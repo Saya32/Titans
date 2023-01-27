@@ -89,3 +89,6 @@ class SignUpView(LoginProhibitedMixin, FormView):
     
 def home_page(request):
     return render(request, 'home_page.html')
+
+def feed(request):
+    return render(request, 'feed.html')
