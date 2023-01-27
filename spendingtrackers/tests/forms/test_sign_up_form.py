@@ -2,8 +2,8 @@
 from django.contrib.auth.hashers import check_password
 from django import forms
 from django.test import TestCase
-from lessons.forms import SignUpForm
-from lessons.models import User
+from spendingtrackers.forms import SignUpForm
+from spendingtrackers.models import User
 
 class SignUpFormTestCase(TestCase):
     """Unit tests of the sign up form."""

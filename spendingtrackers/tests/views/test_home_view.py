@@ -12,8 +12,7 @@ class HomeViewTestCase(TestCase):
 
     def test_template_name_correct(self):
         response = self.client.get(reverse("home_page"))
-        self.assertTemplateUsed(response, "home_page.html")from django.test import TestCase
-from django.urls import reverse
+        self.assertTemplateUsed(response, "home_page.html")
 
 class HomeViewTestCase(TestCase):
     def test_url_exists_at_correct_location(self):

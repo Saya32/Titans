@@ -1,7 +1,7 @@
 """Unit tests for the User model."""
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from lessons.models import User
+from spendingtrackers.models import User
 from decimal import Decimal
 
 class UserModelTestCase(TestCase):
@@ -83,20 +83,6 @@ class UserModelTestCase(TestCase):
         self._assert_user_is_invalid()
 
 
-    def test_balance_starts_at_0(self):
-        self.assertEqual(self.user.balance, 0.00)
-
-    def test_balance_can_be_positive(self):
-        self.user.set_balance(20.55)
-        self.user = User.objects.get(username='johndoe@example.org')
-        self.assertEqual(20.55, float(self.user.balance))
-        self._assert_user_is_valid()
-
-    def test_balance_can_be_negative(self):
-        self.user.set_balance(-20.55)
-        self.user = User.objects.get(username='johndoe@example.org')
-        self.assertEqual(-20.55, float(self.user.balance))
-        self._assert_user_is_valid()
 
 
     def test_full_name_returns_correctly(self):
