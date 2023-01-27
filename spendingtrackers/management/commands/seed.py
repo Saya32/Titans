@@ -1,15 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
 from faker import Faker
 from spendingtrackers.models import User
-from random import randint, random
-from decimal import Decimal
-
-
-#import pytz
 
 class Command(BaseCommand):
     PASSWORD = "Password123"
-    USER_COUNT = 100
+    USER_COUNT = 50
    
 
     def __init__(self):
