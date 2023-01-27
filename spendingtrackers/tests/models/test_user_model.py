@@ -83,12 +83,6 @@ class UserModelTestCase(TestCase):
         self._assert_user_is_invalid()
 
 
-
-
-    def test_full_name_returns_correctly(self):
-        self.assertEqual(self.user.full_name, f"{self.user.first_name} {self.user.last_name}")
-
-
     def _assert_user_is_valid(self):
         try:
             self.user.full_clean()

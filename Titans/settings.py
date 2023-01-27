@@ -136,7 +136,7 @@ AUTH_USER_MODEL = 'spendingtrackers.User'
 LOGIN_URL = 'log_in'
 
 # URL where @admin_required redirects to student users too.
-REDIRECT_URL_WHEN_LOGGED_IN = 'home_page'
+REDIRECT_URL_WHEN_LOGGED_IN = 'feed'
 
 # Message level tags should use Bootstrap terms
 # MESSAGE_TAGS = {
