@@ -11,3 +11,35 @@ class User(AbstractUser):
         )
     first_name = models.CharField(max_length=50, blank=False)
     last_name = models.CharField(max_length=50, blank=False)
+
+
+
+class Transaction(models.Model):
+    is_expenditure = models.BooleanField(blank = False, null = False) # If it's false then it means Income
+    title = models.CharField(blank = False, max_length=30)
+    description = models.CharField(blank = True, max_length=200)
+    amount = models.DecimalField(blank=False, max_digits=10, decimal_places=2)
+    date_paid = models.DateTimeField(auto_now_add=False, blank=True, null=True)
+    time_paid = models.TimeField(auto_now_add=False, blank=True, null=True)
+
+    CATEGORY_CHOICES = [
+    ('Groceries', 'Groceries'),
+    ('Salary', 'Salary'),
+    ('Bills', 'Bills'),
+    ('Rent', 'Rent'),
+    ('Gym', 'Gym'),
+    ('Restaurant', 'Restaurant'),
+    ('Vacation', 'Vacation'),
+    ('Travel', 'Travel'),
+    ('Gift', 'Gift'),
+    ('Investments', 'Investments'),
+    ('Savings', 'Savings'),
+    ('Entertainment', 'Entertainment'),
+    ('Internet', 'Internet'),
+    ('Healthcare', 'Healthcare'),
+    ('Lifestyle', 'Lifestyle'),
+    ('Insurance', 'Insurance'),
+    ('Other', 'Other'),
+    ]
+    category = models.CharField(max_length=10, blank=False, choices=CATEGORY_CHOICES)
+
