@@ -41,5 +41,5 @@ class Transaction(models.Model):
     ('Insurance', 'Insurance'),
     ('Other', 'Other'),
     ]
-    category = models.CharField(max_length=10, blank=False, choices=CATEGORY_CHOICES)
+    category = models.CharField(max_length=50, blank=False, choices=CATEGORY_CHOICES)
 
