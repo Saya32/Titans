@@ -92,3 +92,8 @@ def home_page(request):
 
 def feed(request):
     return render(request, 'feed.html')
+
+
+def log_out(request):
+    logout(request)
+    return redirect('home_page')
