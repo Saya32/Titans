@@ -64,7 +64,7 @@ class SignUpForm(forms.ModelForm):
             first_name=self.cleaned_data.get('first_name'),
             last_name=self.cleaned_data.get('last_name'),
             password=self.cleaned_data.get('new_password'),
-            currency=self.cleaned_data.get('new_currency'),
+            currency=self.cleaned_data.get('currency'),
         )
         return user
 

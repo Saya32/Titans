@@ -13,6 +13,7 @@ class SignUpFormTestCase(TestCase):
             'first_name': 'Jane',
             'last_name': 'Doe',
             'username': 'janedoe@example.org',
+            'currency': '£',
             'new_password': 'Password123',
             'password_confirmation': 'Password123'
         }
