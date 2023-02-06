@@ -11,6 +11,14 @@ class User(AbstractUser):
         )
     first_name = models.CharField(max_length=50, blank=False)
     last_name = models.CharField(max_length=50, blank=False)
+    CURRENCY_CHOICES = [
+        ('£','£'),
+        ('$','$'),
+        ('€','€'),
+        ('₹','₹'),
+        ('¥','¥'),
+    ]
+    currency = models.CharField(max_length=1, blank=False, choices=CURRENCY_CHOICES, default="£",null=True)
 
 
 

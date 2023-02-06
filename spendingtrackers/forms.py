@@ -29,7 +29,7 @@ class SignUpForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username']
+        fields = ['first_name', 'last_name', 'username', 'currency']
         labels = {
             'username': 'Email',
         }
@@ -64,7 +64,18 @@ class SignUpForm(forms.ModelForm):
             first_name=self.cleaned_data.get('first_name'),
             last_name=self.cleaned_data.get('last_name'),
             password=self.cleaned_data.get('new_password'),
-
-
+            currency=self.cleaned_data.get('currency'),
         )
         return user
+
+
+class UserForm(forms.ModelForm):
+    
+
+    """Form to update user profiles."""
+    class Meta:
+
+        """Form options."""
+        model = User
+        fields = ['first_name', 'last_name', 'currency', 'username']
+        
