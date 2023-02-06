@@ -77,5 +77,5 @@ class UserForm(forms.ModelForm):
 
         """Form options."""
         model = User
-        fields = ['first_name', 'last_name', 'currency']
+        fields = ['first_name', 'last_name', 'currency', 'username']
         
