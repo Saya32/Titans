@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'spendingtrackers',
     'widget_tweaks',
+    'social_django',
+    'mainApp',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'Titans.urls'
@@ -66,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
             ],
         },
     },
@@ -144,3 +148,13 @@ REDIRECT_URL_WHEN_LOGGED_IN = 'feed'
 #     message_constants.ERROR: 'danger',
 # }
 
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
+LOGIN_URL = 'log_in'
+LOGIN_REDIRECT_URL = 'feed'
+LOGOUT_URL = 'log_out'
+LOGOUT_REDIRECT_URL = 'log_in'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '##################################'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '###########################'
