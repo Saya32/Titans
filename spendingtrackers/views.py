@@ -1,6 +1,6 @@
 # Create your views here.
 from django.shortcuts import render, redirect
-from .models import User
+from .models import User, Transaction, Category
 from django.contrib.auth.decorators import login_required
 from .forms import SignUpForm, LogInForm
 from django.contrib.auth import login, logout
@@ -14,7 +14,7 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import  UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import UserForm
+from .forms import UserForm, TransactionForm
 
 class LoginProhibitedMixin:
     """Mixin that redirects when a user is logged in."""
@@ -119,3 +119,29 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         """Return redirect URL after successful update."""
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
+
+def new_transaction(request):
+    if request.method == 'POST':
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            Transaction.objects.create(
+                #user=request.user,
+                title=form.cleaned_data.get('title'),
+                description=form.cleaned_data.get('description'),
+                amount=form.cleaned_data.get('amount'),
+                date_paid=form.cleaned_data.get('date_paid'),
+                time_paid=form.cleaned_data.get('time_paid'),
+                category=form.cleaned_data.get('category'),
+                receipt=form.cleaned_data.get('receipt'),
+                transaction_type=form.cleaned_data.get('transaction_type')
+                
+            )
+
+            #return redirect('pending_requests')
+            #return render(request, 'pending_requests.html', {'requests' : requests})
+        else:
+            return render(request, 'transaction.html', {'form': form})
+    else:
+        form = TransactionForm()
+        return render(request, 'transaction.html', {'form': form})

@@ -25,4 +25,6 @@ urlpatterns = [
     path('log_in/', views.LogInView.as_view(), name='log_in'),
     path('log_out/', views.log_out, name='log_out'),
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
+    path('new_transaction/',views.new_transaction, name ='new_transaction'),
+
 ]

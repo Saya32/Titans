@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, Transaction
 from django.utils import timezone
 from django.core.validators import RegexValidator
 from django.contrib.auth import authenticate
@@ -79,3 +79,39 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ['first_name', 'last_name', 'currency', 'username']
         
+
+
+class TransactionForm(forms.ModelForm):
+    class Meta:
+        model = Transaction
+        fields = ['title', 'description', 'amount', 'date_paid', 'time_paid', 'category', 'receipt', 'transaction_type']
+        labels = {
+            'title': ('Title:'),
+            'description': ('Description'),
+            'amount': ('Amount:'),
+            'date_paid': ('Date:'),
+            'time_paid': ('Time:'),
+            'category': ('Category:'),
+            'receipt': ('Receipt:'),
+            'transaction_type': ('Transaction type:'),
+
+        }
+
+
+    """Override clean method to check date and time"""
+    def clean(self):
+        super().clean()
+        # date = self.cleaned_data.get('date_paid')
+        # if (date == None):
+        #     self.add_error('date','Please enter the date as YYYY-MM-DD.')
+        #     return
+
+        # time = self.cleaned_data.get('time_paid')
+        # if (time == None):
+        #     self.add_error('time','Please enter the time as HH:MM.')
+        #     return
+
+        # if(date <= timezone.now().date()):
+        #     self.add_error('date','Date must be in the future.')
+        #     if (date == timezone.now().date() and time <= timezone.now().time()):
+        #         self.add_error('time','Time must be in the future.')

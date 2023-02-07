@@ -47,19 +47,34 @@ class Category(models.Model):
     spending_limit = models.DecimalField(max_digits=10, decimal_places=2)
 
 class Transaction(models.Model):
-    is_expenditure = models.BooleanField(blank = False, null = False) # If it's false then it means Income
+    TRANSACTION_CHOICES = [
+        ('Expense','Expense'),
+        ('Income','Income'),
+    ]
+    transaction_type = models.CharField(max_length=10, blank=False, choices=TRANSACTION_CHOICES, default="Expense",null=True)
     title = models.CharField(blank = False, max_length=30)
     description = models.CharField(blank = True, max_length=200)
     amount = models.DecimalField(blank=False, max_digits=10, decimal_places=2)
     date_paid = models.DateTimeField(auto_now_add=False, blank=True, null=True)
     time_paid = models.TimeField(auto_now_add=False, blank=True, null=True)
-    CURRENCY_CHOICES = [
-        ('£','£'),
-        ('$','$'),
-        ('€','€'),
-        ('₹','₹'),
-        ('¥','¥'),
+    CATEGORY_CHOICES = [
+    ('Groceries', 'Groceries'),
+    ('Salary', 'Salary'),
+    ('Bills', 'Bills'),
+    ('Rent', 'Rent'),
+    ('Gym', 'Gym'),
+    ('Restaurant', 'Restaurant'),
+    ('Vacation', 'Vacation'),
+    ('Travel', 'Travel'),
+    ('Gift', 'Gift'),
+    ('Investments', 'Investments'),
+    ('Savings', 'Savings'),
+    ('Entertainment', 'Entertainment'),
+    ('Internet', 'Internet'),
+    ('Healthcare', 'Healthcare'),
+    ('Lifestyle', 'Lifestyle'),
+    ('Insurance', 'Insurance'),
+    ('Other', 'Other'),
     ]
-    currency = models.CharField(max_length=1, blank=False, choices=CURRENCY_CHOICES, default="£",null=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.CharField(max_length=50, blank=False, choices=CATEGORY_CHOICES)
     receipt = models.ImageField(upload_to='receipts/', blank=True, null=True) #need to create receipts url pathway
