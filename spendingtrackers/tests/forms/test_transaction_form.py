@@ -13,7 +13,7 @@ class SignUpFormTestCase(TestCase):
     ]
 
     def setUp(self):
-        #self.user = User.objects.get(username='johndoe@example.org')
+        self.user = User.objects.get(username='johndoe@example.org')
         self.form_input = {
             'title': 'Shopping',
             'description': 'At asda',
@@ -76,3 +76,4 @@ class SignUpFormTestCase(TestCase):
         form = TransactionForm(data=self.form_input)
         self.assertFalse(form.is_valid())
     
+
