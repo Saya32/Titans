@@ -94,7 +94,6 @@ class TransactionForm(forms.ModelForm):
             'category': ('Category:'),
             'receipt': ('Receipt:'),
             'transaction_type': ('Transaction type:'),
-
         }
 
 

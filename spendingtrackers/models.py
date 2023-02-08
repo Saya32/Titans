@@ -47,6 +47,7 @@ class Category(models.Model):
     spending_limit = models.DecimalField(max_digits=10, decimal_places=2)
 
 class Transaction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     TRANSACTION_CHOICES = [
         ('Expense','Expense'),
         ('Income','Income'),

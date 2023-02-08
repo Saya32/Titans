@@ -126,7 +126,7 @@ def new_transaction(request):
         form = TransactionForm(request.POST)
         if form.is_valid():
             Transaction.objects.create(
-                #user=request.user,
+                user=request.user,
                 title=form.cleaned_data.get('title'),
                 description=form.cleaned_data.get('description'),
                 amount=form.cleaned_data.get('amount'),
@@ -135,13 +135,10 @@ def new_transaction(request):
                 category=form.cleaned_data.get('category'),
                 receipt=form.cleaned_data.get('receipt'),
                 transaction_type=form.cleaned_data.get('transaction_type')
-                
             )
-
-            #return redirect('pending_requests')
-            #return render(request, 'pending_requests.html', {'requests' : requests})
+            return redirect('feed')
         else:
-            return render(request, 'transaction.html', {'form': form})
+            return render(request, 'new_transaction.html', {'form': form})
     else:
         form = TransactionForm()
-        return render(request, 'transaction.html', {'form': form})
+        return render(request, 'new_transaction.html', {'form': form})
