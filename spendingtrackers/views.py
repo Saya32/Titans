@@ -136,7 +136,7 @@ def new_transaction(request):
                 receipt=form.cleaned_data.get('receipt'),
                 transaction_type=form.cleaned_data.get('transaction_type')
             )
-            return redirect('feed')
+            #return redirect('feed')
         else:
             return render(request, 'new_transaction.html', {'form': form})
     else:

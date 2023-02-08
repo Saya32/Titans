@@ -5,7 +5,7 @@ from spendingtrackers.models import User, Transaction
 from spendingtrackers.views import new_transaction
 from spendingtrackers.forms import TransactionForm
 from spendingtrackers.tests.helpers import reverse_with_next
-#from spendingtrackers.tests.helpers import create_transactions
+from spendingtrackers.tests.helpers import create_transactions
 
 class NewTransactionViewTestCase(TestCase):
     """Test case of new transaction view"""
@@ -20,7 +20,7 @@ class NewTransactionViewTestCase(TestCase):
         self.data = {
             'title':'This is a title',
             'description':'Description of Transaction goes here',
-            'amount':1000.00,
+            'amount':1000,
             'date_paid':'2023-12-12',
             'time_paid':'10:51',
             'category':'Salary',
