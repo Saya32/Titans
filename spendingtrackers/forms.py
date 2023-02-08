@@ -101,15 +101,15 @@ class TransactionForm(forms.ModelForm):
     """Override clean method to check date and time"""
     def clean(self):
         super().clean()
-        # date = self.cleaned_data.get('date_paid')
-        # if (date == None):
-        #     self.add_error('date','Please enter the date as YYYY-MM-DD.')
-        #     return
+        date_paid = self.cleaned_data.get('date_paid')
+        if (date_paid == None):
+             self.add_error('date_paid','Please enter the date as YYYY-MM-DD.')
+             return
 
-        # time = self.cleaned_data.get('time_paid')
-        # if (time == None):
-        #     self.add_error('time','Please enter the time as HH:MM.')
-        #     return
+        time_paid = self.cleaned_data.get('time_paid')
+        if (time_paid == None):
+             self.add_error('time_paid','Please enter the time as HH:MM.')
+             return
 
         # if(date <= timezone.now().date()):
         #     self.add_error('date','Date must be in the future.')

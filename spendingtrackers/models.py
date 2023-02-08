@@ -55,7 +55,7 @@ class Transaction(models.Model):
     title = models.CharField(blank = False, max_length=30)
     description = models.CharField(blank = True, max_length=200)
     amount = models.DecimalField(blank=False, max_digits=10, decimal_places=2)
-    date_paid = models.DateTimeField(auto_now_add=False, blank=True, null=True)
+    date_paid = models.DateField(auto_now_add=False, blank=True, null=True)
     time_paid = models.TimeField(auto_now_add=False, blank=True, null=True)
     CATEGORY_CHOICES = [
     ('Groceries', 'Groceries'),
