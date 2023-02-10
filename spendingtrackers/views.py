@@ -4,7 +4,6 @@ from .models import User, Transaction, Category
 from django.contrib.auth.decorators import login_required
 from .forms import SignUpForm, LogInForm
 from django.contrib.auth import login, logout
-##from .decorators import student_required, director_required, admin_required
 from django.contrib import messages
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
