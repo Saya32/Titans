@@ -89,20 +89,25 @@ class TransactionForm(forms.ModelForm):
             'title': ('Title:'),
             'description': ('Description'),
             'amount': ('Amount:'),
-            'date_paid': ('Date:'),
-            'time_paid': ('Time:'),
             'category': ('Category:'),
             'receipt': ('Receipt:'),
             'transaction_type': ('Transaction type:'),
         }
-
+        widgets = {
+            'date_paid': forms.widgets.DateInput(
+                format=('%d/%m/%Y'), attrs={'type': 'date'}
+                ),
+            'time_paid': forms.widgets.TimeInput(
+                format=('%H/%M'), attrs={'type': 'time'}
+                ),
+        }
 
     """Override clean method to check date and time"""
     def clean(self):
         super().clean()
         date_paid = self.cleaned_data.get('date_paid')
         if (date_paid == None):
-             self.add_error('date_paid','Please enter the date as YYYY-MM-DD.')
+             self.add_error('date_paid','Please enter the date as DD-MM-YYYY.')
              return
 
         time_paid = self.cleaned_data.get('time_paid')
