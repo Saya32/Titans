@@ -1,0 +1,15 @@
+<div class = "col">
+    <div class="card mb-3 " id="request_card">
+      <div class="card-body">
+        <h5 class="card-header">Transaction {{ transaction.id }}</h5>
+        <p class="card-text lead"> 
+          <b>{{ transaction.user }}</b> date of transaction: <b>{{ transaction.date_paid }}</b> at <b>{{ transaction.time_paid }}</b>. 
+          of <b>{{ transaction.amount }}</b> Falls in the type of <b>{{ transaction.transaction_type }}</b> and category of
+          <b>{{ transaction.category }}</b> 
+        </p>
+      </div>
+      {% if show_button %}
+      {% include 'partials/record_card_footer.html'%}
+      {% endif %}
+    </div>
+  </div>

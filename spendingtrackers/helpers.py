@@ -1,7 +1,17 @@
-from .models import User
+from .models import User, Transaction
 from django.conf import settings
 from django.shortcuts import redirect
 from django.utils import timezone
+
+
+
+def get_user_transactions(user):
+    transactions = Transaction.objects.filter(user=user)
+    return transactions
+
+
+
+
 
 class LogInTester:
     def _is_logged_in(self):

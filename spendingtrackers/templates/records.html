@@ -1,0 +1,11 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="container">
+  <h1>Records</h1>
+  <div class="row row-cols-2 row-cols-md-2 g-4">
+    {% for transaction in transactions %}
+    {% include 'partials/transaction_as_card.html' with transaction=transaction show_button=True%}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
