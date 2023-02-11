@@ -10,7 +10,9 @@ def get_user_transactions(user):
     return transactions
 
 
-
+def get_all_transactions():
+    transactions = Transaction.objects.filter()
+    return transactions
 
 
 class LogInTester:
