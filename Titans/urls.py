@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from spendingtrackers import views
+from django.conf.urls.static import static
+from django.conf import settings
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,5 +29,9 @@ urlpatterns = [
     path('log_out/', views.log_out, name='log_out'),
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
     path('new_transaction/',views.new_transaction, name ='new_transaction'),
+    path('records/', views.records, name='records'),
+    path('update_record/<int:id>', views.update_record, name='update_record'),
+    path('delete_record/<int:id>', views.delete_record, name='delete_record'),
 
 ]
+urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

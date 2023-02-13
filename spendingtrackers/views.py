@@ -4,7 +4,6 @@ from .models import User, Transaction, Category
 from django.contrib.auth.decorators import login_required
 from .forms import SignUpForm, LogInForm
 from django.contrib.auth import login, logout
-##from .decorators import student_required, director_required, admin_required
 from django.contrib import messages
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
@@ -15,6 +14,7 @@ from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import  UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import UserForm, TransactionForm
+from .helpers import get_user_transactions
 
 class LoginProhibitedMixin:
     """Mixin that redirects when a user is logged in."""
@@ -123,7 +123,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
 def new_transaction(request):
     if request.method == 'POST':
-        form = TransactionForm(request.POST)
+        form = TransactionForm(request.POST, request.FILES)
         if form.is_valid():
             Transaction.objects.create(
                 user=request.user,
@@ -142,3 +142,37 @@ def new_transaction(request):
     else:
         form = TransactionForm()
         return render(request, 'new_transaction.html', {'form': form})
+
+
+def records(request):
+    transactions = get_user_transactions(request.user)
+    return render(request, 'records.html', {'transactions' : transactions})
+
+def update_record(request, id):
+    try:
+        record = Transaction.objects.get(pk=id)
+    except:
+        messages.add_message(request, messages.ERROR, "Record could not be found!")
+        return redirect('feed')
+
+    if request.method == 'POST':
+        form = TransactionForm(instance = record, data = request.POST)
+        if (form.is_valid()):
+            messages.add_message(request, messages.SUCCESS, "Record updated!")
+            form.save()
+            return redirect('feed')
+        else:
+            return render(request, 'update_record.html', {'form': form, 'transaction' : record})
+    else:
+        form = TransactionForm(instance = record)
+        return render(request, 'update_record.html', {'form': form, 'transaction' : record})
+
+def delete_record(request, id):
+    if (Transaction.objects.filter(pk=id)):
+        Transaction.objects.filter(pk=id).delete()
+        messages.add_message(request, messages.SUCCESS, "Record deleted!")
+        return redirect('feed')
+    else:
+        messages.add_message(request, messages.ERROR, "Sorry, an error occurred deleting your record.")
+        return redirect('feed')
+

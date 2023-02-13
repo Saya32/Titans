@@ -34,7 +34,6 @@ class SignUpForm(forms.ModelForm):
             'username': 'Email',
         }
 
-
     new_password = forms.CharField(
         label='Password',
         widget=forms.PasswordInput(),
@@ -70,8 +69,6 @@ class SignUpForm(forms.ModelForm):
 
 
 class UserForm(forms.ModelForm):
-    
-
     """Form to update user profiles."""
     class Meta:
 
@@ -119,3 +116,5 @@ class TransactionForm(forms.ModelForm):
         #     self.add_error('date','Date must be in the future.')
         #     if (date == timezone.now().date() and time <= timezone.now().time()):
         #         self.add_error('time','Time must be in the future.')
+    
+ 
