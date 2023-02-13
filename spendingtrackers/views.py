@@ -101,6 +101,13 @@ def log_out(request):
     logout(request)
     return redirect('home_page')
 
+
+
+def category(request):
+   context = {'CATEGORY_CHOICES': Category.CATEGORY_CHOICES}
+   return render(request, 'category.html', context)
+
+
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     """View to update logged-in user's profile."""
@@ -142,3 +149,6 @@ def new_transaction(request):
     else:
         form = TransactionForm()
         return render(request, 'new_transaction.html', {'form': form})
+    
+
+

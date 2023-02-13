@@ -26,5 +26,5 @@ urlpatterns = [
     path('log_out/', views.log_out, name='log_out'),
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
     path('new_transaction/',views.new_transaction, name ='new_transaction'),
-
+    path('category',views.category, name = 'category'),
 ]
