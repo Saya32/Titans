@@ -47,48 +47,48 @@ class UpdateTransactionViewTestCase(TestCase):
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
 
-    # def test_update_correctly_saves(self):
-    #     self.client.login(username=self.user.username, password='Password123')
-    #     transaction_url = reverse('update_record', kwargs={'id': self.transactions[0].pk})
-    #     response = self.client.get(transaction_url)
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertTemplateUsed(response, 'update_record.html')
-    #     form = response.context['form']
-    #     self.assertTrue(isinstance(form, TransactionForm))
-    #     self.assertContains(response, "Expense")
+    def test_update_correctly_saves(self):
+        self.client.login(username=self.user.username, password='Password123')
+        transaction_url = reverse('update_record', kwargs={'id': self.transactions[0].pk})
+        response = self.client.get(transaction_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'update_record.html')
+        form = response.context['form']
+        self.assertTrue(isinstance(form, TransactionForm))
+        self.assertContains(response, "Expense")
 
-    #     before_count = Transaction.objects.count()
-    #     update_response = self.client.post(transaction_url, self.form_input, follow=True)
-    #     after_count = Transaction.objects.count()
-    #     self.assertEqual(before_count, after_count)
+        before_count = Transaction.objects.count()
+        update_response = self.client.post(transaction_url, self.data, follow=True)
+        after_count = Transaction.objects.count()
+        self.assertEqual(before_count, after_count)
 
-    #     self.assertEqual(update_response.status_code, 200)
-    #     self.assertTemplateUsed(update_response, 'feed.html')
-    #     messages_list = list(update_response.context['messages'])
-    #     self.assertEqual(len(messages_list), 1)
+        self.assertEqual(update_response.status_code, 200)
+        self.assertTemplateUsed(update_response, 'feed.html')
+        messages_list = list(update_response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
 
-    #     self.transactions = Transaction.objects.filter(user = self.user)
-    #     self.assertEqual(self.transactions[0].category, 'Salary')
+        self.transactions = Transaction.objects.filter(user = self.user)
+        self.assertEqual(self.transactions[0].category, 'Salary')
 
-    # def test_update_does_not_save_if_form_is_invalid(self):
-    #     self.client.login(username=self.user.username, password='Password123')
-    #     transaction_url = reverse('update_record', kwargs={'id': self.transactions[0].pk})
-    #     response = self.client.get(transaction_url)
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertTemplateUsed(response, 'update_record.html')
-    #     form = response.context['form']
-    #     self.assertTrue(isinstance(form, TransactionForm))
-    #     self.assertContains(response, "Expense")
+    def test_update_does_not_save_if_form_is_invalid(self):
+        self.client.login(username=self.user.username, password='Password123')
+        transaction_url = reverse('update_record', kwargs={'id': self.transactions[0].pk})
+        response = self.client.get(transaction_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'update_record.html')
+        form = response.context['form']
+        self.assertTrue(isinstance(form, TransactionForm))
+        self.assertContains(response, "Expense")
 
-    #     self.form_input['amount'] ='a'
+        self.data['amount'] ='a'
 
-    #     before_count = Transaction.objects.count()
-    #     update_response = self.client.post(transaction_url, self.form_input, follow=True)
-    #     after_count = Transaction.objects.count()
-    #     self.assertEqual(before_count, after_count)
+        before_count = Transaction.objects.count()
+        update_response = self.client.post(transaction_url, self.data, follow=True)
+        after_count = Transaction.objects.count()
+        self.assertEqual(before_count, after_count)
 
-    #     self.assertEqual(update_response.status_code, 200)
-    #     self.assertTemplateUsed(update_response, 'update_record.html')
+        self.assertEqual(update_response.status_code, 200)
+        self.assertTemplateUsed(update_response, 'update_record.html')
         
-    #     self.transactions = Transaction.objects.filter(user = self.user)
-    #     self.assertEqual(self.transactions[0].amount, 1000)
+        self.transactions = Transaction.objects.filter(user = self.user)
+        self.assertEqual(self.transactions[0].amount, 1000)

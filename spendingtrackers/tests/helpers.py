@@ -14,7 +14,7 @@ def reverse_with_next(url_name, next_url):
 def create_transactions(user, from_count, to_count):
     """Create unique helper testing"""
     for count in range(from_count, to_count):
-        desc_text = f'Dexription__{count}'
+        desc_text = f'Description__{count}'
         
         transaction = Transaction(
             user = user,

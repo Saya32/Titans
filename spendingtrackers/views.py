@@ -123,7 +123,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
 def new_transaction(request):
     if request.method == 'POST':
-        form = TransactionForm(request.POST)
+        form = TransactionForm(request.POST, request.FILES)
         if form.is_valid():
             Transaction.objects.create(
                 user=request.user,
