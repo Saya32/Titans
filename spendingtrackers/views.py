@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect
 from .models import User, Transaction, Category
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm, LogInForm, SpendingLimitForm
+from .forms import SignUpForm, LogInForm, CategoryDetailsForm
 from django.contrib.auth import login, logout
 ##from .decorators import student_required, director_required, admin_required
 from django.contrib import messages
@@ -143,17 +143,20 @@ def new_transaction(request):
         form = TransactionForm()
         return render(request, 'new_transaction.html', {'form': form})
 
-def spending_limit(request):
+def add_category_details(request):
     if request.method == 'POST':
-        form = SpendingLimitForm(request.POST)
+        form = CategoryDetailsForm(request.POST)
         if form.is_valid():
-            Limit.objects.create(
+            Category.objects.create(
                 user=request.user,
                 spending_limit=form.cleaned_data.get('spending_limit'),
-                category_choices=form.cleaned_data.get('category_choices')
+                category_choices=form.cleaned_data.get('category_choices'),
+                budget=form.cleaned_data.get('budget'),
+                start_date=form.cleaned_data.get('start_date'),
+                end_date=form.cleaned_data.get ('end_date')
             )
         else:
-            return render(request, 'spending_limit.html', {'form': form})
+            return render(request, 'add_category_details.html', {'form': form})
     else:
-        form = SpendingLimitForm()
-        return render(request, 'spending_limit.html', {'form': form})
+        form = CategoryDetailsForm()
+        return render(request, 'add_category_details.html', {'form': form})

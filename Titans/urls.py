@@ -26,6 +26,6 @@ urlpatterns = [
     path('log_out/', views.log_out, name='log_out'),
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
     path('new_transaction/',views.new_transaction, name ='new_transaction'),
-    path('spending_limit/', views.spending_limit, name='spending_limit'),
+    path('add_category_details/', views.add_category_details, name='add_category_details'),
 
 ]
