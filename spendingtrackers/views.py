@@ -1,99 +1,141 @@
 # Create your views here.
+import json
 from django.shortcuts import render, redirect
 from .models import User
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm, LogInForm
-from django.contrib.auth import login, logout
-##from .decorators import student_required, director_required, admin_required
-from django.contrib import messages
 from django.conf import settings
+from django.http import HttpResponse
+from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
 from django.views import View
 from django.views.generic.edit import FormView
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth.hashers import make_password, check_password
+from spendingtrackers.models import User
+from django import forms
 
-class LoginProhibitedMixin:
-    """Mixin that redirects when a user is logged in."""
 
-    redirect_when_logged_in_url = None
+class SignUpForm(forms.Form):
+    username = forms.CharField(label='username', max_length=50)
+    first_name = forms.CharField(label='first_name', max_length=50)
+    last_name = forms.CharField(label='last_name', max_length=50)
+    password = forms.CharField(label='password', widget=forms.PasswordInput())
+    password_confirmation = forms.CharField(label='password_confirmation', widget=forms.PasswordInput())
 
-    def dispatch(self, *args, **kwargs):
-        """Redirect when logged in, or dispatch as normal otherwise."""
-        if self.request.user.is_authenticated:
-            return self.handle_already_logged_in(*args, **kwargs)
-        return super().dispatch(*args, **kwargs)
 
-    def handle_already_logged_in(self, *args, **kwargs):
-        url = self.get_redirect_when_logged_in_url()
-        return redirect(url)
+def sign_up(request):
+    if request.method == 'POST':
+        userform = SignUpForm(request.POST)
+        if userform.is_valid():
+            username = userform.cleaned_data['username']
+            first_name = userform.cleaned_data['first_name']
+            last_name = userform.cleaned_data['last_name']
+            password = userform.cleaned_data['password']
+            password_confirmation = userform.cleaned_data['password_confirmation']
+            if password != password_confirmation:
+                messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
+                return render(request, 'sign_up.html')
+            try:
+                user = User()
+                user.first_name = first_name
+                user.last_name = last_name
+                user.username = username
+                user.password = make_password(password)
+                user.save()
+            except Exception as e:
+                print(e)
+                messages.add_message(request, messages.ERROR, "email already exists!")
+                return render(request, 'sign_up.html')
 
-    def get_redirect_when_logged_in_url(self):
-        """Returns the url to redirect to when not logged in."""
-        if self.redirect_when_logged_in_url is None:
-            raise ImproperlyConfigured(
-                "LoginProhibitedMixin requires either a value for "
-                "'redirect_when_logged_in_url', or an implementation for "
-                "'get_redirect_when_logged_in_url()'."
-            )
+            return render(request, 'sign_success.html')
         else:
-            return self.redirect_when_logged_in_url
+            return render(request, 'sign_up.html')
+    else:
+        return render(request, 'sign_up.html')
 
 
-class LogInView(LoginProhibitedMixin, View):
-    """View that handles log in."""
-
-    http_method_names = ['get', 'post']
-    redirect_when_logged_in_url = 'feed'
-
-    def get(self, request):
-        """Display log in template."""
-
-        self.next = request.GET.get('next') or ''
-        return self.render()
-
-    def post(self, request):
-        """Handle log in attempt."""
-
-        form = LogInForm(request.POST)
-        self.next = request.POST.get('next') or settings.REDIRECT_URL_WHEN_LOGGED_IN
-        user = form.get_user()
-        if user is not None:
-            login(request, user)
-            return redirect(self.next)
-
-        messages.add_message(request, messages.ERROR, "The credentials provided were invalid!")
-        return self.render()
-
-    def render(self):
-        """Render log in template with blank log in form."""
-
-        form = LogInForm()
-        return render(self.request, 'log_in.html', {'form': form, 'next': self.next})
+class LoginForm(forms.Form):
+    username = forms.CharField(label='username', max_length=50)
+    password = forms.CharField(label='password', widget=forms.PasswordInput())
 
 
-class SignUpView(LoginProhibitedMixin, FormView):
-    """View that signs up user."""
+def login(request):
+    if request.method == 'POST':
+        userform = LoginForm(request.POST)
+        if userform.is_valid():
+            username = userform.cleaned_data['username']
+            password = userform.cleaned_data['password']
+            user = User.objects.filter(username__exact=username).first()
 
-    form_class = SignUpForm
-    template_name = "sign_up.html"
-    redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
+            if not user or not check_password(password, user.password):
+                messages.add_message(request, messages.ERROR, "Account or password error!")
+                return render(request, 'log_in.html')
+            else:
+                request.session['is_login'] = True
+                request.session['username'] = username
 
-    def form_valid(self, form):
-        self.object = form.save()
-        login(self.request, self.object)
-        return super().form_valid(form)
+                return render(request, 'feed.html')
 
-    def get_success_url(self):
-        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
-    
+        else:
+            return render(request, 'log_in.html')
+    else:
+        return render(request, 'log_in.html')
+
+
 def home_page(request):
     return render(request, 'home_page.html')
 
+
 def feed(request):
+    if not request.session.get('is_login'):
+        return render(request, 'log_in.html')
     return render(request, 'feed.html')
 
 
+def sign_success(request):
+    if not request.session.get('is_login'):
+        return render(request, 'log_in.html')
+    return render(request, 'sign_success.html')
+
+
 def log_out(request):
-    logout(request)
+    if not request.session.get('is_login'):
+        return render(request, 'log_in.html')
+    del request.session['is_login']
+    del request.session['username']
     return redirect('home_page')
+
+
+class ChangePasswordForm(forms.Form):
+    username = forms.CharField(label='username', max_length=50)
+    his_password = forms.CharField(label='his_password', widget=forms.PasswordInput())
+    password = forms.CharField(label='password', widget=forms.PasswordInput())
+    password_confirmation = forms.CharField(label='password_confirmation', widget=forms.PasswordInput())
+
+
+def change_password(request):
+    if request.method == 'POST':
+        userform = ChangePasswordForm(request.POST)
+        if userform.is_valid():
+            username = userform.cleaned_data['username']
+            his_password = userform.cleaned_data['his_password']
+            password = userform.cleaned_data['password']
+            password_confirmation = userform.cleaned_data['password_confirmation']
+            if password != password_confirmation:
+                messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
+                return render(request, 'change_password.html')
+            user = User.objects.filter(username__exact=username).first()
+            if not user:
+                messages.add_message(request, messages.ERROR, "email not exists!")
+                return render(request, 'change_password.html')
+            if not check_password(his_password, user.password):
+                messages.add_message(request, messages.ERROR, "history password error!")
+                return render(request, 'change_password.html')
+            user.password = make_password(password)
+            user.save()
+            return render(request, 'log_in.html')
+        else:
+            return render(request, 'change_password.html')
+    else:
+        return render(request, 'change_password.html')

@@ -45,7 +45,9 @@
   }
   
   .cover-card {
-    background-color: rgba(245, 245, 245, 0.6);
+    background-color: white;
+    border-color:#5cbc68;
+    height:300px;
     max-width: 30rem;
     padding-top: 30px;
     padding-left: 50px;

@@ -1,15 +1,53 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="container">
-  <div class="row">
-    <div class="col-sm-12 col-md-6 offset-md-3">
-      <h1>Log in</h1>
-      <form action="{% url 'log_in' %}" method="post">
-        {% csrf_token %}
-        {% include 'partials/bootstrap_form.html' with form=form %}
-        <input type="submit" value="Log in" class="btn btn-primary">
-      </form>
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'login.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'login_btn.css' %}">
+<style type="text/css">
+    iframe#_hjRemoteVarsFrame {display: none !important; width: 1px !important; height: 1px !important; opacity: 0 !important; pointer-events: none !important;}
+
+</style>
+<form action="{% url 'log_in' %}" method="post">
+    {% csrf_token %}
+    <div class="_33T1-ZBLz7FQrNT-ZCfKte">
+        <div class="_1sxlTjCjFLM5k-nXvLkywP">
+
+            <section class="_3P7ejYsij9dpnS4OZiCJVK">
+                <div class="_2CKN4I1T1m1ACp1JPZ2CR9"><h1>Log in</h1>
+                    <form class="ui error form">
+                        <div class="field"><label>Email</label><br><br>
+                            <div class="ui input"><input name="username" autocomplete="username" type="email"
+                                                         value="" style="width:331px">
+                            </div>
+                            <br>
+                        </div>
+                        <br>
+                        <div class="field"><label>Password</label><br><br>
+                            <div class="ui input"><input name="password" autocomplete="current-password"
+                                                         type="password"
+                                                         value="" style="width:331px"></div>
+                        </div>
+                        <br>
+                        <div class="_2tj4RYmrU4JjSo2W5_ugzj"><a
+                                href="{% url 'change_password' %}">Change
+                            password?</a></div>
+                        <div class="ui hidden divider"></div>
+                        <button type="submit" class="ui large circular fluid primary button">Log In</button>
+                    </form>
+                    <div>
+                        <div class="_1TIOxpSJZ9E3EmrUCPh1rq">
+                            <div class="_1shxn-I3ZrsxJkRub33ZoZ">
+                                <div class="_34wD3pxeKAiDFX3oCDQ0V2">or continue with</div>
+                            </div>
+                            <div class="_32kDtyuRtVMAzp7wf6Xfyv"></div>
+                        </div>
+                    </div>
+                    <div class="_2c-xSUqb6VJ6HJUQ_o-qV9">Don't have account?&nbsp;<a
+                            href="{% url 'sign_up' %}">Sign Up</a></div>
+                </div>
+            </section>
+        </div>
     </div>
-  </div>
-</div>
+</form>
 {% endblock %}
