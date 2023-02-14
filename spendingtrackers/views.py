@@ -15,7 +15,8 @@ from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import  UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import UserForm
-
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 class LoginProhibitedMixin:
     """Mixin that redirects when a user is logged in."""
 
@@ -89,7 +90,8 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
     def get_success_url(self):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
-    
+
+@login_required
 def home_page(request):
     return render(request, 'home_page.html')
 

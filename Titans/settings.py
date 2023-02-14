@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'spendingtrackers',
     'widget_tweaks',
     'social_django',
-    'mainApp',
 ]
 
 MIDDLEWARE = [
@@ -156,5 +155,5 @@ LOGIN_URL = 'log_in'
 LOGIN_REDIRECT_URL = 'feed'
 LOGOUT_URL = 'log_out'
 LOGOUT_REDIRECT_URL = 'log_in'
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '##################################'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '###########################'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '770846061116-41mkhu294dgkumh1gsoh3essjjeoq1vd.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
