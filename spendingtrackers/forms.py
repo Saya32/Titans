@@ -34,7 +34,6 @@ class SignUpForm(forms.ModelForm):
             'username': 'Email',
         }
 
-
     new_password = forms.CharField(
         label='Password',
         widget=forms.PasswordInput(),
@@ -70,8 +69,6 @@ class SignUpForm(forms.ModelForm):
 
 
 class UserForm(forms.ModelForm):
-
-
     """Form to update user profiles."""
     class Meta:
 
@@ -89,20 +86,25 @@ class TransactionForm(forms.ModelForm):
             'title': ('Title:'),
             'description': ('Description'),
             'amount': ('Amount:'),
-            'date_paid': ('Date:'),
-            'time_paid': ('Time:'),
             'category': ('Category:'),
             'receipt': ('Receipt:'),
             'transaction_type': ('Transaction type:'),
         }
-
+        widgets = {
+            'date_paid': forms.widgets.DateInput(
+                format=('%d/%m/%Y'), attrs={'type': 'date'}
+                ),
+            'time_paid': forms.widgets.TimeInput(
+                format=('%H/%M'), attrs={'type': 'time'}
+                ),
+        }
 
     """Override clean method to check date and time"""
     def clean(self):
         super().clean()
         date_paid = self.cleaned_data.get('date_paid')
         if (date_paid == None):
-             self.add_error('date_paid','Please enter the date as YYYY-MM-DD.')
+             self.add_error('date_paid','Please enter the date as DD-MM-YYYY.')
              return
 
         time_paid = self.cleaned_data.get('time_paid')
@@ -114,6 +116,7 @@ class TransactionForm(forms.ModelForm):
         #     self.add_error('date','Date must be in the future.')
         #     if (date == timezone.now().date() and time <= timezone.now().time()):
         #         self.add_error('time','Time must be in the future.')
+    
 
 class CategoryDetailsForm(forms.ModelForm):
     class Meta:
@@ -129,3 +132,5 @@ class CategoryDetailsForm(forms.ModelForm):
 
     def clean(self):
         super().clean()
+
+ 
