@@ -121,8 +121,8 @@ class CategoryDetailsForm(forms.ModelForm):
         fields = ['category_choices', 'spending_limit', 'budget', 'start_date', 'end_date']
         labels = {
             'category_choices': ('Category:'),
-            'spending_limit': ('Spending Limit (£):'),
-            'budget': ('Budget (£):'),
+            'spending_limit': ('Spending Limit:'),
+            'budget': ('Budget:'),
             'start_date': ('Start Date:'),
             'end_date': ('End Date:'),
         }
