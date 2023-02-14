@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Transaction
+from .models import User, Transaction, Category
 from django.utils import timezone
 from django.core.validators import RegexValidator
 from django.contrib.auth import authenticate
@@ -70,7 +70,7 @@ class SignUpForm(forms.ModelForm):
 
 
 class UserForm(forms.ModelForm):
-    
+
 
     """Form to update user profiles."""
     class Meta:
@@ -78,7 +78,7 @@ class UserForm(forms.ModelForm):
         """Form options."""
         model = User
         fields = ['first_name', 'last_name', 'currency', 'username']
-        
+
 
 
 class TransactionForm(forms.ModelForm):
@@ -114,3 +114,15 @@ class TransactionForm(forms.ModelForm):
         #     self.add_error('date','Date must be in the future.')
         #     if (date == timezone.now().date() and time <= timezone.now().time()):
         #         self.add_error('time','Time must be in the future.')
+
+class SpendingLimitForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['category_choices', 'spending_limit']
+        labels = {
+            'category_choices': ('Category:'),
+            'spending_limit': ('Spending Limit:'),
+        }
+
+    def clean(self):
+        super().clean()

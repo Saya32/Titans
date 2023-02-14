@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect
 from .models import User, Transaction, Category
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm, LogInForm
+from .forms import SignUpForm, LogInForm, SpendingLimitForm
 from django.contrib.auth import login, logout
 ##from .decorators import student_required, director_required, admin_required
 from django.contrib import messages
@@ -89,7 +89,7 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
     def get_success_url(self):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
-    
+
 def home_page(request):
     return render(request, 'home_page.html')
 
@@ -142,3 +142,18 @@ def new_transaction(request):
     else:
         form = TransactionForm()
         return render(request, 'new_transaction.html', {'form': form})
+
+def spending_limit(request):
+    if request.method == 'POST':
+        form = SpendingLimitForm(request.POST)
+        if form.is_valid():
+            Limit.objects.create(
+                user=request.user,
+                spending_limit=form.cleaned_data.get('spending_limit'),
+                category_choices=form.cleaned_data.get('category_choices')
+            )
+        else:
+            return render(request, 'spending_limit.html', {'form': form})
+    else:
+        form = SpendingLimitForm()
+        return render(request, 'spending_limit.html', {'form': form})
