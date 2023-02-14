@@ -7,16 +7,16 @@
             <div class="card card-block" style="height : 300px">
                 <div class="card-body align-items-center d-flex justify-content-center">              
                 <h5 class="card-title">Overall</h5>
-                <a href="" class="stretched-link"></a>
+                <a href="" class="stretched-link"></a> 
                 </div>
             </div>
         </div>
-    {% for item in CATEGORY_CHOICES %}
+    {% for category in CATEGORY_CHOICES %}
         <div class="col-sm-4 text-center my-3">
             <div class="card card-block" style="height : 300px">
                 <div class="card-body align-items-center d-flex justify-content-center">              
-                <h5 class="card-title">{{ item.1 }}</h5>
-                <a href="" class="stretched-link"></a>
+                <h5 class="card-title">{{ category.1 }}</h5>
+                <a href="{% url 'view_category' category_id %}" class="stretched-link"></a>
                 </div>
             </div>
         </div>

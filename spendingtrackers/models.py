@@ -45,6 +45,7 @@ class Category(models.Model):
     start_date = models.DateField(blank=False)
     end_date = models.DateField(blank=False)
     spending_limit = models.DecimalField(max_digits=10, decimal_places=2)
+    category_id   = models.AutoField(primary_key=True)
 
 class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
