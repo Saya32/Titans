@@ -91,3 +91,18 @@ class UserModelTestCase(TestCase):
     def _assert_user_is_invalid(self):
         with self.assertRaises(ValidationError):
             self.user.full_clean()
+
+
+    def test_bio_must_not_contain_more_than_1_character(self):
+        self.user.currency = '££'
+        self._assert_user_is_invalid()
+    
+    def test_currency_must_contain_1_character(self):
+        self.user.currency = '£' 
+        self._assert_user_is_valid()
+    
+    def test_currency_may_not_be_blank(self):
+        self.user.currency = ''
+        self._assert_user_is_invalid()
+
+   

@@ -2,8 +2,8 @@
 {% block content %}
 <div class="container">
   <div class="row">
-    <h1>New Transaction</h1>
-    <form action="{% url 'new_transaction' %}"method="post">
+    <h1>Add Category Details</h1>
+    <form action="{% url 'add_category_details' %}"method="post">
       {% csrf_token %}
       {% include 'partials/bootstrap_form.html' with form=form %}
       <a href="{%url 'feed' %}" type="button" class="btn btn-secondary">Back</a>

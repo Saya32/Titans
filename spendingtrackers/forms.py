@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, Transaction, Category
 from django.utils import timezone
 from django.core.validators import RegexValidator
 from django.contrib.auth import authenticate
@@ -29,11 +29,10 @@ class SignUpForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username']
+        fields = ['first_name', 'last_name', 'username', 'currency']
         labels = {
             'username': 'Email',
         }
-
 
     new_password = forms.CharField(
         label='Password',
@@ -64,7 +63,80 @@ class SignUpForm(forms.ModelForm):
             first_name=self.cleaned_data.get('first_name'),
             last_name=self.cleaned_data.get('last_name'),
             password=self.cleaned_data.get('new_password'),
-
-
+            currency=self.cleaned_data.get('currency'),
         )
         return user
+
+
+class UserForm(forms.ModelForm):
+    """Form to update user profiles."""
+    class Meta:
+
+        """Form options."""
+        model = User
+        fields = ['first_name', 'last_name', 'currency', 'username']
+
+
+
+class TransactionForm(forms.ModelForm):
+    class Meta:
+        model = Transaction
+        fields = ['title', 'description', 'amount', 'date_paid', 'time_paid', 'category', 'receipt', 'transaction_type']
+        labels = {
+            'title': ('Title:'),
+            'description': ('Description'),
+            'amount': ('Amount:'),
+            'category': ('Category:'),
+            'receipt': ('Receipt:'),
+            'transaction_type': ('Transaction type:'),
+        }
+        widgets = {
+            'date_paid': forms.widgets.DateInput(
+                format=('%d/%m/%Y'), attrs={'type': 'date'}
+                ),
+            'time_paid': forms.widgets.TimeInput(
+                format=('%H/%M'), attrs={'type': 'time'}
+                ),
+        }
+
+    """Override clean method to check date and time"""
+    def clean(self):
+        super().clean()
+        date_paid = self.cleaned_data.get('date_paid')
+        if (date_paid == None):
+             self.add_error('date_paid','Please enter the date as DD-MM-YYYY.')
+             return
+
+        time_paid = self.cleaned_data.get('time_paid')
+        if (time_paid == None):
+             self.add_error('time_paid','Please enter the time as HH:MM.')
+             return
+
+        # if(date <= timezone.now().date()):
+        #     self.add_error('date','Date must be in the future.')
+        #     if (date == timezone.now().date() and time <= timezone.now().time()):
+        #         self.add_error('time','Time must be in the future.')
+    
+
+class CategoryDetailsForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['category_choices', 'spending_limit', 'budget', 'start_date', 'end_date']
+        labels = {
+            'category_choices': ('Category:'),
+            'spending_limit': ('Spending Limit:'),
+            'budget': ('Budget:'),
+            'start_date': ('Start Date:'),
+            'end_date': ('End Date:'),
+        }
+
+    def clean(self):
+        super().clean()
+
+class ChangePasswordForm(forms.Form):
+    username = forms.CharField(label='username', max_length=50)
+    his_password = forms.CharField(label='his_password', widget=forms.PasswordInput())
+    password = forms.CharField(label='password', widget=forms.PasswordInput())
+    password_confirmation = forms.CharField(label='password_confirmation', widget=forms.PasswordInput())
+
+ 
