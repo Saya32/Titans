@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect
 from .models import User, Transaction, Category
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm, LogInForm
+from .forms import SignUpForm, LogInForm, CategoryDetailsForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.conf import settings
@@ -175,4 +175,23 @@ def delete_record(request, id):
     else:
         messages.add_message(request, messages.ERROR, "Sorry, an error occurred deleting your record.")
         return redirect('feed')
+
+def add_category_details(request):
+    if request.method == 'POST':
+        form = CategoryDetailsForm(request.POST)
+        if form.is_valid():
+            Category.objects.create(
+                user=request.user,
+                spending_limit=form.cleaned_data.get('spending_limit'),
+                category_choices=form.cleaned_data.get('category_choices'),
+                budget=form.cleaned_data.get('budget'),
+                start_date=form.cleaned_data.get('start_date'),
+                end_date=form.cleaned_data.get ('end_date')
+            )
+        else:
+            return render(request, 'add_category_details.html', {'form': form})
+    else:
+        form = CategoryDetailsForm()
+        return render(request, 'add_category_details.html', {'form': form})
+
 
