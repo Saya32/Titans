@@ -102,10 +102,10 @@ def log_out(request):
     return redirect('home_page')
 
 
-
 def category(request):
    CATEGORY_CHOICES = Category.CATEGORY_CHOICES
    return render(request, 'category.html', {'CATEGORY_CHOICES':CATEGORY_CHOICES})
+
 
 def view_category(request, category_id):
     category = Category.objects.get(category_id=category_id)
