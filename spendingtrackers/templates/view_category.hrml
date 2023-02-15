@@ -7,10 +7,13 @@
         <div class="card cover-card offset-sm-1 offset-md-3 offset-lg-6">
 
           <p>
-
-              Under Construction
-            </a>
-          
+            <h5 class="card-title"><b>Name:</b>{{ category.category_choices}}</h5>
+            <h5 class="card-title"><b>Budget:</b>{{ category.budget}}</h5>
+            <h5 class="card-title"><b>Start Date:</b>{{ category.start_date}}</h5>
+            <h5 class="card-title"><b>End Date:</b>{{ category.end_date}}</h5>
+            <h5 class="card-title"><b>Spending Limit:</b>{{ category.spending_limit}}</h5>
+          </a>
+          <a href="{%url 'edit_category_details' category.id %}" class="btn btn-success">Edit</a> 
           </p>
         </div>
       </div>

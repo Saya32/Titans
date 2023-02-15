@@ -121,9 +121,9 @@ class TransactionForm(forms.ModelForm):
 class CategoryDetailsForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['category_choices', 'spending_limit', 'budget', 'start_date', 'end_date']
+        fields = ['spending_limit', 'budget', 'start_date', 'end_date']
         labels = {
-            'category_choices': ('Category:'),
+            
             'spending_limit': ('Spending Limit:'),
             'budget': ('Budget:'),
             'start_date': ('Start Date:'),
