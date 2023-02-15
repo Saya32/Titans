@@ -5,7 +5,7 @@ from .models import User, Transaction, Category
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.http import HttpResponse
-from .forms import SignUpForm, LogInForm, CategoryDetailsForm, ChangePasswordForm
+from .forms import SignUpForm, LogInForm, CategoryDetailsForm, ChangePasswordForm, UserForm, TransactionForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
@@ -15,11 +15,10 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import  UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import UserForm, TransactionForm
 from .helpers import get_user_transactions
 from django.contrib.auth.hashers import make_password, check_password
-from spendingtrackers.models import User
-from django import forms
+#from spendingtrackers.models import User
+#from django import forms
 
 
 # class SignUpForm(forms.Form):
@@ -105,41 +104,11 @@ class SignUpView(LoginProhibitedMixin, FormView):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
 
-class LoginForm(forms.Form):
-    username = forms.CharField(label='username', max_length=50)
-    password = forms.CharField(label='password', widget=forms.PasswordInput())
-
-
-def login(request):
-    if request.method == 'POST':
-        userform = LoginForm(request.POST)
-        if userform.is_valid():
-            username = userform.cleaned_data['username']
-            password = userform.cleaned_data['password']
-            user = User.objects.filter(username__exact=username).first()
-
-            if not user or not check_password(password, user.password):
-                messages.add_message(request, messages.ERROR, "Account or password error!")
-                return render(request, 'log_in.html')
-            else:
-                request.session['is_login'] = True
-                request.session['username'] = username
-
-                return render(request, 'feed.html')
-
-        else:
-            return render(request, 'log_in.html')
-    else:
-        return render(request, 'log_in.html')
-
-
 def home_page(request):
     return render(request, 'home_page.html')
 
 
 def feed(request):
-    if not request.session.get('is_login'):
-        return render(request, 'log_in.html')
     return render(request, 'feed.html')
 
 
@@ -150,10 +119,7 @@ def sign_success(request):
 
 
 def log_out(request):
-    if not request.session.get('is_login'):
-        return render(request, 'log_in.html')
-    del request.session['is_login']
-    del request.session['username']
+    logout(request)
     return redirect('home_page')
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):

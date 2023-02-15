@@ -15,41 +15,11 @@
 
             <section class="_3P7ejYsij9dpnS4OZiCJVK">
                 <div class="_2CKN4I1T1m1ACp1JPZ2CR9"  style="margin-top:0px;"><h1>Create account</h1>
-                    <form class="ui error form">
-                        <div class="field"><label>First name:</label><br><br>
-                            <div class="ui input"><input name="first_name" autocomplete="username" type="text"
-                                                         value="" style="width:331px">
-                            </div>
-                            <br>
-                        </div>
-                      <br>
-                        <div class="field"><label>Last name:</label><br><br>
-                            <div class="ui input"><input name="last_name" autocomplete="current-password"
-                                                         type="text"
-                                                         value="" style="width:331px"></div>
-                        </div>
-                                              <br>
-                      <div class="field"><label>Email:</label><br><br>
-                            <div class="ui input"><input name="username"
-                                                         type="email"
-                                                         value="" style="width:331px"></div>
-                        </div>
-                      <br>
-                      <div class="field"><label>Password:</label><br><br>
-                            <div class="ui input"><input name="password"
-                                                         type="password"
-                                                         value="" style="width:331px"></div>
-                        </div>
-                      <br>
-                      <div class="field"><label>Password confirmation:</label><br><br>
-                            <div class="ui input"><input name="password_confirmation"
-                                                         type="password"
-                                                         value="" style="width:331px"></div>
-                        </div>
-
-                        <div class="ui hidden divider"></div>
-                        <button type="submit" href="{% url 'feed' %}" class="ui large circular fluid primary button">Sign Up</button>
-                    </form>
+                    <form action="{% url 'sign_up' %}" method="post">
+                        {% csrf_token %}
+                        {% include 'partials/bootstrap_form.html' with form=form %}
+                        <input type="submit" value="Sign up" class="btn btn-primary">
+                      </form>
                     <div>
                         <div class="_1TIOxpSJZ9E3EmrUCPh1rq">
                             <div class="_1shxn-I3ZrsxJkRub33ZoZ">
