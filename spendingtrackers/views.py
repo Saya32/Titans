@@ -5,7 +5,7 @@ from .models import User, Transaction, Category
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.http import HttpResponse
-from .forms import SignUpForm, LogInForm, CategoryDetailsForm, ChangePasswordForm, UserForm, TransactionForm, CategoryForm
+from .forms import SignUpForm, LogInForm, CategoryDetailsForm, ChangePasswordForm, UserForm, TransactionForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
@@ -19,7 +19,6 @@ from .helpers import get_user_transactions
 from django.contrib.auth.hashers import make_password, check_password
 #from spendingtrackers.models import User
 #from django import forms
-from django.shortcuts import get_object_or_404
 
 
 # class SignUpForm(forms.Form):
@@ -246,53 +245,11 @@ def change_password(request):
     else:
         return render(request, 'change_password.html')
 
-# def category_list(request):
-#     categories = Category.objects.filter(user=request.user)
-#     return render(request, 'category_list.html', {'categories': categories})
-
-# def category_create(request):
-#     if request.method == 'POST':
-#         form = CategoryDetailsForm(request.POST)
-#         if form.is_valid():
-#             category = form.save(commit=False)
-#             category.user = request.user
-#             category.save()
-#             return redirect('category_list')
-#     else:
-#         form = CategoryDetailsForm()
-#     return render(request, 'category_create.html', {'form': form})
-
-# def category_update(request, pk):
-#     category = Category.objects.get(pk=pk, user=request.user)
-#     if request.method == 'POST':
-#         form = CategoryDetailsForm(request.POST, instance=category)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('category_list')
-#     else:
-#         form = CategoryDetailsForm(instance=category)
-#     return render(request, 'category_update.html', {'form': form})
-
-# def category_delete(request, pk):
-#     category = Category.objects.get(pk=pk, user=request.user)
-#     category.delete()
-#     return redirect('category_list')
-
-def add_category(request):
-    if request.method == 'POST':
-        form = CategoryForm(request.POST)
-        if form.is_valid():
-            category = form.save()
-            messages.success(request, 'Category created successfully.')
-            return redirect('add_transaction')
-    else:
-        form = CategoryForm()
-    return render(request, 'add_category.html', {'form': form})
+def category(request):
+   CATEGORY_CHOICES = Category.CATEGORY_CHOICES
+   return render(request, 'category.html', {'CATEGORY_CHOICES':CATEGORY_CHOICES})
 
 
-
-def category_details(request, pk):
-    category = get_object_or_404(Category, pk=pk)
-    transactions = Transaction.objects.filter(category=category)
-    context = {'category': category, 'transactions': transactions}
-    return render(request, 'category_details.html', context)
+def view_category(request, category_id):
+    category = Category.objects.get(category_id=category_id)
+    return render(request, 'view_category.html', {'category':category})

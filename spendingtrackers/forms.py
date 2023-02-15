@@ -112,17 +112,18 @@ class TransactionForm(forms.ModelForm):
              self.add_error('time_paid','Please enter the time as HH:MM.')
              return
 
-class CategoryForm(forms.ModelForm):
-    class Meta:
-        model = Category
-        fields = '__all__'
+        # if(date <= timezone.now().date()):
+        #     self.add_error('date','Date must be in the future.')
+        #     if (date == timezone.now().date() and time <= timezone.now().time()):
+        #         self.add_error('time','Time must be in the future.')
+    
 
 class CategoryDetailsForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['spending_limit', 'budget', 'start_date', 'end_date']
+        fields = ['category_choices', 'spending_limit', 'budget', 'start_date', 'end_date']
         labels = {
-            
+            'category_choices': ('Category:'),
             'spending_limit': ('Spending Limit:'),
             'budget': ('Budget:'),
             'start_date': ('Start Date:'),
