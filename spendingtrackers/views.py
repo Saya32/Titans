@@ -15,7 +15,7 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import  UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .helpers import get_user_transactions
+from .helpers import get_user_transactions, get_categories
 from django.contrib.auth.hashers import make_password, check_password
 #from spendingtrackers.models import User
 #from django import forms
@@ -200,25 +200,6 @@ def delete_record(request, id):
         messages.add_message(request, messages.ERROR, "Sorry, an error occurred deleting your record.")
         return redirect('feed')
 
-def add_category_details(request):
-    if request.method == 'POST':
-        form = CategoryDetailsForm(request.POST)
-        if form.is_valid():
-            Category.objects.create(
-                user=request.user,
-                spending_limit=form.cleaned_data.get('spending_limit'),
-                category_choices=form.cleaned_data.get('category_choices'),
-                budget=form.cleaned_data.get('budget'),
-                start_date=form.cleaned_data.get('start_date'),
-                end_date=form.cleaned_data.get ('end_date')
-            )
-            return redirect('category')
-        else:
-            return render(request, 'add_category_details.html', {'form': form})
-    else:
-        form = CategoryDetailsForm()
-        return render(request, 'add_category_details.html', {'form': form})
-
 
 def change_password(request):
     if request.method == 'POST':
@@ -246,11 +227,36 @@ def change_password(request):
     else:
         return render(request, 'change_password.html')
 
+def edit_category_details(request, id):
+    
+    try:
+        category = Category.objects.get(pk=id)
+    except:
+        messages.add_message(request, messages.ERROR, "Category could not be found!")
+        return redirect('feed')
+
+    if request.method == 'POST':
+        form = CategoryDetailsForm(instance = category, data = request.POST)
+        if (form.is_valid()):
+            messages.add_message(request, messages.SUCCESS, "Category updated!")
+            form.save()
+            return redirect('feed')
+        else:
+            return render(request, 'edit_category_details.html', {'form': form, 'category' : category})
+    else:
+        form = CategoryDetailsForm(instance = category)
+        return render(request, 'edit_category_details.html', {'form': form, 'category' : category})
+
 def category(request):
-   CATEGORY_CHOICES = Category.CATEGORY_CHOICES
-   return render(request, 'category.html', {'CATEGORY_CHOICES':CATEGORY_CHOICES})
+   categories = get_categories(request.user)
+   return render(request, 'category.html', {'categories':categories})
 
+def view_category(request, id):
+    try:
+        category = Category.objects.get(pk=id)
+    except:
+        messages.add_message(request, messages.ERROR, "Category could not be found!")
+        return redirect('feed')
 
-def view_category(request, category_id):
-    category = Category.objects.get(category_id=category_id)
+    #category = Category.objects.get(category_id=category_id)
     return render(request, 'view_category.html', {'category':category})
