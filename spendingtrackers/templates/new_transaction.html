@@ -3,7 +3,7 @@
 <div class="container">
   <div class="row">
     <h1>New Transaction</h1>
-    <form action="{% url 'new_transaction' %}"method="post">
+    <form action="{% url 'new_transaction' %}"method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {% include 'partials/bootstrap_form.html' with form=form %}
       <a href="{%url 'feed' %}" type="button" class="btn btn-secondary">Back</a>

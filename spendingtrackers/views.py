@@ -141,6 +141,9 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         """Return redirect URL after successful update."""
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
+def transaction_list(request):
+    transactions = Transaction.objects.all()
+    return render(request, 'transaction_list.html', {'transactions': transactions})
 
 def new_transaction(request):
     if request.method == 'POST':

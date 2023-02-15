@@ -78,7 +78,7 @@ class Transaction(models.Model):
     ('Other', 'Other'),
     ]
     category = models.CharField(max_length=50, blank=False, choices=CATEGORY_CHOICES)
-    receipt = models.ImageField(upload_to='images/', height_field = None, width_field = None, max_length= None, blank=True, null=True) #need to create receipts url pathway
+    receipt = models.ImageField(upload_to='receipt_images', blank = True)
     
     def __str__(self):
         return self.name
