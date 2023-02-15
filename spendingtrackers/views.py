@@ -212,6 +212,7 @@ def add_category_details(request):
                 start_date=form.cleaned_data.get('start_date'),
                 end_date=form.cleaned_data.get ('end_date')
             )
+            return redirect('category')
         else:
             return render(request, 'add_category_details.html', {'form': form})
     else:

@@ -40,6 +40,7 @@ class Category(models.Model):
     ('Insurance', 'Insurance'),
     ('Other', 'Other'),
     ]
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
     category_choices = models.CharField(max_length=50, blank=False, choices=CATEGORY_CHOICES)
     budget = models.DecimalField(max_digits=10, decimal_places=2)
     start_date = models.DateField(blank=False)
