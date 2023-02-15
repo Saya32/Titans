@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Transactions in {{ category.category_choices }} category</h2>
+  <ul>
+    {% for transaction in transactions %}
+      <li>{{ transaction.title }}: {{ transaction.amount }}</li>
+    {% empty %}
+      <li>No transactions found in this category.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

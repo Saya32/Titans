@@ -35,7 +35,7 @@ urlpatterns = [
     path('update_record/<int:id>', views.update_record, name='update_record'),
     path('delete_record/<int:id>', views.delete_record, name='delete_record'),
     path('change_password/', views.change_password, name='change_password'),
-      path('category',views.category, name='category'),
-    path('view_category/<int:id>', views.view_category, name='view_category'),
+    path('category',views.category, name = 'category'),
+    path('view_category/<int:category_id>/',views.view_category, name = 'view_category'),
 ]
 urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
