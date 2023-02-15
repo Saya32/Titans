@@ -29,10 +29,11 @@ urlpatterns = [
     path('log_out/', views.log_out, name='log_out'),
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
     path('new_transaction/',views.new_transaction, name ='new_transaction'),
-    path('add_category_details/', views.add_category_details, name='add_category_details'),
+    path('edit_category_details/<int:id>', views.edit_category_details, name='edit_category_details'),
     path('records/', views.records, name='records'),
     path('update_record/<int:id>', views.update_record, name='update_record'),
     path('delete_record/<int:id>', views.delete_record, name='delete_record'),
-
+    path('category',views.category, name='category'),
+    path('view_category/<int:id>', views.view_category, name='view_category'),
 ]
 urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

@@ -15,7 +15,7 @@ class CategoryDetailsFormTestCase(TestCase):
         self.form_input = {
             'spending_limit': '350',
             'category_choices': 'Groceries'
-            'budget': '350',
+            'budget' : '350',
             'start_date': '2022-10-10',
             'end_date': '2022-11-10'
         }

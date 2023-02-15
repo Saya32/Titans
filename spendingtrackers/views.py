@@ -14,7 +14,7 @@ from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import  UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import UserForm, TransactionForm
-from .helpers import get_user_transactions
+from .helpers import get_user_transactions, get_categories
 
 class LoginProhibitedMixin:
     """Mixin that redirects when a user is logged in."""
@@ -134,7 +134,8 @@ def new_transaction(request):
                 time_paid=form.cleaned_data.get('time_paid'),
                 category=form.cleaned_data.get('category'),
                 receipt=form.cleaned_data.get('receipt'),
-                transaction_type=form.cleaned_data.get('transaction_type')
+                transaction_type=form.cleaned_data.get('transaction_type'),
+                #category_fk = Category.objects.get(category_choices=category)
             )
             return redirect('feed')
         else:
@@ -176,22 +177,51 @@ def delete_record(request, id):
         messages.add_message(request, messages.ERROR, "Sorry, an error occurred deleting your record.")
         return redirect('feed')
 
-def add_category_details(request):
+def edit_category_details(request, id):
+    # if request.method == 'POST':
+    #     form = CategoryDetailsForm(request.POST)
+    #     if form.is_valid():
+    #         Category.objects.create(
+    #             user=request.user,
+    #             spending_limit=form.cleaned_data.get('spending_limit'),
+    #             category_choices=form.cleaned_data.get('category_choices'),
+    #             budget=form.cleaned_data.get('budget'),
+    #             start_date=form.cleaned_data.get('start_date'),
+    #             end_date=form.cleaned_data.get ('end_date')
+    #         )
+    #     else:
+    #         return render(request, 'edit_category_details.html', {'form': form})
+    # else:
+    #     form = CategoryDetailsForm()
+    #     return render(request, 'edit_category_details.html', {'form': form})
+    try:
+        category = Category.objects.get(pk=id)
+    except:
+        messages.add_message(request, messages.ERROR, "Category could not be found!")
+        return redirect('feed')
+
     if request.method == 'POST':
-        form = CategoryDetailsForm(request.POST)
-        if form.is_valid():
-            Category.objects.create(
-                user=request.user,
-                spending_limit=form.cleaned_data.get('spending_limit'),
-                category_choices=form.cleaned_data.get('category_choices'),
-                budget=form.cleaned_data.get('budget'),
-                start_date=form.cleaned_data.get('start_date'),
-                end_date=form.cleaned_data.get ('end_date')
-            )
+        form = CategoryDetailsForm(instance = category, data = request.POST)
+        if (form.is_valid()):
+            messages.add_message(request, messages.SUCCESS, "Category updated!")
+            form.save()
+            return redirect('feed')
         else:
-            return render(request, 'add_category_details.html', {'form': form})
+            return render(request, 'edit_category_details.html', {'form': form, 'category' : category})
     else:
-        form = CategoryDetailsForm()
-        return render(request, 'add_category_details.html', {'form': form})
+        form = CategoryDetailsForm(instance = category)
+        return render(request, 'edit_category_details.html', {'form': form, 'category' : category})
 
+def category(request):
+   categories = get_categories(request.user)
+   return render(request, 'category.html', {'categories':categories})
 
+def view_category(request, id):
+    try:
+        category = Category.objects.get(pk=id)
+    except:
+        messages.add_message(request, messages.ERROR, "Category could not be found!")
+        return redirect('feed')
+
+    #category = Category.objects.get(category_id=category_id)
+    return render(request, 'view_category.html', {'category':category})

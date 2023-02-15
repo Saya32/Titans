@@ -1,4 +1,4 @@
-from .models import User, Transaction
+from .models import User, Transaction, Category
 from django.conf import settings
 from django.shortcuts import redirect
 from django.utils import timezone
@@ -14,6 +14,9 @@ def get_all_transactions():
     transactions = Transaction.objects.filter()
     return transactions
 
+def get_categories(user):
+    categories = Category.objects.filter(user=user)
+    return categories
 
 class LogInTester:
     def _is_logged_in(self):
