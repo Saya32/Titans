@@ -158,7 +158,8 @@ def new_transaction(request):
                 time_paid=form.cleaned_data.get('time_paid'),
                 category=form.cleaned_data.get('category'),
                 receipt=form.cleaned_data.get('receipt'),
-                transaction_type=form.cleaned_data.get('transaction_type')
+                transaction_type=form.cleaned_data.get('transaction_type'),
+                category_fk= request.user.get_category(form.cleaned_data.get('category'))
             )
             return redirect('feed')
         else:
@@ -258,5 +259,7 @@ def view_category(request, id):
         messages.add_message(request, messages.ERROR, "Category could not be found!")
         return redirect('feed')
 
+    transactions = get_user_transactions(request.user)
     #category = Category.objects.get(category_id=category_id)
-    return render(request, 'view_category.html', {'category':category})
+    context = {'category': category, 'transactions': transactions}
+    return render(request, 'view_category.html', context)

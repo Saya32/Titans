@@ -39,8 +39,57 @@ class User(AbstractUser):
         Category.objects.create(user=self,category_choices='Other', budget=None, start_date=None, end_date=None, spending_limit=None)
     
     def get_category(self, category):
-        needed_category = Category.objects.filter(category_choices=category)
-        return needed_category
+        categories = Category.objects.all().order_by('id')
+        if(category=='Groceries'):
+            first_post = categories[0]
+            return first_post
+        elif(category=='Salary'):
+            second_post = categories[1]
+            return second_post
+        elif(category=='Bills'):
+            third_post = categories[2]
+            return third_post
+        elif(category=='Rent'):
+            fourth_post = categories[3]
+            return fourth_post
+        elif(category=='Gym'):
+            fifth_post = categories[4]
+            return fifth_post
+        elif(category=='Restaurant'):
+            sixth_post = categories[5]
+            return sixth_post
+        elif(category=='Vacation'):
+            seventh_post = categories[6]
+            return seventh_post
+        elif(category=='Travel'):
+            eight_post = categories[7]
+            return eight_post
+        elif(category=='Gift'):
+            nine_post = categories[8]
+            return nine_post
+        elif(category=='Savings'):
+            tenth_post = categories[9]
+            return tenth_post
+        elif(category=='Entertainment'):
+            eleventh_post = categories[10]
+            return eleventh_post
+        elif(category=='Internet'):
+            twelve_post = categories[11]
+            return twelve_post
+        elif(category=='Healthcare'):
+            thirtheenth_post = categories[12]
+            return thirtheenth_post
+        elif(category=='Lifestyle'):
+            fourteenth_post = categories[13]
+            return fourteenth_post
+        elif(category=='Insurance'):
+            fifteenth_post = categories[14]
+            return fifteenth_post
+        elif(category=='Other'):
+            sixteenth_post = categories[15]
+            return sixteenth_post
+
+                            
     
 
 class Category(models.Model):
@@ -64,6 +113,7 @@ class Transaction(models.Model):
     amount = models.DecimalField(blank=False, max_digits=10, decimal_places=2)
     date_paid = models.DateField(auto_now_add=False, blank=True, null=True)
     time_paid = models.TimeField(auto_now_add=False, blank=True, null=True)
+    category_fk= models.ForeignKey(Category, on_delete=models.CASCADE)
     CATEGORY_CHOICES = [
     ('Groceries', 'Groceries'),
     ('Salary', 'Salary'),
@@ -87,7 +137,7 @@ class Transaction(models.Model):
     receipt = models.ImageField(upload_to='receipt_images', blank = True)
     
     def __str__(self):
-        return self.name
+        return self.title
 
     def receipt_url(self):
         if self.receipt and hasattr(self.receipt, 'url'):
