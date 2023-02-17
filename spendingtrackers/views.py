@@ -17,16 +17,6 @@ from django.views.generic.edit import  UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .helpers import get_user_transactions, get_categories
 from django.contrib.auth.hashers import make_password, check_password
-#from spendingtrackers.models import User
-#from django import forms
-
-
-# class SignUpForm(forms.Form):
-#     username = forms.CharField(label='username', max_length=50)
-#     first_name = forms.CharField(label='first_name', max_length=50)
-#     last_name = forms.CharField(label='last_name', max_length=50)
-#     password = forms.CharField(label='password', widget=forms.PasswordInput())
-#     password_confirmation = forms.CharField(label='password_confirmation', widget=forms.PasswordInput())
 
 
 class LoginProhibitedMixin:
@@ -159,7 +149,7 @@ def new_transaction(request):
                 category=form.cleaned_data.get('category'),
                 receipt=form.cleaned_data.get('receipt'),
                 transaction_type=form.cleaned_data.get('transaction_type'),
-                category_fk= request.user.get_category(form.cleaned_data.get('category'))
+                #category_fk= request.user.get_category(form.cleaned_data.get('category'))
             )
             return redirect('feed')
         else:
