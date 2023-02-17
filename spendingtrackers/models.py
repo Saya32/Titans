@@ -20,31 +20,16 @@ class User(AbstractUser):
     ]
     currency = models.CharField(max_length=1, blank=False, choices=CURRENCY_CHOICES, default="£",null=True)
 
+
+
 class Category(models.Model):
-    CATEGORY_CHOICES = [
-    ('Groceries', 'Groceries'),
-    ('Salary', 'Salary'),
-    ('Bills', 'Bills'),
-    ('Rent', 'Rent'),
-    ('Gym', 'Gym'),
-    ('Restaurant', 'Restaurant'),
-    ('Vacation', 'Vacation'),
-    ('Travel', 'Travel'),
-    ('Gift', 'Gift'),
-    ('Investments', 'Investments'),
-    ('Savings', 'Savings'),
-    ('Entertainment', 'Entertainment'),
-    ('Internet', 'Internet'),
-    ('Healthcare', 'Healthcare'),
-    ('Lifestyle', 'Lifestyle'),
-    ('Insurance', 'Insurance'),
-    ('Other', 'Other'),
-    ]
-    category_choices = models.CharField(max_length=50, blank=False, choices=CATEGORY_CHOICES)
-    budget = models.DecimalField(max_digits=10, decimal_places=2)
-    start_date = models.DateField(blank=False)
-    end_date = models.DateField(blank=False)
-    spending_limit = models.DecimalField(max_digits=10, decimal_places=2)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category_choices = models.CharField(max_length=50, blank=False)
+    budget = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    start_date = models.DateField(blank=False, null=True)
+    end_date = models.DateField(blank=False, null=True)
+    spending_limit = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+
 
 class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -58,6 +43,7 @@ class Transaction(models.Model):
     amount = models.DecimalField(blank=False, max_digits=10, decimal_places=2)
     date_paid = models.DateField(auto_now_add=False, blank=True, null=True)
     time_paid = models.TimeField(auto_now_add=False, blank=True, null=True)
+
     CATEGORY_CHOICES = [
     ('Groceries', 'Groceries'),
     ('Salary', 'Salary'),
@@ -78,10 +64,10 @@ class Transaction(models.Model):
     ('Other', 'Other'),
     ]
     category = models.CharField(max_length=50, blank=False, choices=CATEGORY_CHOICES)
-    receipt = models.ImageField(upload_to='images/', height_field = None, width_field = None, max_length= None, blank=True, null=True) #need to create receipts url pathway
+    receipt = models.ImageField(upload_to='receipt_images', blank = True)
     
     def __str__(self):
-        return self.name
+        return self.title
 
     def receipt_url(self):
         if self.receipt and hasattr(self.receipt, 'url'):

@@ -15,9 +15,7 @@ from django.contrib.messages import constants as message_constants
 from django.http import Http404
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 
 # Quick-start development settings - unsuitable for production
@@ -29,7 +27,7 @@ SECRET_KEY = 'django-insecure-bhj^427=@)!yqku8@1uoqhka^j$1kfw)wu1xu2e08*8n!dao7j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -125,8 +123,8 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-MEDIA_ROOT = os.path.join(BASE_DIR, 'spendingtrackers/media')
-MEDIA_URL = "/images/"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 

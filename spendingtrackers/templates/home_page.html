@@ -1,19 +1,18 @@
 {% extends 'base.html' %}
 {% block body %}
-<div id="cover-image">
+{% load static %}
+
+<div id="cover-image" style="background-image:url({% static 'bg.jpg' %});background-size:100% 100%;">
   <div class="container vh-100">
     <div class="row h-100">
       <div class="col-12 my-auto">
         <div class="card cover-card offset-sm-1 offset-md-3 offset-lg-6">
-          <h1 class="cover-heading">PST</h1>
-          <p class="cover-text">Personal Spending Tracker</p>
-          <p>
-            <a href='{% url 'sign_up' %}' class="btn btn-lg btn-secondary">
+          <img src="{% static 'bg_1.png' %}" style="margin-top:30px">
+          <p style="margin-top:30px">
+            <a href='{% url 'sign_up' %}' class="btn btn-lg btn-secondary" style="background-color:#5cbc68;width:140px">
               Sign up
             </a>
-          </p>
-          <p>
-            <a href='{% url 'log_in' %}'  class="btn btn-lg btn-secondary">
+            <a style="margin-left:90px;background-color:#5cbc68;width:140px" href='{% url 'log_in' %}'  class="btn btn-lg btn-secondary">
               Log in
             </a>
           </p>

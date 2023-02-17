@@ -65,6 +65,7 @@ class SignUpForm(forms.ModelForm):
             password=self.cleaned_data.get('new_password'),
             currency=self.cleaned_data.get('currency'),
         )
+        #user.create_categories()
         return user
 
 
@@ -132,5 +133,11 @@ class CategoryDetailsForm(forms.ModelForm):
 
     def clean(self):
         super().clean()
+
+class ChangePasswordForm(forms.Form):
+    username = forms.CharField(label='username', max_length=50)
+    his_password = forms.CharField(label='his_password', widget=forms.PasswordInput())
+    password = forms.CharField(label='password', widget=forms.PasswordInput())
+    password_confirmation = forms.CharField(label='password_confirmation', widget=forms.PasswordInput())
 
  

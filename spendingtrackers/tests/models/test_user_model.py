@@ -106,3 +106,4 @@ class UserModelTestCase(TestCase):
         self._assert_user_is_invalid()
 
    
+   

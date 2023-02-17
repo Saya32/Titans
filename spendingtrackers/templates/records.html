@@ -22,7 +22,13 @@
         <td>{{ transaction.date_paid}}</td>
         <td>{{ transaction.time_paid  }}</td>
         <td>{{ transaction.amount }}</td>
-        <td><img src="{{ object.image_url|default_if_none:'#' }}" /></td>
+        <td>
+        {% if transaction.receipt %}
+                <img src="{{ transaction.receipt.url }}" alt="Receipt">
+            {% else %}
+                No receipt found.
+            {% endif %}
+        </td>
         <td>{{ transaction.transaction_type }}</td>
         <td>{{ transaction.category }}</td>
     

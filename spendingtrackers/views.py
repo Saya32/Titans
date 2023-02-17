@@ -1,11 +1,13 @@
 # Create your views here.
+import json
 from django.shortcuts import render, redirect
 from .models import User, Transaction, Category
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm, LogInForm, CategoryDetailsForm
+from django.conf import settings
+from django.http import HttpResponse
+from .forms import SignUpForm, LogInForm, CategoryDetailsForm, ChangePasswordForm, UserForm, TransactionForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
-from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.views import View
 from django.views.generic.edit import FormView
@@ -13,8 +15,9 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import  UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import UserForm, TransactionForm
-from .helpers import get_user_transactions
+from .helpers import get_user_transactions, get_categories
+from django.contrib.auth.hashers import make_password, check_password
+
 
 class LoginProhibitedMixin:
     """Mixin that redirects when a user is logged in."""
@@ -89,12 +92,20 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
     def get_success_url(self):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
-    
+
+
 def home_page(request):
     return render(request, 'home_page.html')
 
+
 def feed(request):
     return render(request, 'feed.html')
+
+
+def sign_success(request):
+    if not request.session.get('is_login'):
+        return render(request, 'log_in.html')
+    return render(request, 'sign_success.html')
 
 
 def log_out(request):
@@ -120,6 +131,9 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         """Return redirect URL after successful update."""
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
+def transaction_list(request):
+    transactions = Transaction.objects.all()
+    return render(request, 'transaction_list.html', {'transactions': transactions})
 
 def new_transaction(request):
     if request.method == 'POST':
@@ -134,7 +148,8 @@ def new_transaction(request):
                 time_paid=form.cleaned_data.get('time_paid'),
                 category=form.cleaned_data.get('category'),
                 receipt=form.cleaned_data.get('receipt'),
-                transaction_type=form.cleaned_data.get('transaction_type')
+                transaction_type=form.cleaned_data.get('transaction_type'),
+                #category_fk= request.user.get_category(form.cleaned_data.get('category'))
             )
             return redirect('feed')
         else:
@@ -176,22 +191,65 @@ def delete_record(request, id):
         messages.add_message(request, messages.ERROR, "Sorry, an error occurred deleting your record.")
         return redirect('feed')
 
-def add_category_details(request):
+
+def change_password(request):
     if request.method == 'POST':
-        form = CategoryDetailsForm(request.POST)
-        if form.is_valid():
-            Category.objects.create(
-                user=request.user,
-                spending_limit=form.cleaned_data.get('spending_limit'),
-                category_choices=form.cleaned_data.get('category_choices'),
-                budget=form.cleaned_data.get('budget'),
-                start_date=form.cleaned_data.get('start_date'),
-                end_date=form.cleaned_data.get ('end_date')
-            )
+        userform = ChangePasswordForm(request.POST)
+        if userform.is_valid():
+            username = userform.cleaned_data['username']
+            his_password = userform.cleaned_data['his_password']
+            password = userform.cleaned_data['password']
+            password_confirmation = userform.cleaned_data['password_confirmation']
+            if password != password_confirmation:
+                messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
+                return render(request, 'change_password.html')
+            user = User.objects.filter(username__exact=username).first()
+            if not user:
+                messages.add_message(request, messages.ERROR, "email not exists!")
+                return render(request, 'change_password.html')
+            if not check_password(his_password, user.password):
+                messages.add_message(request, messages.ERROR, "history password error!")
+                return render(request, 'change_password.html')
+            user.password = make_password(password)
+            user.save()
+            return render(request, 'log_in.html')
         else:
-            return render(request, 'add_category_details.html', {'form': form})
+            return render(request, 'change_password.html')
     else:
-        form = CategoryDetailsForm()
-        return render(request, 'add_category_details.html', {'form': form})
+        return render(request, 'change_password.html')
 
+def edit_category_details(request, id):
+    
+    try:
+        category = Category.objects.get(pk=id)
+    except:
+        messages.add_message(request, messages.ERROR, "Category could not be found!")
+        return redirect('feed')
 
+    if request.method == 'POST':
+        form = CategoryDetailsForm(instance = category, data = request.POST)
+        if (form.is_valid()):
+            messages.add_message(request, messages.SUCCESS, "Category updated!")
+            form.save()
+            return redirect('feed')
+        else:
+            return render(request, 'edit_category_details.html', {'form': form, 'category' : category})
+    else:
+        form = CategoryDetailsForm(instance = category)
+        return render(request, 'edit_category_details.html', {'form': form, 'category' : category})
+
+def category(request):
+   categories = get_categories(request.user)
+   return render(request, 'category.html', {'categories':categories})
+
+def view_category(request, id):
+    try:
+        category = Category.objects.get(pk=id)
+    except:
+        messages.add_message(request, messages.ERROR, "Category could not be found!")
+        return redirect('feed')
+
+    transactions = get_user_transactions(request.user)
+    #category = Category.objects.get(category_id=category_id)
+    context = {'category': category, 'transactions': transactions}
+    return render(request, 'view_category.html', context)
