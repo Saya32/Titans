@@ -89,7 +89,7 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
     def get_success_url(self):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
-    
+
 def home_page(request):
     return render(request, 'home_page.html')
 
@@ -176,3 +176,12 @@ def delete_record(request, id):
         messages.add_message(request, messages.ERROR, "Sorry, an error occurred deleting your record.")
         return redirect('feed')
 
+def show_results(request):
+    if request.method == 'POST':
+        from_date = request.POST.get('from_date')
+        to_date = request.POST.get('to_date')
+        search_result = Transaction.objects.raw('SELECT id,transaction_type,title,description,amount,date_paid,time_paid,category,receipt,user_id FROM spendingtrackers_transaction WHERE date_paid between "'+from_date+'" and "'+to_date+'"')
+        return render(request, 'records.html', {"data": search_results})
+    else:
+        display_data = Transaction.objects.all()
+        return render(request, 'records.html', {"data": display_data})

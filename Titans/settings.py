@@ -146,4 +146,3 @@ REDIRECT_URL_WHEN_LOGGED_IN = 'feed'
 #     message_constants.DEBUG: 'dark',
 #     message_constants.ERROR: 'danger',
 # }
-

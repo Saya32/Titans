@@ -2,6 +2,12 @@
 {% block content %}
 <div class="container">
   <h1>Records</h1>
+  <hr/>
+  <form method='POST'>
+    {% csrf_token %}
+  From: <input type="date" name="from_date"/>
+  To: <input type="date" name="to_date"/>
+  <input type="submit" value="Search"/>
   <div class="card-body table-responsive p-0">
     <table class="table table-hover text-nowrap">
     <thead>
@@ -18,23 +24,24 @@
     <tbody>
         {% for transaction in transactions %}
         <tr>
-        <td>{{ transaction.id }}</td> 
+        <td>{{ transaction.id }}</td>
         <td>{{ transaction.date_paid}}</td>
         <td>{{ transaction.time_paid  }}</td>
         <td>{{ transaction.amount }}</td>
         <td><img src="{{ object.image_url|default_if_none:'#' }}" /></td>
         <td>{{ transaction.transaction_type }}</td>
         <td>{{ transaction.category }}</td>
-    
+
         <td>
-            <a href="{%url 'update_record' transaction.id %}" class="btn btn-success">Edit</a> 
+            <a href="{%url 'update_record' transaction.id %}" class="btn btn-success">Edit</a>
             <a href="{%url 'delete_record' transaction.id %}" class="btn btn-danger">Delete</a>
         </td>
         </tr>
         {% endfor %}
-        
+
     </tbody>
     </table>
+    </form>
     <a class="btn btn-primary" href="{% url 'new_transaction' %}" role="button"> Add Transaction</a> <br/>
 </div>
 </div>
