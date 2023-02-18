@@ -253,3 +253,6 @@ def view_category(request, id):
     #category = Category.objects.get(category_id=category_id)
     context = {'category': category, 'transactions': transactions}
     return render(request, 'view_category.html', context)
+
+def dashboard(request):
+    return render(request, 'dashboard.html')
