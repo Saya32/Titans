@@ -65,7 +65,7 @@ class SignUpForm(forms.ModelForm):
             password=self.cleaned_data.get('new_password'),
             currency=self.cleaned_data.get('currency'),
         )
-        #user.create_categories()
+        user.create_categories()
         return user
 
 
