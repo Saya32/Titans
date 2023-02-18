@@ -17,6 +17,8 @@ from django.views.generic.edit import  UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .helpers import get_user_transactions, get_categories
 from django.contrib.auth.hashers import make_password, check_password
+from django.db.models import Q
+from datetime import datetime
 
 
 class LoginProhibitedMixin:
@@ -253,3 +255,26 @@ def view_category(request, id):
     #category = Category.objects.get(category_id=category_id)
     context = {'category': category, 'transactions': transactions}
     return render(request, 'view_category.html', context)
+
+# def show_results(request):
+#     if request.method == 'POST':
+#         from_date = request.POST.get('from_date')
+#         to_date = request.POST.get('to_date')
+#         search_result = Transaction.objects.raw('SELECT id,transaction_type,title,description,amount,date_paid,time_paid,category,receipt,user_id FROM spendingtrackers_transaction WHERE date_paid between "'+from_date+'" and "'+to_date+'"')
+#         return render(request, 'records.html', {"data": search_result})
+#     else:
+#         display_data = Transaction.objects.all()
+#         return render(request, 'records.html', {"data": display_data})
+
+def show_results(request):
+    if request.method == 'POST':
+        from_date = request.POST.get('from_date')
+        to_date = request.POST.get('to_date')
+        search_result = Transaction.objects.filter(
+            Q(date_paid__gte=from_date) & Q(date_paid__lte=to_date),
+            user=request.user
+        )
+        return render(request, 'records.html', {"transactions": search_result})
+    else:
+        display_data = get_user_transactions(request.user)
+        return render(request, 'records.html', {"transactions": display_data})
