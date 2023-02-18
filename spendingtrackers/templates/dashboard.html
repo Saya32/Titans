@@ -1,0 +1,27 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+    <div class="row" style="width:90%">
+        <div class="col-sm-4 text-center my-3">
+            <div class="card card-block" style="height : 300px">
+                <div class="card-body align-items-center d-flex justify-content-center">              
+                <h5 class="card-title">Balance Trend</h5>
+                <a href="" class="stretched-link"></a> 
+                </div>
+            </div>
+        </div>
+    {% for category in categories %}
+        <div class="col-sm-4 text-center my-3">
+            <div class="card card-block" style="height : 300px">
+                <div class="card-body align-items-center d-flex justify-content-center">              
+                <h5 class="card-title">{{ category.category_choices}}</h5>
+                <a href="{% url 'view_category' category.id %}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+    </div>
+</div>     
+{% endblock %}
