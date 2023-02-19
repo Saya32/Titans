@@ -42,7 +42,6 @@ class RecordsViewTestCase(TestCase):
         self.assertTemplateUsed(response, 'records.html')
         self.assertIn(transaction1, response.context['transactions'])
         self.assertNotIn(transaction2, response.context['transactions'])
-    
 
 
     # def test_get_pending_transaction_redirects_when_not_logged_in(self): //WHEN LOGIN REQUIRED IS ADDED WE CAN CHANGE THIS
