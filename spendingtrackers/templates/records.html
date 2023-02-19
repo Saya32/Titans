@@ -2,6 +2,13 @@
 {% block content %}
 <div class="container">
   <h1>Records</h1>
+  <hr/>
+  <form method="POST">
+    {% csrf_token %}
+    From: <input type="date" name="from_date"/>
+    To: <input type="date" name="to_date"/>
+    <input type="submit" value="Search"/>
+  </form>
   <div class="card-body table-responsive p-0">
     <table class="table table-hover text-nowrap">
     <thead>
