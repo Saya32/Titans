@@ -65,7 +65,7 @@ class SignUpForm(forms.ModelForm):
             password=self.cleaned_data.get('new_password'),
             currency=self.cleaned_data.get('currency'),
         )
-        user.create_categories()
+        #user.create_categories()
         return user
 
 
@@ -122,10 +122,9 @@ class TransactionForm(forms.ModelForm):
 class CategoryDetailsForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['category_choices', 'spending_limit', 'budget', 'start_date', 'end_date']
+        fields = ['category_choices', 'budget', 'start_date', 'end_date']
         labels = {
             'category_choices': ('Category:'),
-            'spending_limit': ('Spending Limit:'),
             'budget': ('Budget:'),
             'start_date': ('Start Date:'),
             'end_date': ('End Date:'),

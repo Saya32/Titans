@@ -253,3 +253,21 @@ def view_category(request, id):
    
     context = {'category': category, 'transactions': transactions}
     return render(request, 'view_category.html', context)
+
+def add_category_details(request):
+    if request.method == 'POST':
+        form = CategoryDetailsForm(request.POST)
+        if form.is_valid():
+            Category.objects.create(
+                user=request.user,
+                category_choices=form.cleaned_data.get('category_choices'),
+                budget=form.cleaned_data.get('budget'),
+                start_date=form.cleaned_data.get('start_date'),
+                end_date=form.cleaned_data.get ('end_date')
+            )
+            return redirect('feed')
+        else:
+            return render(request, 'add_category_details.html', {'form': form})
+    else:
+        form = CategoryDetailsForm()
+        return render(request, 'add_category_details.html', {'form': form})
