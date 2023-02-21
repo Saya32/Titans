@@ -239,7 +239,7 @@ def edit_category_details(request, id):
         return render(request, 'edit_category_details.html', {'form': form, 'category' : category})
 
 def category(request):
-   categories = get_categories(request.user)
+   categories = get_categories(request.user.id)
    return render(request, 'category.html', {'categories':categories})
 
 def view_category(request, id):
