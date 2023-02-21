@@ -20,84 +20,13 @@ class User(AbstractUser):
     ]
     currency = models.CharField(max_length=1, blank=False, choices=CURRENCY_CHOICES, default="£",null=True)
 
-    # def create_categories(self):
-    #     Category.objects.create(user=self,category_choices='Groceries', budget=None, start_date=None, end_date=None, spending_limit=None)
-    #     Category.objects.create(user=self,category_choices='Salary', budget=None, start_date=None, end_date=None, spending_limit=None)
-    #     Category.objects.create(user=self,category_choices='Bills', budget=None, start_date=None, end_date=None, spending_limit=None)
-    #     Category.objects.create(user=self,category_choices='Rent', budget=None, start_date=None, end_date=None, spending_limit=None)
-    #     Category.objects.create(user=self,category_choices='Gym', budget=None, start_date=None, end_date=None, spending_limit=None)
-    #     Category.objects.create(user=self,category_choices='Restaurant', budget=None, start_date=None, end_date=None, spending_limit=None)
-    #     Category.objects.create(user=self,category_choices='Vacation', budget=None, start_date=None, end_date=None, spending_limit=None)
-    #     Category.objects.create(user=self,category_choices='Travel', budget=None, start_date=None, end_date=None, spending_limit=None)
-    #     Category.objects.create(user=self,category_choices='Gift', budget=None, start_date=None, end_date=None, spending_limit=None)
-    #     Category.objects.create(user=self,category_choices='Savings', budget=None, start_date=None, end_date=None, spending_limit=None)
-    #     Category.objects.create(user=self,category_choices='Entertainment', budget=None, start_date=None, end_date=None, spending_limit=None)
-    #     Category.objects.create(user=self,category_choices='Internet', budget=None, start_date=None, end_date=None, spending_limit=None)
-    #     Category.objects.create(user=self,category_choices='Healthcare', budget=None, start_date=None, end_date=None, spending_limit=None)
-    #     Category.objects.create(user=self,category_choices='Lifestyle', budget=None, start_date=None, end_date=None, spending_limit=None)
-    #     Category.objects.create(user=self,category_choices='Insurance', budget=None, start_date=None, end_date=None, spending_limit=None)
-    #     Category.objects.create(user=self,category_choices='Other', budget=None, start_date=None, end_date=None, spending_limit=None)
-    
-    # def get_category(self, category):
-    #     categories = Category.objects.all().order_by('id')
-    #     if(category=='Groceries'):
-    #         first_post = categories[0]
-    #         return first_post
-    #     elif(category=='Salary'):
-    #         second_post = categories[1]
-    #         return second_post
-    #     elif(category=='Bills'):
-    #         third_post = categories[2]
-    #         return third_post
-    #     elif(category=='Rent'):
-    #         fourth_post = categories[3]
-    #         return fourth_post
-    #     elif(category=='Gym'):
-    #         fifth_post = categories[4]
-    #         return fifth_post
-    #     elif(category=='Restaurant'):
-    #         sixth_post = categories[5]
-    #         return sixth_post
-    #     elif(category=='Vacation'):
-    #         seventh_post = categories[6]
-    #         return seventh_post
-    #     elif(category=='Travel'):
-    #         eight_post = categories[7]
-    #         return eight_post
-    #     elif(category=='Gift'):
-    #         nine_post = categories[8]
-    #         return nine_post
-    #     elif(category=='Savings'):
-    #         tenth_post = categories[9]
-    #         return tenth_post
-    #     elif(category=='Entertainment'):
-    #         eleventh_post = categories[10]
-    #         return eleventh_post
-    #     elif(category=='Internet'):
-    #         twelve_post = categories[11]
-    #         return twelve_post
-    #     elif(category=='Healthcare'):
-    #         thirtheenth_post = categories[12]
-    #         return thirtheenth_post
-    #     elif(category=='Lifestyle'):
-    #         fourteenth_post = categories[13]
-    #         return fourteenth_post
-    #     elif(category=='Insurance'):
-    #         fifteenth_post = categories[14]
-    #         return fifteenth_post
-    #     elif(category=='Other'):
-    #         sixteenth_post = categories[15]
-    #         return sixteenth_post
-
-
 
 class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    category_choices = models.CharField(max_length=50, blank=False)
+    name = models.CharField(max_length=50)
     budget = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     start_date = models.DateField(blank=False, null=True)
     end_date = models.DateField(blank=False, null=True)
-
 
 
 class Transaction(models.Model):
@@ -112,31 +41,11 @@ class Transaction(models.Model):
     amount = models.DecimalField(blank=False, max_digits=10, decimal_places=2)
     date_paid = models.DateField(auto_now_add=False, blank=True, null=True)
     time_paid = models.TimeField(auto_now_add=False, blank=True, null=True)
-    CATEGORY_CHOICES = [
-    ('Groceries', 'Groceries'),
-    ('Salary', 'Salary'),
-    ('Bills', 'Bills'),
-    ('Rent', 'Rent'),
-    ('Gym', 'Gym'),
-    ('Restaurant', 'Restaurant'),
-    ('Vacation', 'Vacation'),
-    ('Travel', 'Travel'),
-    ('Gift', 'Gift'),
-    ('Investments', 'Investments'),
-    ('Savings', 'Savings'),
-    ('Entertainment', 'Entertainment'),
-    ('Internet', 'Internet'),
-    ('Healthcare', 'Healthcare'),
-    ('Lifestyle', 'Lifestyle'),
-    ('Insurance', 'Insurance'),
-    ('Other', 'Other'),
-    ]
-    category_fk = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null =True)
-    category = models.CharField(max_length=50, blank=False, choices=CATEGORY_CHOICES)
-    receipt = models.ImageField(upload_to='images/', height_field = None, width_field = None, max_length= None, blank=True, null=True) #need to create receipts url pathway
+    receipt = models.ImageField(upload_to='receipt_images', blank = True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.name
+        return self.title
 
     def receipt_url(self):
         if self.receipt and hasattr(self.receipt, 'url'):
