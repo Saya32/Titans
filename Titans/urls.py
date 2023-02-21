@@ -21,7 +21,7 @@ urlpatterns = [
     path('category',views.category, name='category'),
     path('view_category/<int:id>', views.view_category, name='view_category'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('records/csv/', views.records_csv, name='records_csv'),
-    path('balance/graph/', views.chart_balance_graph, name='chart_balance_graph'),
+    #path('records/csv/', views.records_csv, name='records_csv'),
+    path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
 ]
 urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

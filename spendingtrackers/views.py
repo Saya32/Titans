@@ -26,6 +26,12 @@ from django.shortcuts import render
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 
 
 class LoginProhibitedMixin:
@@ -172,22 +178,22 @@ def records(request):
     transactions = get_user_transactions(request.user)
     return render(request, 'records.html', {'transactions' : transactions})
 
-def records_csv(request):
-    response = HttpResponse(content_type='text/csv', headers={'Content-Disposition': 'attachment; filename="records.csv"'},)
+#def records_csv(request):
+ #   response = HttpResponse(content_type='text/csv', headers={'Content-Disposition': 'attachment; filename="records.csv"'},)
     #create writer
-    writer = csv.writer(response)
+  #  writer = csv.writer(response)
     #designate model
-    records = Transaction.objects.all()
+   # records = Transaction.objects.all()
     #add column headings
-    writer.writerow(['Amount'])
+    #writer.writerow(['Amount'])
     #loop through and output
-    for record in records:
-        writer.writerow([Transaction.amount])
+    #for record in records:
+     #   writer.writerow([Transaction.amount])
 
-    return response
+    #return response
 
 #@login_required
-def chart_balance_graph(request):
+#def chart_balance_graph(request):
     user = request.user
     transactions = Transaction.objects.filter(user=user).order_by('date_paid', 'time_paid')
     if transactions:
@@ -212,6 +218,38 @@ def chart_balance_graph(request):
     else:
         return render(request, 'dashboard.html')
 
+class DashboardView(TemplateView):
+    template_name = 'dashboard.html'
+
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        # Get the user's transactions
+        transactions = Transaction.objects.filter(user=request.user)
+
+        # Convert the transactions to a Pandas DataFrame
+        df = pd.DataFrame(list(transactions.values()))
+
+        # Calculate the balance for each date
+        balance = df.groupby('date_paid')['amount'].sum().cumsum()
+
+        # Create the line graph
+        fig, ax = plt.subplots()
+        ax.plot(balance.index, balance.values)
+        ax.set_title('Balance Trends')
+        ax.set_xlabel('Date')
+        ax.set_ylabel('Balance')
+        ax.grid()
+
+        # Convert the graph to a PNG image
+        canvas = FigureCanvasAgg(fig)
+        response = HttpResponse(content_type='image/png')
+        canvas.print_png(response)
+
+        # Return the image
+        return response
 
 
 def update_record(request, id):
