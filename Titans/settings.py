@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'spendingtrackers',
     'widget_tweaks',
+    'matplotlib',
 ]
 
 MIDDLEWARE = [
