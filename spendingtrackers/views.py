@@ -1,6 +1,6 @@
 # Create your views here.
 import json
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import User, Transaction, Category
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
@@ -139,6 +139,9 @@ def new_transaction(request):
     if request.method == 'POST':
         form = TransactionForm(request.POST, request.FILES)
         if form.is_valid():
+            category_name=form.cleaned_data['category']
+            category_object = get_object_or_404(Category, name=category_name)
+            
             Transaction.objects.create(
                 user=request.user,
                 title=form.cleaned_data.get('title'),
@@ -149,7 +152,7 @@ def new_transaction(request):
                 category=form.cleaned_data.get('category'),
                 receipt=form.cleaned_data.get('receipt'),
                 transaction_type=form.cleaned_data.get('transaction_type'),
-                category_fk= request.user.get_category(form.cleaned_data.get('category'))
+                category_fk= category_object
             )
             return redirect('feed')
         else:
