@@ -263,7 +263,7 @@ def add_category_details(request):
         if form.is_valid():
             Category.objects.create(
                 user=request.user,
-                category_choices=form.cleaned_data.get('category_choices'),
+                name=form.cleaned_data.get('name'),
                 budget=form.cleaned_data.get('budget'),
                 start_date=form.cleaned_data.get('start_date'),
                 end_date=form.cleaned_data.get ('end_date')
