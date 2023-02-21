@@ -30,6 +30,7 @@ class User(AbstractUser):
         Category.objects.create(user=self,category_choices='Vacation', budget=None, start_date=None, end_date=None, spending_limit=None)
         Category.objects.create(user=self,category_choices='Travel', budget=None, start_date=None, end_date=None, spending_limit=None)
         Category.objects.create(user=self,category_choices='Gift', budget=None, start_date=None, end_date=None, spending_limit=None)
+        Category.objects.create(user=self,category_choices='Investments', budget=None, start_date=None, end_date=None, spending_limit=None)
         Category.objects.create(user=self,category_choices='Savings', budget=None, start_date=None, end_date=None, spending_limit=None)
         Category.objects.create(user=self,category_choices='Entertainment', budget=None, start_date=None, end_date=None, spending_limit=None)
         Category.objects.create(user=self,category_choices='Internet', budget=None, start_date=None, end_date=None, spending_limit=None)
@@ -67,26 +68,29 @@ class User(AbstractUser):
         elif(category=='Gift'):
             nine_post = categories[8]
             return nine_post
+        elif(category=='Investments'):
+            nine_post = categories[9]
+            return nine_post
         elif(category=='Savings'):
-            tenth_post = categories[9]
+            tenth_post = categories[10]
             return tenth_post
         elif(category=='Entertainment'):
-            eleventh_post = categories[10]
+            eleventh_post = categories[11]
             return eleventh_post
         elif(category=='Internet'):
-            twelve_post = categories[11]
+            twelve_post = categories[12]
             return twelve_post
         elif(category=='Healthcare'):
-            thirtheenth_post = categories[12]
+            thirtheenth_post = categories[13]
             return thirtheenth_post
         elif(category=='Lifestyle'):
-            fourteenth_post = categories[13]
+            fourteenth_post = categories[14]
             return fourteenth_post
         elif(category=='Insurance'):
-            fifteenth_post = categories[14]
+            fifteenth_post = categories[15]
             return fifteenth_post
         elif(category=='Other'):
-            sixteenth_post = categories[15]
+            sixteenth_post = categories[16]
             return sixteenth_post
 
 
@@ -112,7 +116,7 @@ class Transaction(models.Model):
     amount = models.DecimalField(blank=False, max_digits=10, decimal_places=2)
     date_paid = models.DateField(auto_now_add=False, blank=True, null=True)
     time_paid = models.TimeField(auto_now_add=False, blank=True, null=True)
-    category_fk= models.ForeignKey(Category, on_delete=models.CASCADE)
+    #category_fk= models.ForeignKey(Category, on_delete=models.CASCADE)
     CATEGORY_CHOICES = [
     ('Groceries', 'Groceries'),
     ('Salary', 'Salary'),

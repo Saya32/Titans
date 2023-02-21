@@ -151,7 +151,7 @@ def new_transaction(request):
                 category=form.cleaned_data.get('category'),
                 receipt=form.cleaned_data.get('receipt'),
                 transaction_type=form.cleaned_data.get('transaction_type'),
-                category_fk= request.user.get_category(form.cleaned_data.get('category'))
+               # category_fk= request.user.get_category(form.cleaned_data.get('category'))
             )
             return redirect('feed')
         else:
