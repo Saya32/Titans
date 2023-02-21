@@ -17,6 +17,15 @@ from django.views.generic.edit import  UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .helpers import get_user_transactions, get_categories
 from django.contrib.auth.hashers import make_password, check_password
+from django.http import HttpResponse
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+from matplotlib.dates import DateFormatter
+import csv
+from django.shortcuts import render
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
 
 
 class LoginProhibitedMixin:
@@ -162,6 +171,48 @@ def new_transaction(request):
 def records(request):
     transactions = get_user_transactions(request.user)
     return render(request, 'records.html', {'transactions' : transactions})
+
+def records_csv(request):
+    response = HttpResponse(content_type='text/csv', headers={'Content-Disposition': 'attachment; filename="records.csv"'},)
+    #create writer
+    writer = csv.writer(response)
+    #designate model
+    records = Transaction.objects.all()
+    #add column headings
+    writer.writerow(['Amount'])
+    #loop through and output
+    for record in records:
+        writer.writerow([Transaction.amount])
+
+    return response
+
+#@login_required
+def chart_balance_graph(request):
+    user = request.user
+    transactions = Transaction.objects.filter(user=user).order_by('date_paid', 'time_paid')
+    if transactions:
+        dates = []
+        balance = []
+        total_balance = 0
+        for transaction in transactions:
+            total_balance += transaction.amount
+            dates.append(transaction.date_paid)
+            balance.append(total_balance)
+        fig, ax = plt.subplots()
+        ax.plot(dates, balance)
+        ax.set(xlabel='Date', ylabel='Balance', title='Balance Trends')
+        ax.grid()
+        # Convert the figure to a PNG string buffer
+        buffer = BytesIO()
+        fig.savefig(buffer, format='png')
+        buffer.seek(0)
+        # Encode the PNG string buffer to base64 and include in the HTML response
+        graph = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        return render(request, 'dashboard.html', {'graph': graph})
+    else:
+        return render(request, 'dashboard.html')
+
+
 
 def update_record(request, id):
     try:
