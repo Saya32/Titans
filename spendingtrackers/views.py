@@ -17,6 +17,8 @@ from django.views.generic.edit import  UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .helpers import get_user_transactions, get_categories
 from django.contrib.auth.hashers import make_password, check_password
+from datetime import datetime
+
 
 
 class LoginProhibitedMixin:
@@ -140,7 +142,7 @@ def new_transaction(request):
         form = TransactionForm(request.POST, request.FILES)
         if form.is_valid():
             category_name=form.cleaned_data['category']
-            category_object = get_object_or_404(Category, name=category_name)
+            category_object = get_object_or_404(Category, user = request.user, name=category_name)
             
             Transaction.objects.create(
                 user=request.user,
@@ -164,7 +166,14 @@ def new_transaction(request):
 
 def records(request):
     transactions = get_user_transactions(request.user)
-    return render(request, 'records.html', {'transactions' : transactions})
+    if request.method == 'POST':
+        from_date = request.POST.get('from_date')
+        to_date = request.POST.get('to_date')
+        if from_date and to_date:
+            from_date_obj = datetime.strptime(from_date, '%Y-%m-%d').date()
+            to_date_obj = datetime.strptime(to_date, '%Y-%m-%d').date()
+            transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
+    return render(request, 'records.html', {'transactions': transactions})
 
 def update_record(request, id):
     try:
@@ -220,6 +229,8 @@ def change_password(request):
             return render(request, 'change_password.html')
     else:
         return render(request, 'change_password.html')
+
+
 
 def edit_category_details(request, id):
     
