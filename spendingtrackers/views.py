@@ -234,17 +234,17 @@ def change_password(request):
 
 def edit_category_details(request, id):
     try:
-        category = Category.objects.get(pk=id)
+        category = Category.objects.get(pk=id, user=request.user)
     except:
         messages.add_message(request, messages.ERROR, "Category could not be found!")
-        return redirect('feed')
+        return redirect('category')
 
     if request.method == 'POST':
         form = CategoryDetailsForm(instance = category, data = request.POST)
         if (form.is_valid()):
             messages.add_message(request, messages.SUCCESS, "Category updated!")
             form.save()
-            return redirect('feed')
+            return redirect('category')
         else:
             return render(request, 'edit_category_details.html', {'form': form, 'category' : category})
     else:
@@ -263,6 +263,8 @@ def view_category(request, id):
         return redirect('feed')
 
     transactions = get_user_transactions(request.user)
+    expense = category.get_expenses()
+    income = category.get_income()
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
         to_date = request.POST.get('to_date')
@@ -270,23 +272,23 @@ def view_category(request, id):
             from_date_obj = datetime.strptime(from_date, '%Y-%m-%d').date()
             to_date_obj = datetime.strptime(to_date, '%Y-%m-%d').date()
             transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
-    context = {'category': category, 'transactions': transactions}
+            expense = category.get_expenses(from_date=from_date_obj, to_date=to_date_obj)
+            income = category.get_income(from_date=from_date_obj, to_date=to_date_obj)
+    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income}
     return render(request, 'view_category.html', context)
 
 def add_category_details(request):
     if request.method == 'POST':
         form = CategoryDetailsForm(request.POST)
         if form.is_valid():
-            Category.objects.create(
-                user=request.user,
-                name=form.cleaned_data.get('name'),
-                budget=form.cleaned_data.get('budget'),
-                start_date=form.cleaned_data.get('start_date'),
-                end_date=form.cleaned_data.get ('end_date')
-            )
-            return redirect('feed')
+            category = form.save(commit=False)
+            category.user = request.user
+            category.save()
+            messages.success(request, "Category added.")
+            return redirect('category')
         else:
-            return render(request, 'add_category_details.html', {'form': form})
+            messages.error(request, "Invalid form data.")
     else:
         form = CategoryDetailsForm()
-        return render(request, 'add_category_details.html', {'form': form})
+
+    return render(request, 'add_category_details.html', {'form': form})

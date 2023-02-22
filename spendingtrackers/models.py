@@ -33,13 +33,13 @@ class Category(models.Model):
         transactions = self.transaction_set.all()
         if from_date and to_date:
             transactions = transactions.filter(date_paid__range=[from_date, to_date])
-        return sum(transaction.amount for transaction in transactions if transaction.amount < 0)
+        return sum(transaction.amount for transaction in transactions if transaction.transaction_type == 'Expense')
 
     def get_income(self, from_date=None, to_date=None):
         transactions = self.transaction_set.all()
         if from_date and to_date:
             transactions = transactions.filter(date_paid__range=[from_date, to_date])
-        return sum(transaction.amount for transaction in transactions if transaction.amount > 0)
+        return sum(transaction.amount for transaction in transactions if transaction.transaction_type =='Income')
 
     def get_balance(self, from_date=None, to_date=None):
         return self.get_spending_limit(from_date, to_date) - self.get_expenses(from_date, to_date)
