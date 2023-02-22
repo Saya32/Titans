@@ -29,6 +29,14 @@ class Category(models.Model):
     start_date = models.DateField(blank=False, null=True)
     end_date = models.DateField(blank=False, null=True)
 
+    def get_total_speding(self):
+        transactions = Transaction.objects.filter(category_fk=self)
+        spending = 0
+        for transaction in transactions:
+            spending = spending + transaction.amount
+        return spending
+    
+
 
 
 class Transaction(models.Model):
@@ -53,3 +61,5 @@ class Transaction(models.Model):
     def receipt_url(self):
         if self.receipt and hasattr(self.receipt, 'url'):
             return self.receipt.url
+    
+
