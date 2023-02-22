@@ -27,6 +27,12 @@
         <p>{{balance}}</p>
       </div>
     </div>
+  
+    {% if warning_message %}
+    <div class="alert alert-warning" role="alert">
+      {{ warning_message }}
+    </div>
+  {% endif %}
 
   </form>
           <table class="table table-hover text-nowrap">

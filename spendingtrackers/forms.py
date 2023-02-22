@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Transaction, Category, CategoryLimit
+from .models import User, Transaction, Category
 from django.utils import timezone
 from django.core.validators import RegexValidator
 from django.contrib.auth import authenticate
@@ -132,18 +132,6 @@ class CategoryDetailsForm(forms.ModelForm):
     def clean(self):
         super().clean()
 
-# class CategoryLimitForm(forms.ModelForm):
-#     class Meta:
-#         model = CategoryLimit
-#         fields = ['limit', 'from_date', 'to_date']
-#         labels = {
-#             'limit': ('Spending Limit:'),
-#             'from_date': ('From Date:'),
-#             'to_date': ('To Date:'),
-#         }
-    
-#     def clean(self):
-#         super().clean()
 
 class ChangePasswordForm(forms.Form):
     username = forms.CharField(label='username', max_length=50)

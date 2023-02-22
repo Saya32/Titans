@@ -21,7 +21,6 @@ class User(AbstractUser):
     currency = models.CharField(max_length=1, blank=False, choices=CURRENCY_CHOICES, default="£",null=True)
 
 
-
 class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
@@ -48,20 +47,7 @@ class Category(models.Model):
             balance = self.budget - self.get_expenses(from_date,to_date)
         return balance
 
-    def get_spending_limit(self, from_date=None, to_date=None):
-        return self.categorylimit_set.filter(from_date=to_date, to_date=from_date).first()
 
-    def has_exceeded_spending_limit(self, from_date=None, to_date=None):
-        spending_limit = self.get_spending_limit(from_date, to_date)
-        if spending_limit and self.get_expenses(from_date, to_date) > spending_limit.limit:
-            return True
-        return False
-
-class CategoryLimit(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    limit = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    from_date = models.DateField(blank=False, null=True)
-    to_date = models.DateField(blank=False, null=True)
 
 class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -80,7 +66,7 @@ class Transaction(models.Model):
     receipt = models.ImageField(upload_to='images/', height_field = None, width_field = None, max_length= None, blank=True, null=True) #need to create receipts url pathway
     
     def __str__(self):
-        return self.name
+        return self.title
 
     def receipt_url(self):
         if self.receipt and hasattr(self.receipt, 'url'):

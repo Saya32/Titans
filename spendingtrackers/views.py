@@ -104,12 +104,6 @@ def feed(request):
     return render(request, 'feed.html')
 
 
-# def sign_success(request):
-#     if not request.session.get('is_login'):
-#         return render(request, 'log_in.html')
-#     return render(request, 'sign_success.html')
-
-
 def log_out(request):
     logout(request)
     return redirect('home_page')
@@ -132,10 +126,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         """Return redirect URL after successful update."""
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
-
-# def transaction_list(request):
-#     transactions = Transaction.objects.all()
-#     return render(request, 'transaction_list.html', {'transactions': transactions})
 
 def new_transaction(request):
     if request.method == 'POST':
@@ -266,6 +256,7 @@ def view_category(request, id):
     expense = category.get_expenses()
     income = category.get_income()
     balance = category.get_balance()
+   
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
         to_date = request.POST.get('to_date')
@@ -276,7 +267,21 @@ def view_category(request, id):
             expense = category.get_expenses(from_date=from_date_obj, to_date=to_date_obj)
             income = category.get_income(from_date=from_date_obj, to_date=to_date_obj)
             balance = category.get_balance(from_date=from_date_obj, to_date=to_date_obj)
-    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income, 'balance': balance}
+    
+    if category.budget:
+        used_percentage = expense / category.budget * 100
+        used_percentage = round(used_percentage, 2)
+    else:
+        used_percentage = None
+    
+    if balance < 0:
+        warning_message = "Warning: You have exceeded your budget for this category."
+    elif used_percentage is not None and used_percentage >= 90:
+        warning_message = "Warning: You have used {}% of your budget for this category.".format(used_percentage)
+    else:
+        warning_message = None
+
+    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income, 'balance': balance, 'warning_message': warning_message}
     return render(request, 'view_category.html', context)
 
 def add_category_details(request):
