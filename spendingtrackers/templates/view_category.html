@@ -3,8 +3,13 @@
 <div id="cover-image">
   <div class="container vh-100">
     <h1><center>{{ category.name}}</center>></h1>
-      
-        
+    <hr/>
+  <form method="POST">
+    {% csrf_token %}
+    From: <input type="date" name="start_date"/>
+    To: <input type="date" name="end_date"/>
+    <input type="submit" value="Search"/>
+  </form>
           <table class="table table-hover text-nowrap">
             <thead>
                 <tr>
