@@ -29,7 +29,35 @@ class Category(models.Model):
     start_date = models.DateField(blank=False, null=True)
     end_date = models.DateField(blank=False, null=True)
 
+    def get_expenses(self, from_date=None, to_date=None):
+        transactions = self.transaction_set.all()
+        if from_date and to_date:
+            transactions = transactions.filter(date_paid__range=[from_date, to_date])
+        return sum(transaction.amount for transaction in transactions if transaction.amount < 0)
 
+    def get_income(self, from_date=None, to_date=None):
+        transactions = self.transaction_set.all()
+        if from_date and to_date:
+            transactions = transactions.filter(date_paid__range=[from_date, to_date])
+        return sum(transaction.amount for transaction in transactions if transaction.amount > 0)
+
+    def get_balance(self, from_date=None, to_date=None):
+        return self.get_spending_limit(from_date, to_date) - self.get_expenses(from_date, to_date)
+
+    def get_spending_limit(self, from_date=None, to_date=None):
+        return self.categorylimit_set.filter(from_date=to_date, to_date=from_date).first()
+
+    def has_exceeded_spending_limit(self, from_date=None, to_date=None):
+        spending_limit = self.get_spending_limit(from_date, to_date)
+        if spending_limit and self.get_expenses(from_date, to_date) > spending_limit.limit:
+            return True
+        return False
+
+class CategoryLimit(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    limit = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    from_date = models.DateField(blank=False, null=True)
+    to_date = models.DateField(blank=False, null=True)
 
 class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

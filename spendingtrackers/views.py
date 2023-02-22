@@ -233,7 +233,6 @@ def change_password(request):
 
 
 def edit_category_details(request, id):
-    
     try:
         category = Category.objects.get(pk=id)
     except:

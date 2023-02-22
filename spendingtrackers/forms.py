@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Transaction, Category
+from .models import User, Transaction, Category, CategoryLimit
 from django.utils import timezone
 from django.core.validators import RegexValidator
 from django.contrib.auth import authenticate
@@ -129,6 +129,19 @@ class CategoryDetailsForm(forms.ModelForm):
             'end_date': ('End Date:'),
         }
 
+    def clean(self):
+        super().clean()
+
+class CategoryLimitForm(forms.ModelForm):
+    class Meta:
+        model = CategoryLimit
+        fields = ['limit', 'from_date', 'to_date']
+        labels = {
+            'limit': ('Spending Limit:'),
+            'from_date': ('From Date:'),
+            'to_date': ('To Date:'),
+        }
+    
     def clean(self):
         super().clean()
 
