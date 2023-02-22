@@ -30,12 +30,18 @@ class Category(models.Model):
     end_date = models.DateField(blank=False, null=True)
 
     def get_total_speding(self):
-        transactions = Transaction.objects.filter(category_fk=self)
+        transactions = Transaction.objects.filter(category_fk=self, transaction_type="Expense")
         spending = 0
         for transaction in transactions:
             spending = spending + transaction.amount
         return spending
     
+    def get_total_income(self):
+        transactions = Transaction.objects.filter(category_fk=self, transaction_type="Income")
+        income = 0
+        for transaction in transactions:
+            income = income + transaction.amount
+        return income
 
 
 
