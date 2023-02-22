@@ -132,18 +132,18 @@ class CategoryDetailsForm(forms.ModelForm):
     def clean(self):
         super().clean()
 
-class CategoryLimitForm(forms.ModelForm):
-    class Meta:
-        model = CategoryLimit
-        fields = ['limit', 'from_date', 'to_date']
-        labels = {
-            'limit': ('Spending Limit:'),
-            'from_date': ('From Date:'),
-            'to_date': ('To Date:'),
-        }
+# class CategoryLimitForm(forms.ModelForm):
+#     class Meta:
+#         model = CategoryLimit
+#         fields = ['limit', 'from_date', 'to_date']
+#         labels = {
+#             'limit': ('Spending Limit:'),
+#             'from_date': ('From Date:'),
+#             'to_date': ('To Date:'),
+#         }
     
-    def clean(self):
-        super().clean()
+#     def clean(self):
+#         super().clean()
 
 class ChangePasswordForm(forms.Form):
     username = forms.CharField(label='username', max_length=50)

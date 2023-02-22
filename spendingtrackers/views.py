@@ -104,10 +104,10 @@ def feed(request):
     return render(request, 'feed.html')
 
 
-def sign_success(request):
-    if not request.session.get('is_login'):
-        return render(request, 'log_in.html')
-    return render(request, 'sign_success.html')
+# def sign_success(request):
+#     if not request.session.get('is_login'):
+#         return render(request, 'log_in.html')
+#     return render(request, 'sign_success.html')
 
 
 def log_out(request):
@@ -133,9 +133,9 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         """Return redirect URL after successful update."""
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
-def transaction_list(request):
-    transactions = Transaction.objects.all()
-    return render(request, 'transaction_list.html', {'transactions': transactions})
+# def transaction_list(request):
+#     transactions = Transaction.objects.all()
+#     return render(request, 'transaction_list.html', {'transactions': transactions})
 
 def new_transaction(request):
     if request.method == 'POST':
