@@ -265,6 +265,7 @@ def view_category(request, id):
     transactions = get_user_transactions(request.user)
     expense = category.get_expenses()
     income = category.get_income()
+    balance = category.get_balance()
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
         to_date = request.POST.get('to_date')
@@ -274,7 +275,8 @@ def view_category(request, id):
             transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
             expense = category.get_expenses(from_date=from_date_obj, to_date=to_date_obj)
             income = category.get_income(from_date=from_date_obj, to_date=to_date_obj)
-    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income}
+            balance = category.get_balance(from_date=from_date_obj, to_date=to_date_obj)
+    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income, 'balance': balance}
     return render(request, 'view_category.html', context)
 
 def add_category_details(request):

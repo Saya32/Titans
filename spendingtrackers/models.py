@@ -42,7 +42,11 @@ class Category(models.Model):
         return sum(transaction.amount for transaction in transactions if transaction.transaction_type =='Income')
 
     def get_balance(self, from_date=None, to_date=None):
-        return self.get_spending_limit(from_date, to_date) - self.get_expenses(from_date, to_date)
+        if(from_date == None or to_date ==  None):
+            balance = self.budget - self.get_expenses(None,None)
+        else:
+            balance = self.budget - self.get_expenses(from_date,to_date)
+        return balance
 
     def get_spending_limit(self, from_date=None, to_date=None):
         return self.categorylimit_set.filter(from_date=to_date, to_date=from_date).first()
