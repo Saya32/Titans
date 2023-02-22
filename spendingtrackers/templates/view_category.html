@@ -2,13 +2,32 @@
 {% block content %}
 <div id="cover-image">
   <div class="container vh-100">
-    <h1><center>{{ category.name}}</center>></h1>
+    <h1><center>{{ category.name}}</center></h1>
     <hr/>
   <form method="POST">
     {% csrf_token %}
     From: <input type="date" name="from_date"/>
     To: <input type="date" name="to_date"/>
     <input type="submit" value="Search"/>
+    <div class="row">
+      <div class="column" style="background-color:#5cbc691b;">
+        <h2>Budget</h2>
+        <p>{{ category.budget}}</p>
+      </div>
+      <div class="column" style="background-color:#5cbc695b;">
+        <h2>Expense</h2>
+        <p>{{expense}}</p>
+      </div>
+      <div class="column" style="background-color:#5cbc69d8;">
+        <h2>Income</h2>
+        <p>{{income}}</p>
+      </div>
+      <div class="column" style="background-color:#5cbc68;">
+        <h2>Balance</h2>
+        <p>Some text..</p>
+      </div>
+    </div>
+
   </form>
           <table class="table table-hover text-nowrap">
             <thead>
@@ -38,12 +57,11 @@
             </tbody>
             </table>
           <p>
-            <h5 class="card-title"><b>Name:</b>{{ category.name}}</h5>
+          
             <h5 class="card-title"><b>Budget:</b>{{ category.budget}}</h5>
             <h5 class="card-title"><b>Start Date:</b>{{ category.start_date}}</h5>
             <h5 class="card-title"><b>End Date:</b>{{ category.end_date}}</h5>
-            <h5 class="card-title"><b>Expense:</b> {{ expense }}</h5>
-            <h5 class="card-title"><b>Income:</b> {{ income}}</h5>
+        
 
           </a>
           <a href="{%url 'edit_category_details' category.id %}" class="btn btn-success">Edit</a> 

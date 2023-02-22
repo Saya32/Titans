@@ -24,6 +24,20 @@
 		text-shadow:none;
 		background-image:none;
 		}
+		* {
+    	box-sizing: border-box;
+  		}
+  		.column {
+    	float: left;
+    	width: 25%;
+    	padding: 10px;
+    	height: 300px;
+  		}
+  		.row:after {
+    	content: "";
+    	display: table;
+    	clear: both;
+  		}
 	</style>
 	    <body>
 	
