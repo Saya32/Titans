@@ -35,8 +35,19 @@ def get_user_balance(user,from_date=None, to_date=None):
         balance = get_user_budget(user,from_date,to_date) - get_user_expense(user,from_date,to_date)
     return balance
 
+def change_transaction_name(user,category):
+    transactions = Transaction.objects.filter(user=user)
+    new_name = category.name
+    for transaction in transactions:
+        if  transaction.category_fk == category:
+            transaction.category = new_name
+            transaction.save()
 
-
+def delete_transactions(user, category):
+    transactions = Transaction.objects.filter(user=user)
+    for transaction in transactions:
+        if  transaction.category_fk == category:
+            transaction.delete()
 
 
 def get_all_transactions():

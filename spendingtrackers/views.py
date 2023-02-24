@@ -15,7 +15,7 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import  UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, get_user_budget
+from .helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, get_user_budget, change_transaction_name, delete_transactions
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import datetime
 
@@ -232,6 +232,7 @@ def edit_category_details(request, id):
     if request.method == 'POST':
         form = CategoryDetailsForm(instance = category, data = request.POST)
         if (form.is_valid()):
+            change_transaction_name(request.user, category)
             messages.add_message(request, messages.SUCCESS, "Category updated!")
             form.save()
             return redirect('category')
@@ -240,6 +241,19 @@ def edit_category_details(request, id):
     else:
         form = CategoryDetailsForm(instance = category)
         return render(request, 'edit_category_details.html', {'form': form, 'category' : category})
+
+def delete_category(request, id):
+    if (Category.objects.filter(pk=id)):
+        category = Category.objects.filter(pk=id)
+        delete_transactions(request.user, category)
+        Category.objects.filter(pk=id).delete()
+        messages.add_message(request, messages.SUCCESS, "Category deleted!")
+        return redirect('feed')
+    else:
+        messages.add_message(request, messages.ERROR, "Sorry, an error occurred deleting your Category")
+        return redirect('feed')
+
+
 
 def category(request):
    categories = get_categories(request.user.id)

@@ -29,6 +29,21 @@ class CategoryDetailsFormTestCase(TestCase):
         form = CategoryDetailsForm()
         self.assertIn('name', form.fields)
 
+        
+        
+        self.assertIn('budget', form.fields)
+        budget = form.fields['budget']
+        self.assertTrue(isinstance(budget, forms.IntegerField))
+
+        self.assertIn('start_date', form.fields)
+        start_date = form.fields['start_date']
+        self.assertTrue(isinstance(start_date, forms.DateField))
+
+        self.assertIn('end_date', form.fields)
+        end_date = form.fields['end_date']
+        self.assertTrue(isinstance(end_date, forms.DateField))
+
+    
         self.assertIn('budget', form.fields)
         budget = form.fields['budget']
         self.assertTrue(isinstance(budget, forms.IntegerField))
@@ -55,4 +70,10 @@ class CategoryDetailsFormTestCase(TestCase):
     def test_time_paid_can_be_none(self):
         self.form_input['time_paid'] = ""
         form = CategoryDetailsForm(data=self.form_input)
+<<<<<<< HEAD
         self.assertTrue(form.is_valid())
+    
+
+=======
+        self.assertTrue(form.is_valid())
+>>>>>>> eef2dc883806bf72ce2d571dde4de8d651309c5f
