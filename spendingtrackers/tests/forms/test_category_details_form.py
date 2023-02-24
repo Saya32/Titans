@@ -29,8 +29,6 @@ class CategoryDetailsFormTestCase(TestCase):
         form = CategoryDetailsForm()
         self.assertIn('name', form.fields)
 
-        
-        
         self.assertIn('budget', form.fields)
         budget = form.fields['budget']
         self.assertTrue(isinstance(budget, forms.IntegerField))
@@ -42,8 +40,6 @@ class CategoryDetailsFormTestCase(TestCase):
         self.assertIn('end_date', form.fields)
         end_date = form.fields['end_date']
         self.assertTrue(isinstance(end_date, forms.DateField))
-
-    
 
 
     def test_form_uses_model_validation(self):
@@ -60,5 +56,3 @@ class CategoryDetailsFormTestCase(TestCase):
         self.form_input['time_paid'] = ""
         form = CategoryDetailsForm(data=self.form_input)
         self.assertTrue(form.is_valid())
-    
-
