@@ -6,7 +6,7 @@ from spendingtrackers.views import add_category_details
 from spendingtrackers.forms import CategoryDetailsForm
 from spendingtrackers.tests.helpers import reverse_with_next
 
-class NewTransactionViewTestCase(TestCase):
+class AddCategoryDetailsViewTestCase(TestCase):
     """Test case of new transaction view"""
 
     fixtures = [
@@ -24,10 +24,10 @@ class NewTransactionViewTestCase(TestCase):
         }
         self.url = reverse('add_category_details')
 
-    def test_new_transaction_url(self):
+    def test_add_category_view_url(self):
         self.assertEqual(self.url,f'/add_category_details/')
 
-    def test_get_new_transaction(self):
+    def test_get_add_new_category_details(self):
         self.client.login(username=self.user.username, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
@@ -41,13 +41,13 @@ class NewTransactionViewTestCase(TestCase):
     #     response = self.client.get(self.url)
     #     self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
-    def test_successful_new_transaction(self):
+    def test_successful_add_category(self):
         self.client.login(username=self.user.username, password="Password123")
         response = self.client.post(self.url, self.data, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'category.html')
 
-    def test_unsuccessful_new_transaction(self):
+    def test_unsuccessful_add_category(self):
         self.client.login(username=self.user.username, password="Password123")
         count_before = Category.objects.count()
         self.data['start_date'] = "not a date"
