@@ -59,7 +59,33 @@ class LogInTester:
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
 
-
 def get_categories(user):
     categories = Category.objects.filter(user=user)
     return categories
+
+# def get_expenses(user, from_date=None, to_date=None):
+#     transactions = user.transaction_set.all()
+#     if from_date and to_date:
+#         transactions = transactions.filter(date_paid__range=[from_date, to_date])
+#     return sum(transaction.amount for transaction in transactions if transaction.transaction_type == 'Expense')
+
+# def get_income(user, from_date=None, to_date=None):
+#     transactions = user.transaction_set.all()
+#     if from_date and to_date:
+#         transactions = transactions.filter(date_paid__range=[from_date, to_date])
+#     return sum(transaction.amount for transaction in transactions if transaction.transaction_type =='Income')
+
+# def get_user_budget(user,from_date=None, to_date=None):
+#     categories = Category.objects.filter(user=user)
+#     overall_budget = 0
+#     for category in categories:
+#         overall_budget= overall_budget+category.budget
+#     return overall_budget
+    
+# def get_balance(user, from_date=None, to_date=None):
+#     if(from_date == None or to_date ==  None):
+#         balance = user.budget - user.get_expenses(None,None)
+#     else:
+#         balance = user.budget - user.get_expenses(from_date,to_date)
+#     return balance
+
