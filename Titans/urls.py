@@ -21,5 +21,6 @@ urlpatterns = [
     path('category',views.category, name='category'),
     path('view_category/<int:id>', views.view_category, name='view_category'),
     path('add_category_details/', views.add_category_details, name='add_category_details'),
+    path('overall/',views.overall, name ='overall'),
 ]
 urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

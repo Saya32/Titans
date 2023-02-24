@@ -5,7 +5,7 @@ from ...models import Transaction, User
 from django.utils import timezone
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-class SignUpFormTestCase(TestCase):
+class TransactionFormTestCase(TestCase):
     """Unit tests of the sign up form."""
 
     fixtures = [

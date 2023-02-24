@@ -15,7 +15,7 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import  UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .helpers import get_user_transactions, get_categories
+from .helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, get_user_budget
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import datetime
 
@@ -299,3 +299,39 @@ def add_category_details(request):
         form = CategoryDetailsForm()
 
     return render(request, 'add_category_details.html', {'form': form})
+
+def overall(request):
+ 
+    transactions = get_user_transactions(request.user)
+    expense = get_user_expense(request.user)
+    income = get_user_income(request.user)
+    balance = get_user_balance(request.user)
+    budget = get_user_budget(request.user)
+    if request.method == 'POST':
+        from_date = request.POST.get('from_date')
+        to_date = request.POST.get('to_date')
+        if from_date and to_date:
+            from_date_obj = datetime.strptime(from_date, '%Y-%m-%d').date()
+            to_date_obj = datetime.strptime(to_date, '%Y-%m-%d').date()
+            transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
+            expense = get_user_expense(request.user,from_date=from_date_obj, to_date=to_date_obj)
+            income = get_user_income(request.user,from_date=from_date_obj, to_date=to_date_obj)
+            balance = get_user_balance(request.user,from_date=from_date_obj, to_date=to_date_obj)
+            budget = get_user_budget(request.user)
+    
+    
+    if budget:
+        used_percentage = expense / budget * 100
+        used_percentage = round(used_percentage, 2)
+    else:
+        used_percentage = None
+    
+    if balance < 0:
+        warning_message = "Warning: You have exceeded your budget for this category."
+    elif used_percentage is not None and used_percentage >= 90:
+        warning_message = "Warning: You have used {}% of your budget for this category.".format(used_percentage)
+    else:
+        warning_message = None
+
+    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income, 'balance': balance, 'warning_message': warning_message, budget:'budget'}
+    return render(request, 'overall.html', context)

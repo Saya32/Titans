@@ -1,0 +1,76 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<div id="cover-image">
+  <div class="container vh-100">
+    <h1><center>{{ category.name}}</center></h1>
+    <hr/>
+  <form method="POST">
+    {% csrf_token %}
+    From: <input type="date" name="from_date"/>
+    To: <input type="date" name="to_date"/>
+    <input type="submit" value="Search"/>
+    <div class="row">
+      <div class="column" style="background-color:#5cbc691b;">
+        <h2>Budget</h2>
+        <p>{{budget}}</p>
+      </div>
+      <div class="column" style="background-color:#5cbc695b;">
+        <h2>Expense</h2>
+        <p>{{expense}}</p>
+      </div>
+      <div class="column" style="background-color:#5cbc69d8;">
+        <h2>Income</h2>
+        <p>{{income}}</p>
+      </div>
+      <div class="column" style="background-color:#5cbc68;">
+        <h2>Balance</h2>
+        <p>{{balance}}</p>
+      </div>
+    </div>
+  
+    {% if warning_message %}
+    <div class="alert alert-warning" role="alert">
+      {{ warning_message }}
+    </div>
+  {% endif %}
+
+  </form>
+          <table class="table table-hover text-nowrap">
+            <thead>
+                <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Amount</th>
+                <th>Transaction Type</th>
+                <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                  
+                <tr>
+                <td>{{ transaction.id }}</td> 
+                <td>{{ transaction.date_paid}}</td>
+                <td>{{ transaction.time_paid  }}</td>
+                <td>{{ transaction.amount }}</td>
+                <td>{{ transaction.transaction_type }}</td>
+                <td>{{ transaction.category }}</td>
+
+                
+                {% endfor %}
+                
+            </tbody>
+            </table>
+          <p>
+          
+         
+
+          
+          </p>
+        
+      
+    
+  </div>
+</div>
+{% endblock %}
