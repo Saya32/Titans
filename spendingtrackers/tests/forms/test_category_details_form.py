@@ -70,10 +70,4 @@ class CategoryDetailsFormTestCase(TestCase):
     def test_time_paid_can_be_none(self):
         self.form_input['time_paid'] = ""
         form = CategoryDetailsForm(data=self.form_input)
-<<<<<<< HEAD
         self.assertTrue(form.is_valid())
-    
-
-=======
-        self.assertTrue(form.is_valid())
->>>>>>> eef2dc883806bf72ce2d571dde4de8d651309c5f
