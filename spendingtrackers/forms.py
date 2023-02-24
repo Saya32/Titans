@@ -117,7 +117,7 @@ class TransactionForm(forms.ModelForm):
         #     self.add_error('date','Date must be in the future.')
         #     if (date == timezone.now().date() and time <= timezone.now().time()):
         #         self.add_error('time','Time must be in the future.')
-    
+
 
 class CategoryDetailsForm(forms.ModelForm):
     class Meta:
@@ -135,9 +135,32 @@ class CategoryDetailsForm(forms.ModelForm):
         super().clean()
 
 class ChangePasswordForm(forms.Form):
-    username = forms.CharField(label='username', max_length=50)
-    his_password = forms.CharField(label='his_password', widget=forms.PasswordInput())
-    password = forms.CharField(label='password', widget=forms.PasswordInput())
+    email = forms.CharField(label='email', max_length=50)
+    his_password = forms.CharField(
+        label='his_password',
+        widget=forms.PasswordInput(),
+        validators=[RegexValidator(
+            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
+            message='Password must contain an uppercase character, a lowercase '
+                    'character and a number'
+            )]
+    )
+    password = forms.CharField(
+        label='password',
+        widget=forms.PasswordInput(),
+        validators=[RegexValidator(
+            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
+            message='Password must contain an uppercase character, a lowercase '
+                    'character and a number'
+            )]
+    )
     password_confirmation = forms.CharField(label='password_confirmation', widget=forms.PasswordInput())
 
- 
+    def clean(self):
+        """Clean the data and generate messages for any errors."""
+        
+        super().clean()
+        password = self.cleaned_data.get('password')
+        password_confirmation = self.cleaned_data.get('password_confirmation')
+        if password != password_confirmation:
+            self.add_error('password_confirmation', 'Confirmation does not match password.')
