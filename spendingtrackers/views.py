@@ -301,7 +301,6 @@ def add_category_details(request):
     return render(request, 'add_category_details.html', {'form': form})
 
 def overall(request):
- 
     transactions = get_user_transactions(request.user)
     expense = get_user_expense(request.user)
     income = get_user_income(request.user)
@@ -317,7 +316,7 @@ def overall(request):
             expense = get_user_expense(request.user,from_date=from_date_obj, to_date=to_date_obj)
             income = get_user_income(request.user,from_date=from_date_obj, to_date=to_date_obj)
             balance = get_user_balance(request.user,from_date=from_date_obj, to_date=to_date_obj)
-            budget = get_user_budget(request.user)
+            budget = get_user_budget(request.user,from_date=from_date_obj, to_date=to_date_obj)
     
     
     if budget:
@@ -333,5 +332,5 @@ def overall(request):
     else:
         warning_message = None
 
-    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income, 'balance': balance, 'warning_message': warning_message, budget:'budget'}
+    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income, 'balance': balance, 'budget':budget,'warning_message': warning_message,}
     return render(request, 'overall.html', context)
