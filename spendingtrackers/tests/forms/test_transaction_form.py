@@ -49,7 +49,7 @@ class TransactionFormTestCase(TestCase):
 
         self.assertIn('category', form.fields)
         category = form.fields['category']
-        self.assertTrue(isinstance(category, forms.ChoiceField))
+        self.assertTrue(isinstance(category, forms.CharField))
 
         self.assertIn('receipt', form.fields)
         receipt = form.fields['receipt']
