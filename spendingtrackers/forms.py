@@ -65,7 +65,6 @@ class SignUpForm(forms.ModelForm):
             password=self.cleaned_data.get('new_password'),
             currency=self.cleaned_data.get('currency'),
         )
-        #user.create_categories()
         return user
 
 
@@ -122,10 +121,9 @@ class TransactionForm(forms.ModelForm):
 class CategoryDetailsForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['category_choices', 'spending_limit', 'budget', 'start_date', 'end_date']
+        fields = ['name', 'budget', 'start_date', 'end_date']
         labels = {
-            'category_choices': ('Category:'),
-            'spending_limit': ('Spending Limit:'),
+            'name': ('Name:'),
             'budget': ('Budget:'),
             'start_date': ('Start Date:'),
             'end_date': ('End Date:'),
@@ -134,10 +132,35 @@ class CategoryDetailsForm(forms.ModelForm):
     def clean(self):
         super().clean()
 
+
 class ChangePasswordForm(forms.Form):
-    username = forms.CharField(label='username', max_length=50)
-    his_password = forms.CharField(label='his_password', widget=forms.PasswordInput())
-    password = forms.CharField(label='password', widget=forms.PasswordInput())
+    email = forms.CharField(label='email', max_length=50)
+    his_password = forms.CharField(
+        label='his_password',
+        widget=forms.PasswordInput(),
+        validators=[RegexValidator(
+            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
+            message='Password must contain an uppercase character, a lowercase '
+                    'character and a number'
+            )]
+    )
+    password = forms.CharField(
+        label='password',
+        widget=forms.PasswordInput(),
+        validators=[RegexValidator(
+            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
+            message='Password must contain an uppercase character, a lowercase '
+                    'character and a number'
+            )]
+    )
     password_confirmation = forms.CharField(label='password_confirmation', widget=forms.PasswordInput())
 
+    def clean(self):
+        """Clean the data and generate messages for any errors."""
+        
+        super().clean()
+        password = self.cleaned_data.get('password')
+        password_confirmation = self.cleaned_data.get('password_confirmation')
+        if password != password_confirmation:
+            self.add_error('password_confirmation', 'Confirmation does not match password.')
  

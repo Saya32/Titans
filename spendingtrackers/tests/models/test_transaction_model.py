@@ -2,7 +2,7 @@ from django.test import TestCase
 from ...models import Transaction, User
 from django.core.exceptions import ValidationError
 import datetime
-
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 class TransactionTest(TestCase):
     fixtures = [
@@ -83,3 +83,15 @@ class TransactionTest(TestCase):
     def _assert_transaction_is_invalid(self):
         with self.assertRaises(ValidationError):
             self.transaction.full_clean()
+    
+    def test_str_method_returns_title(self):
+        expected_result = "TitleOne"
+        self.assertEqual(str(self.transaction), expected_result)
+
+# Example got from here: https://stackoverflow.com/questions/63476979/unit-testing-django-model-with-an-image-not-quite-understanding-simpleuploaded
+    def test_receipt_url_returns_url_if_present(self):
+        self.transaction.receipt = SimpleUploadedFile(name='receipt_test.jpg', content='', content_type='receipt/jpg')
+        self.assertIsNotNone(self.transaction.receipt_url())
+        
+    def test_receipt_url_returns_none_if_not_present(self):
+        self.assertIsNone(self.transaction.receipt_url())
