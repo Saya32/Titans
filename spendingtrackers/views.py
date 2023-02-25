@@ -332,7 +332,6 @@ def overall(request):
             balance = get_user_balance(request.user,from_date=from_date_obj, to_date=to_date_obj)
             budget = get_user_budget(request.user,from_date=from_date_obj, to_date=to_date_obj)
     
-    
     if budget:
         used_percentage = expense / budget * 100
         used_percentage = round(used_percentage, 2)

@@ -45,3 +45,10 @@ class OverallTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         transactions = response.context['transactions']
         self.assertEqual(transactions.count(), 1)
+    
+    def test_view_category_no_warning(self):
+        url = reverse('overall')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        warning_message = response.context['warning_message']
+        self.assertIsNone(warning_message)
