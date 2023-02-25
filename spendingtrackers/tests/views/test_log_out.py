@@ -13,6 +13,7 @@ class LogOutViewTestCase(TestCase, LogInTester):
             first_name='John',
             last_name='Doe',
             password='Password123',
+            balance=0,
             is_active=True,
         )
 

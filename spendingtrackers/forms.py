@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from django.db import models
 from django.contrib.auth.forms import UserChangeForm
 
+
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
 
@@ -22,6 +23,7 @@ class LogInForm(forms.Form):
             user = authenticate(username=username, password=password)
         return user
 
+
 class SignUpForm(forms.ModelForm):
     """Form enabling unregistered users to sign up."""
 
@@ -29,7 +31,7 @@ class SignUpForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'currency']
+        fields = ['first_name', 'last_name', 'username', 'currency', 'balance']
         labels = {
             'username': 'Email',
         }
@@ -41,8 +43,9 @@ class SignUpForm(forms.ModelForm):
             regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
             message='Password must contain an uppercase character, a lowercase '
                     'character and a number'
-            )]
+        )]
     )
+    balance = forms.FloatField(label='Account balance', widget=forms.TextInput())
     password_confirmation = forms.CharField(label='Password confirmation', widget=forms.PasswordInput())
 
     def clean(self):
@@ -62,20 +65,21 @@ class SignUpForm(forms.ModelForm):
             self.cleaned_data.get('username'),
             first_name=self.cleaned_data.get('first_name'),
             last_name=self.cleaned_data.get('last_name'),
+            balance=self.cleaned_data.get('balance'),
             password=self.cleaned_data.get('new_password'),
             currency=self.cleaned_data.get('currency'),
         )
+        # user.create_categories()
         return user
 
 
 class UserForm(forms.ModelForm):
     """Form to update user profiles."""
-    class Meta:
 
+    class Meta:
         """Form options."""
         model = User
         fields = ['first_name', 'last_name', 'currency', 'username']
-
 
 
 class TransactionForm(forms.ModelForm):
@@ -93,13 +97,14 @@ class TransactionForm(forms.ModelForm):
         widgets = {
             'date_paid': forms.widgets.DateInput(
                 format=('%d/%m/%Y'), attrs={'type': 'date'}
-                ),
+            ),
             'time_paid': forms.widgets.TimeInput(
                 format=('%H/%M'), attrs={'type': 'time'}
-                ),
+            ),
         }
 
     """Override clean method to check date and time"""
+
     def clean(self):
         super().clean()
         date_paid = self.cleaned_data.get('date_paid')
@@ -109,21 +114,22 @@ class TransactionForm(forms.ModelForm):
 
         time_paid = self.cleaned_data.get('time_paid')
         if (time_paid == None):
-             self.add_error('time_paid','Please enter the time as HH:MM.')
-             return
+            self.add_error('time_paid', 'Please enter the time as HH:MM.')
+            return
 
         # if(date <= timezone.now().date()):
         #     self.add_error('date','Date must be in the future.')
         #     if (date == timezone.now().date() and time <= timezone.now().time()):
         #         self.add_error('time','Time must be in the future.')
-    
+
 
 class CategoryDetailsForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['name', 'budget', 'start_date', 'end_date']
+        fields = ['category_choices', 'spending_limit', 'budget', 'start_date', 'end_date']
         labels = {
-            'name': ('Name:'),
+            'category_choices': ('Category:'),
+            'spending_limit': ('Spending Limit:'),
             'budget': ('Budget:'),
             'start_date': ('Start Date:'),
             'end_date': ('End Date:'),
@@ -134,33 +140,7 @@ class CategoryDetailsForm(forms.ModelForm):
 
 
 class ChangePasswordForm(forms.Form):
-    email = forms.CharField(label='email', max_length=50)
-    his_password = forms.CharField(
-        label='his_password',
-        widget=forms.PasswordInput(),
-        validators=[RegexValidator(
-            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
-            message='Password must contain an uppercase character, a lowercase '
-                    'character and a number'
-            )]
-    )
-    password = forms.CharField(
-        label='password',
-        widget=forms.PasswordInput(),
-        validators=[RegexValidator(
-            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
-            message='Password must contain an uppercase character, a lowercase '
-                    'character and a number'
-            )]
-    )
+    username = forms.CharField(label='username', max_length=50)
+    his_password = forms.CharField(label='his_password', widget=forms.PasswordInput())
+    password = forms.CharField(label='password', widget=forms.PasswordInput())
     password_confirmation = forms.CharField(label='password_confirmation', widget=forms.PasswordInput())
-
-    def clean(self):
-        """Clean the data and generate messages for any errors."""
-        
-        super().clean()
-        password = self.cleaned_data.get('password')
-        password_confirmation = self.cleaned_data.get('password_confirmation')
-        if password != password_confirmation:
-            self.add_error('password_confirmation', 'Confirmation does not match password.')
- 

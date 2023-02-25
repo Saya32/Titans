@@ -1,0 +1,42 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="container">
+  <h1>Dashboard</h1>
+  <hr/>
+  <form method="POST">
+    {% csrf_token %}
+    From: <input type="date" name="from_date"/>
+    To: <input type="date" name="to_date"/>
+    <input type="submit" value="Search"/>
+  </form>
+  <div class="card-body table-responsive p-0">
+    <table class="table table-hover text-nowrap">
+    <thead>
+        <tr>
+        <th>Date</th>
+        <th>Balance</th>
+        <th>Balance YOY</th>
+        <th>Income</th>
+        <th>Income YOY</th>
+        <th>Expense</th>
+        <th>Expense YOY</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in result %}
+        <tr>
+        <td>{{ record.day }}</td>
+        <td>{{ record.now_balance}}</td>
+        <td>{{ record.balance_rate}}</td>
+        <td>{{ record.now_income  }}</td>
+        <td>{{ record.income_rate  }}</td>
+        <td>{{ record.now_expense }}</td>
+        <td>{{ record.expense_rate }}</td>
+        </tr>
+        {% endfor %}
+        
+    </tbody>
+    </table>
+</div>
+</div>
+{% endblock %}
