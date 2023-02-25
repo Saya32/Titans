@@ -103,9 +103,9 @@ class TransactionForm(forms.ModelForm):
     def clean(self):
         super().clean()
         date_paid = self.cleaned_data.get('date_paid')
-        if (date_paid == None):
-             self.add_error('date_paid','Please enter the date as DD-MM-YYYY.')
-             return
+        if not date_paid:
+            raise forms.ValidationError('Please enter the date as DD-MM-YYYY.')
+            return self.cleaned_data
 
         time_paid = self.cleaned_data.get('time_paid')
         if (time_paid == None):
