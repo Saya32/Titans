@@ -270,7 +270,6 @@ def view_category(request, id):
     expense = category.get_expenses()
     income = category.get_income()
     balance = category.get_balance()
-    warning_message = None
    
     if request.method == 'POST':
         from_date = request.POST.get('from_date')

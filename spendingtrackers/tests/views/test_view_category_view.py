@@ -19,19 +19,6 @@ class ViewCategoryTestCase(TestCase):
         self.category = Category.objects.create(name='New', user=self.user, budget=Decimal('500.00'))
         self.filtered_category = Category.objects.filter(user = self.user)
         self.client.login(username=self.user.username, password='Password123')
-        self.transactions = {
-            'title':'This is a title',
-            'description':'Description of Transaction goes here',
-            'amount':1000,
-            'date_paid':'2023-12-12',
-            'time_paid':'10:51',
-            'category':'Salary',
-            'receipt': '',
-            'transaction_type':'expense'
-        }
-        self.transactions1 = Transaction.objects.create(title='Transaction 1', amount=150, category=self.category, user=self.user)
-        self.transactions2 = Transaction.objects.create(title='Transaction 2', amount=250, category=self.category, user=self.user)
-        self.transactions3 = Transaction.objects.create(title='Transaction 3', amount=400, category=self.category, user=self.user)
         
     
     def test_view_category(self):
@@ -81,4 +68,4 @@ class ViewCategoryTestCase(TestCase):
         warning_message = response.context['warning_message']
         self.assertIsNone(warning_message)
     
-   
+    
