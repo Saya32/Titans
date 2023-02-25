@@ -73,33 +73,6 @@ class ViewCategoryTestCase(TestCase):
         transactions = response.context['transactions']
         self.assertEqual(transactions.count(), 1)
     
-    # def test_view_category_budget_exceeded_warning(self):
-    #     url = reverse('view_category', kwargs={'id': self.category.pk})
-    #     Transaction.objects.create(
-    #         title='Transaction 4',
-    #         amount=550,
-    #         category=self.category,
-    #         user=self.user,
-    #         date_paid='2023-02-25'
-    #     )
-    #     response = self.client.get(url)
-    #     self.assertEqual(response.status_code, 200)
-    #     warning_message = response.context['warning_message']
-    #     self.assertEqual(warning_message, 'Warning: You have exceeded your budget for this category.')
-
-    # def test_view_category_budget_warning(self):
-    #     url = reverse('view_category', kwargs={'id': self.category.pk})
-    #     Transaction.objects.create(
-    #         title='Transaction 5',
-    #         amount=400,
-    #         category=self.category,
-    #         user=self.user,
-    #         date_paid='2023-02-25'
-    #     )
-    #     response = self.client.get(url)
-    #     self.assertEqual(response.status_code, 200)
-    #     warning_message = response.context['warning_message']
-    #     self.assertEqual(warning_message, 'Warning: You have used 90.0% of your budget for this category.')
     
     def test_view_category_no_warning(self):
         url = reverse('view_category', kwargs={'id': self.category.pk})
