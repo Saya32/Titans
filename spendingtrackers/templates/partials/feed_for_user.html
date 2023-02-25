@@ -6,6 +6,28 @@
 <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
     <div class="col-lg-3 d-flex align-items-stretch">
         <div class="card mb-4 rounded-3 shadow-sm">
+            <h4 class="card-header py-3">Add Category</h4>
+            <div class="card-body">
+                <p class="lead"> click here to add a nre category</p>
+            </div>
+            <div class="card-header">
+                <a href="{%url 'add_category_details'%}" type="button" class="w-100 btn btn-lg btn-outline-primary">Add Categories</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 d-flex align-items-stretch">
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <h4 class="card-header py-3">Categories</h4>
+            <div class="card-body">
+                <p class="lead"> click here to view all the categories!</p>
+            </div>
+            <div class="card-header">
+                <a href="{%url 'category'%}" type="button" class="w-100 btn btn-lg btn-outline-primary">See Categories</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 d-flex align-items-stretch">
+        <div class="card mb-4 rounded-3 shadow-sm">
             <h4 class="card-header py-3">Add Transaction</h4>
             <div class="card-body">
                 <p class="lead">Click here to add a transaction</p>
@@ -23,17 +45,6 @@
             </div>
             <div class="card-header">
                 <a href="{%url 'records'%}" type="button" class="w-100 btn btn-lg btn-outline-primary">See Records</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-3 d-flex align-items-stretch">
-        <div class="card mb-4 rounded-3 shadow-sm">
-            <h4 class="card-header py-3">Categories</h4>
-            <div class="card-body">
-                <p class="lead"> click here to view all the categories!</p>
-            </div>
-            <div class="card-header">
-                <a href="{%url 'category'%}" type="button" class="w-100 btn btn-lg btn-outline-primary">See Categories</a>
             </div>
         </div>
     </div>
