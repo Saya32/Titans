@@ -1,0 +1,16 @@
+[
+    {
+      "model": "spendingtrackers.category",
+      "pk": 1,
+      "fields": {
+        "title":"This is a title",
+        "description":"Description of Transaction goes here",
+        "amount":1000,
+        "date_paid":"2023-12-12",
+        "time_paid":"10:51",
+        "category":"Salary",
+        "receipt": "",
+        "transaction_type":"expense"
+      }
+    }
+  ]

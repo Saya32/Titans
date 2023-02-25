@@ -270,6 +270,7 @@ def view_category(request, id):
     expense = category.get_expenses()
     income = category.get_income()
     balance = category.get_balance()
+    warning_message = None
    
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
@@ -282,7 +283,7 @@ def view_category(request, id):
             income = category.get_income(from_date=from_date_obj, to_date=to_date_obj)
             balance = category.get_balance(from_date=from_date_obj, to_date=to_date_obj)
     
-    if category.budget:
+    if category.budget is not None:
         used_percentage = expense / category.budget * 100
         used_percentage = round(used_percentage, 2)
     else:
