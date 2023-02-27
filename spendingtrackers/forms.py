@@ -163,4 +163,4 @@ class ChangePasswordForm(forms.Form):
         password_confirmation = self.cleaned_data.get('password_confirmation')
         if password != password_confirmation:
             self.add_error('password_confirmation', 'Confirmation does not match password.')
- 
+
