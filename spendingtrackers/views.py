@@ -208,14 +208,14 @@ def change_password(request):
     if request.method == 'POST':
         userform = ChangePasswordForm(request.POST)
         if userform.is_valid():
-            username = userform.cleaned_data['username']
+            email = userform.cleaned_data['email']
             his_password = userform.cleaned_data['his_password']
             password = userform.cleaned_data['password']
             password_confirmation = userform.cleaned_data['password_confirmation']
             if password != password_confirmation:
                 messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
                 return render(request, 'change_password.html')
-            user = User.objects.filter(username__exact=username).first()
+            user = User.objects.filter(username__exact=email).first()
             if not user:
                 messages.add_message(request, messages.ERROR, "email not exists!")
                 return render(request, 'change_password.html')
