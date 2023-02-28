@@ -28,10 +28,22 @@ from io import BytesIO
 import base64
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from io import BytesIO
+import base64
+from django.http import JsonResponse
+from django.db.models import Sum
+from spendingtrackers.models import Transaction
+import datetime 
+from django.utils import timezone
+from datetime import timedelta
+from django.shortcuts import render
+import pandas as pd
+
 
 
 class LoginProhibitedMixin:
@@ -218,10 +230,10 @@ def records(request):
     else:
         return render(request, 'dashboard.html')
 
-class DashboardView(TemplateView):
+#class DashboardView(TemplateView):
     template_name = 'dashboard.html'
 
-    @csrf_exempt
+    
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -251,6 +263,108 @@ class DashboardView(TemplateView):
         # Return the image
         return response
 
+
+#def chart_balance_graph(request):
+    # Retrieve user's transactions
+    transactions = Transaction.objects.filter(user=request.user).order_by('date_paid')
+    
+    # Extract data for graph
+    labels = []
+    data = []
+    balance = 0
+    for transaction in transactions:
+        labels.append(transaction.date_paid.strftime("%m/%d/%Y"))
+        if transaction.transaction_type == "Expense":
+            balance -= transaction.amount
+        else:
+            balance += transaction.amount
+        data.append(balance)
+    
+    # Create chart data
+    chart_data = {
+        'labels': labels,
+        'datasets': [{
+            'label': 'Balance',
+            'data': data,
+            'fill': False,
+            'borderColor': 'rgb(75, 192, 192)',
+            'lineTension': 0.1
+        }]
+    }
+    
+    # Pass chart data to template
+    return render(request, 'dashboard.html', {'chart_data': json.dumps(chart_data)})
+
+#def chart_balance_graph(request):
+    user = request.user
+    transactions = Transaction.objects.filter(user=user).order_by('-date_paid')
+    
+    # Create a dictionary to store the balance for each date
+    balance_dict = {}
+    balance = 0
+    for transaction in transactions:
+        if transaction.transaction_type == 'Expense':
+            balance -= transaction.amount
+        else:
+            balance += transaction.amount
+        balance_dict[transaction.date_paid] = balance
+    
+    # Create a list of dates and corresponding balances for plotting
+    date_list = []
+    balance_list = []
+    start_date = datetime.today() - timedelta(days=30)
+    for i in range(30):
+        date = start_date + timedelta(days=i)
+        date_list.append(date.strftime('%m/%d'))
+        balance = balance_dict.get(date.date(), balance)
+        balance_list.append(balance)
+    
+    # Create and save the plot as a PNG image
+    plt.plot(date_list, balance_list)
+    plt.xlabel('Date')
+    plt.ylabel('Balance')
+    plt.title('Balance Trends')
+    plt.savefig('balance.png')
+    
+    # Render the template with the plot image
+    return render(request, 'dashboard.html', {'balance_graph': 'balance.png'})
+
+
+def get_balance_data(request):
+    user = request.user
+    transactions = Transaction.objects.filter(user=user)
+    today = timezone.now().date()
+    balance_data = []
+    balance = 0
+    for i in range(21):
+        date = today - timedelta(days=i)
+        transactions_on_date = transactions.filter(date_paid=date)
+        for t in transactions_on_date:
+            if t.transaction_type == 'Expense':
+                balance -= t.amount
+            else:
+                balance += t.amount
+        balance_data.append((date.strftime('%m/%d/%Y'), balance))
+    return balance_data[::-1] # reverse the list so that the latest data is first
+
+#def index(request):
+    qs = Chart.objects.all()
+    projects_data = [
+        {
+            'Project': x.name,
+            'Start': x.start_date,
+            'Finish': x.finish_date,
+            'Responsible': x.responsible.username
+        } for x in qs
+    ]
+    df = pd.DataFrame(projects_data)
+    fig = px.timeline(
+        df, x_start="Start", x_end="Finish", y="Project", color="Responsible"
+    )
+    fig.update_yaxes(autorange="reversed")
+    gantt_plot = plot(fig, output_type="div")
+    context = {'plot_div': gantt_plot}
+    return render(request, 'index.html', context)
 
 def update_record(request, id):
     try:
@@ -344,4 +458,9 @@ def view_category(request, id):
     return render(request, 'view_category.html', context)
 
 def dashboard(request):
+    balance_data = get_balance_data(request)
+    context = {
+        'balance_data': balance_data,
+        # other context variables
+    }
     return render(request, 'dashboard.html')

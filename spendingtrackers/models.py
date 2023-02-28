@@ -73,7 +73,20 @@ class Transaction(models.Model):
         if self.receipt and hasattr(self.receipt, 'url'):
             return self.receipt.url
 
-class BiteStat(models.Model):
-    exercise = models.PositiveSmallIntegerField()  # 0 to 32767
-    completed = models.DateField()  # I don't care about time here
-    level = models.PositiveSmallIntegerField(null=True, blank=True)
+
+class Chart(models.Model):
+    name = models.CharField(max_length=200) 
+    start_date = models.DateField()
+    responsible = models.ForeignKey(User, on_delete=models.CASCADE)
+    week_number = models.CharField(max_length=2, blank=True)
+    finish_date = models.DateField()
+
+#string representation method
+    def __str__(self):
+        return str(self.name)
+#overiding the save method
+    def save(self, *args, **kwargs):
+        print(self.start_date.isocalendar()[1])
+        if self.week_number == "":
+            self.week_number = self.start_date.isocalendar()[1]
+        super().save(*args, **kwargs)
