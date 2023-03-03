@@ -19,7 +19,7 @@ Last but not least, the user should have access to reports and visualisations fo
 - CHULIANG LI 
 
 ## References
-https://djangopy.org/how-to/how-to-implement-categories-in-django/
-https://github.com/AymenBerb/Narwhal
-https://github.com/parneetkj/Ibis
-https://stackoverflow.com/questions/52126753/understanding-image-fields-media-root-media-url
+- https://djangopy.org/how-to/how-to-implement-categories-in-django/
+- https://github.com/AymenBerb/Narwhal
+- https://github.com/parneetkj/Ibis
+- https://stackoverflow.com/questions/52126753/understanding-image-fields-media-root-media-url
