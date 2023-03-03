@@ -7,68 +7,114 @@
                 <div class="card-header">
                     <h4 class="card-title">Balance Trends</h4>
                 </div>
-                <canvas id="balance_data"></canvas>
-                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <canvas id="chart_balance_graph" data-url="{% url 'chart_balance_graph' %}"></canvas>
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+                    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
                     <script>
-                    var balanceData = JSON.parse('{{ balance_data|safe }}');
-                    var balanceLabels = balanceData.map(item => item[0]);
-                    var balanceValues = balanceData.map(item => item[1]);
-
-                    var balanceChart = new Chart(document.getElementById("balance_data"), {
-                        type: 'line',
-                        data: {
-                            labels: balanceLabels,
-                            datasets: [{
-                                label: 'Balance',
-                                data: balanceValues,
-                                borderColor: 'blue',
-                                fill: false,
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true,
+                    $(function () {
+                        var $chart_balance_graph = $("#chart_balance_graph");
+                        $.ajax({
+                            url: $chart_balance_graph.data("url"),
+                            success: function (data) {
+                                var ctx = $chart_balance_graph[0].getContext("2d");
+                                new Chart(ctx, {
+                                    type: 'bar',
+                                    data: {
+                                    labels: data.labels,
+                                    datasets: [{
+                                        label: 'Balance',
+                                        backgroundColor: 'blue',
+                                        data: data.data
+                                    }]          
+                                    },
+                                    options: {
+                                    responsive: true,
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Balance Trend Bar Chart'
                                     }
-                                }]
-                            }
-                        }
-                    });
+                                    }
+                                });
+
+                                }
+                            });
+
+                            });
+
                     </script>
             </div>
         </div>
-    </div>
+    
 
 
-    <div class="col-sm-4 text-center my-3">
-        <div class="card card-block" style="height : 300px">
-            <div class="card-body d-flex">              
-            <h5 class="card-title">Expense Trend</h5>
-            <a href="" class="stretched-link"></a> 
+     <div class="col-sm-4 text-center my-3">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Expense Trends</h4>
             </div>
-        </div>
-    </div>
+            <canvas id="chart_expense_graph" data-url="{% url 'chart_expense_graph' %}"></canvas>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+                <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+                <script>
+                $(function () {
+                    var $chart_expense_graph = $("#chart_expense_graph");
+                    $.ajax({
+                        url: $chart_expense_graph.data("url"),
+                        success: function (data) {
+                            var ctx = $chart_expense_graph[0].getContext("2d");
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                labels: data.labels,
+                                datasets: [{
+                                    label: 'Expenses',
+                                    backgroundColor: 'blue',
+                                    data: data.data
+                                }]          
+                                },
+                                options: {
+                                responsive: true,
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Expense Trend Bar Chart'
+                                }
+                                }
+                            });
 
-    <div class="col-sm-4 text-center my-3">
+                            }
+                        });
+
+                        });
+
+                </script>
+        </div>
+    
+
+     <div class="col-sm-4 text-center my-3">
         <div class="card card-block" style="height : 300px">
             <div class="card-body d-flex">              
             <h5 class="card-title">Income Trend</h5>
             <a href="" class="stretched-link"></a> 
             </div>
         </div>
-    </div>
+    
 
-    <div class="col-sm-4 text-center my-3">
+     <div class="col-sm-4 text-center my-3">
         <div class="card card-block" style="height : 300px">
             <div class="card-body d-flex">              
             <h5 class="card-title">Expense Structure</h5>
             <a href="" class="stretched-link"></a> 
             </div>
         </div>
-    </div>
+    
 
-    <div class="col-sm-4 text-center my-3">
+     <div class="col-sm-4 text-center my-3">
         <div class="card card-block" style="height : 300px">
             <div class="card-body d-flex">              
             <h5 class="card-title">Expense Structure</h5>

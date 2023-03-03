@@ -1,7 +1,7 @@
 # Create your views here.
 import json
 from django.shortcuts import render, redirect
-from .models import User, Transaction, Category
+from .models import User, Transaction, Category, Chart
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.http import HttpResponse
@@ -18,31 +18,23 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .helpers import get_user_transactions, get_categories
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import HttpResponse
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
-from matplotlib.dates import DateFormatter
-import csv
-from django.shortcuts import render
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
 import pandas as pd
-import numpy as np
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from io import BytesIO
-import base64
-from django.http import JsonResponse
-from django.db.models import Sum
 from spendingtrackers.models import Transaction
 import datetime 
 from django.utils import timezone
 from datetime import timedelta
 from django.shortcuts import render
-import pandas as pd
+from django.db.models import Sum
+from django.http import JsonResponse
 
 
 
@@ -190,81 +182,8 @@ def records(request):
     transactions = get_user_transactions(request.user)
     return render(request, 'records.html', {'transactions' : transactions})
 
-#def records_csv(request):
- #   response = HttpResponse(content_type='text/csv', headers={'Content-Disposition': 'attachment; filename="records.csv"'},)
-    #create writer
-  #  writer = csv.writer(response)
-    #designate model
-   # records = Transaction.objects.all()
-    #add column headings
-    #writer.writerow(['Amount'])
-    #loop through and output
-    #for record in records:
-     #   writer.writerow([Transaction.amount])
 
-    #return response
-
-#@login_required
-#def chart_balance_graph(request):
-    user = request.user
-    transactions = Transaction.objects.filter(user=user).order_by('date_paid', 'time_paid')
-    if transactions:
-        dates = []
-        balance = []
-        total_balance = 0
-        for transaction in transactions:
-            total_balance += transaction.amount
-            dates.append(transaction.date_paid)
-            balance.append(total_balance)
-        fig, ax = plt.subplots()
-        ax.plot(dates, balance)
-        ax.set(xlabel='Date', ylabel='Balance', title='Balance Trends')
-        ax.grid()
-        # Convert the figure to a PNG string buffer
-        buffer = BytesIO()
-        fig.savefig(buffer, format='png')
-        buffer.seek(0)
-        # Encode the PNG string buffer to base64 and include in the HTML response
-        graph = base64.b64encode(buffer.getvalue()).decode('utf-8')
-        return render(request, 'dashboard.html', {'graph': graph})
-    else:
-        return render(request, 'dashboard.html')
-
-#class DashboardView(TemplateView):
-    template_name = 'dashboard.html'
-
-    
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        # Get the user's transactions
-        transactions = Transaction.objects.filter(user=request.user)
-
-        # Convert the transactions to a Pandas DataFrame
-        df = pd.DataFrame(list(transactions.values()))
-
-        # Calculate the balance for each date
-        balance = df.groupby('date_paid')['amount'].sum().cumsum()
-
-        # Create the line graph
-        fig, ax = plt.subplots()
-        ax.plot(balance.index, balance.values)
-        ax.set_title('Balance Trends')
-        ax.set_xlabel('Date')
-        ax.set_ylabel('Balance')
-        ax.grid()
-
-        # Convert the graph to a PNG image
-        canvas = FigureCanvasAgg(fig)
-        response = HttpResponse(content_type='image/png')
-        canvas.print_png(response)
-
-        # Return the image
-        return response
-
-
-#def chart_balance_graph(request):
+def chart_balance_graph(request):
     # Retrieve user's transactions
     transactions = Transaction.objects.filter(user=request.user).order_by('date_paid')
     
@@ -281,90 +200,30 @@ def records(request):
         data.append(balance)
     
     # Create chart data
-    chart_data = {
+    return JsonResponse(data={
         'labels': labels,
-        'datasets': [{
-            'label': 'Balance',
-            'data': data,
-            'fill': False,
-            'borderColor': 'rgb(75, 192, 192)',
-            'lineTension': 0.1
-        }]
-    }
+        'data': data,
+    })
     
-    # Pass chart data to template
-    return render(request, 'dashboard.html', {'chart_data': json.dumps(chart_data)})
-
-#def chart_balance_graph(request):
-    user = request.user
-    transactions = Transaction.objects.filter(user=user).order_by('-date_paid')
-    
-    # Create a dictionary to store the balance for each date
-    balance_dict = {}
-    balance = 0
+def chart_expense_graph(request):
+    # Retrieve user's transactions
+    transactions = Transaction.objects.filter(user=request.user).order_by('date_paid')
+    # Extract data for graph
+    labels = []
+    data = []
+    expense = 0
     for transaction in transactions:
-        if transaction.transaction_type == 'Expense':
-            balance -= transaction.amount
+        labels.append(transaction.date_paid.strftime("%m/%d/%Y"))
+        if transaction.transaction_type == "Expense":
+            expense = transaction.amount
         else:
-            balance += transaction.amount
-        balance_dict[transaction.date_paid] = balance
-    
-    # Create a list of dates and corresponding balances for plotting
-    date_list = []
-    balance_list = []
-    start_date = datetime.today() - timedelta(days=30)
-    for i in range(30):
-        date = start_date + timedelta(days=i)
-        date_list.append(date.strftime('%m/%d'))
-        balance = balance_dict.get(date.date(), balance)
-        balance_list.append(balance)
-    
-    # Create and save the plot as a PNG image
-    plt.plot(date_list, balance_list)
-    plt.xlabel('Date')
-    plt.ylabel('Balance')
-    plt.title('Balance Trends')
-    plt.savefig('balance.png')
-    
-    # Render the template with the plot image
-    return render(request, 'dashboard.html', {'balance_graph': 'balance.png'})
-
-
-def get_balance_data(request):
-    user = request.user
-    transactions = Transaction.objects.filter(user=user)
-    today = timezone.now().date()
-    balance_data = []
-    balance = 0
-    for i in range(21):
-        date = today - timedelta(days=i)
-        transactions_on_date = transactions.filter(date_paid=date)
-        for t in transactions_on_date:
-            if t.transaction_type == 'Expense':
-                balance -= t.amount
-            else:
-                balance += t.amount
-        balance_data.append((date.strftime('%m/%d/%Y'), balance))
-    return balance_data[::-1] # reverse the list so that the latest data is first
-
-#def index(request):
-    qs = Chart.objects.all()
-    projects_data = [
-        {
-            'Project': x.name,
-            'Start': x.start_date,
-            'Finish': x.finish_date,
-            'Responsible': x.responsible.username
-        } for x in qs
-    ]
-    df = pd.DataFrame(projects_data)
-    fig = px.timeline(
-        df, x_start="Start", x_end="Finish", y="Project", color="Responsible"
-    )
-    fig.update_yaxes(autorange="reversed")
-    gantt_plot = plot(fig, output_type="div")
-    context = {'plot_div': gantt_plot}
-    return render(request, 'index.html', context)
+            expense != transaction.amount
+        data.append(expense)
+    # Create chart data
+    return JsonResponse(data={
+        'labels': labels,
+        'data': data,
+    })
 
 def update_record(request, id):
     try:
@@ -458,9 +317,11 @@ def view_category(request, id):
     return render(request, 'view_category.html', context)
 
 def dashboard(request):
-    balance_data = get_balance_data(request)
+    balance_data = chart_balance_graph(request)
+    expense_data = chart_expense_graph(request)
     context = {
         'balance_data': balance_data,
+        'expense_data': expense_data,
         # other context variables
     }
     return render(request, 'dashboard.html')
