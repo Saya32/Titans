@@ -1,5 +1,5 @@
 from django.urls import reverse
-from spendingtrackers.models import User, Transaction
+from spendingtrackers.models import User, Transaction, Category
 
 class LogInTester:
     def _is_logged_in(self):
@@ -30,3 +30,19 @@ def create_transactions(user, from_count, to_count):
         )
         
         transaction.save()
+
+def create_categories(user, from_count, to_count):
+    """Create unique helper testing"""
+    for count in range(from_count, to_count):
+        desc_text = f'Category__{count}'
+        
+        category = Category(
+            user = user,
+            name=desc_text,
+            budget=1000,
+            start_date="2023-12-12",
+            end_date="2024-12-12"
+
+        )
+        
+        category.save()

@@ -5,7 +5,7 @@ from ...models import Transaction, User
 from django.utils import timezone
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-class SignUpFormTestCase(TestCase):
+class TransactionFormTestCase(TestCase):
     """Unit tests of the sign up form."""
 
     fixtures = [
@@ -49,7 +49,7 @@ class SignUpFormTestCase(TestCase):
 
         self.assertIn('category', form.fields)
         category = form.fields['category']
-        self.assertTrue(isinstance(category, forms.ChoiceField))
+        self.assertTrue(isinstance(category, forms.CharField))
 
         self.assertIn('receipt', form.fields)
         receipt = form.fields['receipt']

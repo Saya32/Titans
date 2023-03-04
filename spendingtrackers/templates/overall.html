@@ -12,7 +12,7 @@
     <div class="row">
       <div class="column" style="background-color:#5cbc691b;">
         <h2>Budget</h2>
-        <p>{{ category.budget}}</p>
+        <p>{{budget}}</p>
       </div>
       <div class="column" style="background-color:#5cbc695b;">
         <h2>Expense</h2>
@@ -48,7 +48,7 @@
             </thead>
             <tbody>
                 {% for transaction in transactions %}
-                  {% if transaction.category_fk == category %}
+                  
                 <tr>
                 <td>{{ transaction.id }}</td> 
                 <td>{{ transaction.date_paid}}</td>
@@ -57,21 +57,16 @@
                 <td>{{ transaction.transaction_type }}</td>
                 <td>{{ transaction.category }}</td>
 
-                {% endif %}
+                
                 {% endfor %}
                 
             </tbody>
             </table>
           <p>
           
-            <h5 class="card-title"><b>Budget:</b>{{ category.budget}}</h5>
-            <h5 class="card-title"><b>Start Date:</b>{{ category.start_date}}</h5>
-            <h5 class="card-title"><b>End Date:</b>{{ category.end_date}}</h5>
-        
+         
 
-          </a>
-          <a href="{%url 'edit_category_details' category.id %}" class="btn btn-success">Edit</a> 
-          <a href="{%url 'delete_category' category.id %}" class="btn btn-success">Delete Category</a> 
+          
           </p>
         
       

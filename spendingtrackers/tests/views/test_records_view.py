@@ -1,4 +1,3 @@
-
 from django.test import TestCase
 from django.urls import reverse
 from spendingtrackers.forms import TransactionForm
@@ -28,19 +27,27 @@ class RecordsViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'records.html')
     
-    # def test_records_shows_student_only_their_transactions(self):
-    #     self.client.login(username=self.user.username, password='Password123')
-    #     other_user = User.objects.get(username='janedoe@example.org')
-    #     create_transactions(other_user, 10, 20)
-    #     create_transactions(self.user, 30, 40)
-    #     response = self.client.get(self.url)
-    #     for count in range (10,20):
-    #         self.assertNotContains(response, f'Description__{count}')
-    #     for count in range (30,40):
-    #         self.assertContains(response, f'Description__{count}')
+    def test_filter_transactions_by_date_range(self):
+        self.client.login(username=self.user.username, password='Password123')
+        create_transactions(self.user, 0, 2)
+        transaction1 = Transaction.objects.first()
+        transaction2 = Transaction.objects.last()
+        transaction1.date_paid = '2023-02-15'
+        transaction2.date_paid = '2023-02-17'
+        transaction1.save()
+        transaction2.save()
+        response = self.client.post(self.url, {'from_date': '2023-02-14', 'to_date': '2023-02-16'})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'records.html')
+        self.assertIn(transaction1, response.context['transactions'])
+        self.assertNotIn(transaction2, response.context['transactions'])
 
 
     # def test_get_pending_transaction_redirects_when_not_logged_in(self): //WHEN LOGIN REQUIRED IS ADDED WE CAN CHANGE THIS
     #     redirect_url = reverse_with_next('log_in', self.url)
     #     response = self.client.get(self.url)
     #     self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+
+
+
+

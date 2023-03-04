@@ -1,13 +1,12 @@
 """Test case of new transaction view"""
 from django.test import TestCase
 from django.urls import reverse
-from spendingtrackers.models import User, Transaction
-from spendingtrackers.views import new_transaction
-from spendingtrackers.forms import TransactionForm
+from spendingtrackers.models import User, Category
+from spendingtrackers.views import add_category_details
+from spendingtrackers.forms import CategoryDetailsForm
 from spendingtrackers.tests.helpers import reverse_with_next
-from spendingtrackers.tests.helpers import create_transactions
 
-class NewTransactionViewTestCase(TestCase):
+class AddCategoryDetailsViewTestCase(TestCase):
     """Test case of new transaction view"""
 
     fixtures = [
@@ -18,27 +17,23 @@ class NewTransactionViewTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.get(username='johndoe@example.org')
         self.data = {
-            'title':'This is a title',
-            'description':'Description of Transaction goes here',
-            'amount':1000,
-            'date_paid':'2023-12-12',
-            'time_paid':'10:51',
-            'category':'Salary',
-            'receipt': '',
-            'transaction_type':'expense'
+            'name':'Gifts',
+            'budget':1000,
+            'start_date':'2023-12-12',
+            'end_date':'2024-12-12',
         }
-        self.url = reverse('new_transaction')
+        self.url = reverse('add_category_details')
 
-    def test_new_transaction_url(self):
-        self.assertEqual(self.url,f'/new_transaction/')
+    def test_add_category_view_url(self):
+        self.assertEqual(self.url,f'/add_category_details/')
 
-    def test_get_new_transaction(self):
+    def test_get_add_new_category_details(self):
         self.client.login(username=self.user.username, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'new_transaction.html')
+        self.assertTemplateUsed(response, 'add_category_details.html')
         form = response.context['form']
-        self.assertTrue(isinstance(form, TransactionForm))
+        self.assertTrue(isinstance(form, CategoryDetailsForm))
         self.assertFalse(form.is_bound)
 
     # def test_get_new_transaction_redirects_when_not_logged_in(self):  #NEED TO COME BACK ONCE WE ADD DECORATOR
@@ -46,21 +41,21 @@ class NewTransactionViewTestCase(TestCase):
     #     response = self.client.get(self.url)
     #     self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
-    def test_successful_new_transaction(self):
+    def test_successful_add_category(self):
         self.client.login(username=self.user.username, password="Password123")
         response = self.client.post(self.url, self.data, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'new_transaction.html')
+        self.assertTemplateUsed(response, 'category.html')
 
-    def test_unsuccessful_new_transaction(self):
+    def test_unsuccessful_add_category(self):
         self.client.login(username=self.user.username, password="Password123")
-        count_before = Transaction.objects.count()
-        self.data['time'] = "not a time"
+        count_before = Category.objects.count()
+        self.data['start_date'] = "not a date"
         response = self.client.post(self.url, self.data)
-        count_after = Transaction.objects.count()
+        count_after = Category.objects.count()
         self.assertEqual(count_after, count_before)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'new_transaction.html')
+        self.assertTemplateUsed(response, 'add_category_details.html')
         form = response.context['form']
-        self.assertTrue(isinstance(form, TransactionForm))
+        self.assertTrue(isinstance(form, CategoryDetailsForm))
         self.assertTrue(form.is_bound)
