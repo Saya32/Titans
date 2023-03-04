@@ -5,6 +5,7 @@ from django.core.validators import RegexValidator
 from django.contrib.auth import authenticate
 from django.db import models
 from django.contrib.auth.forms import UserChangeForm
+from django.core.exceptions import ValidationError
 
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
@@ -130,7 +131,15 @@ class CategoryDetailsForm(forms.ModelForm):
         }
 
     def clean(self):
-        super().clean()
+        clean_data = super().clean()
+
+        start_date = clean_data.get('start_date')
+        end_date = clean_data.get('end_date')
+        if start_date and end_date and start_date >= end_date:
+            raise ValidationError('Start date must be before end date.')
+        
+        return clean_data
+
 
 
 class ChangePasswordForm(forms.Form):

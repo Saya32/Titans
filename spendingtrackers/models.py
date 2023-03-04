@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
+from django.db.models import Sum
 
 class User(AbstractUser):
     """User model used for authentication and lessons authoring."""
@@ -41,12 +42,13 @@ class Category(models.Model):
         return sum(transaction.amount for transaction in transactions if transaction.transaction_type =='Income')
 
     def get_balance(self, from_date=None, to_date=None):
-        if(from_date == None or to_date ==  None):
-            balance = self.budget - self.get_expenses(None,None)
-        else:
-            balance = self.budget - self.get_expenses(from_date,to_date)
+        if not from_date:
+            from_date = self.start_date
+        if not to_date:
+            to_date = self.end_date
+        expenses = self.transaction_set.filter(transaction_type='Expense',date_paid__range=[from_date, to_date]).aggregate(Sum('amount'))['amount__sum'] or 0
+        balance = self.budget - expenses
         return balance
-
 
 
 class Transaction(models.Model):

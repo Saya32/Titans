@@ -19,8 +19,6 @@ from .helpers import get_user_transactions, get_categories, get_user_balance, ge
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import datetime
 
-from datetime import datetime
-
 
 
 class LoginProhibitedMixin:
@@ -293,11 +291,10 @@ def view_category(request, id):
             balance = category.get_balance(from_date=from_date_obj, to_date=to_date_obj)
     
     if category.budget is not None:
-        used_percentage = expense / category.budget * 100
+        used_percentage = balance / category.budget * 100
         used_percentage = round(used_percentage, 2)
     else:
         used_percentage = None
-    
     if balance < 0:
         warning_message = "Warning: You have exceeded your budget for this category."
     elif used_percentage is not None and used_percentage >= 90:
