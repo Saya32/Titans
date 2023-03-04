@@ -19,8 +19,6 @@ from .helpers import get_user_transactions, get_categories, get_user_balance, ge
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import datetime
 
-from datetime import datetime
-
 
 
 class LoginProhibitedMixin:
@@ -208,14 +206,14 @@ def change_password(request):
     if request.method == 'POST':
         userform = ChangePasswordForm(request.POST)
         if userform.is_valid():
-            username = userform.cleaned_data['username']
+            email = userform.cleaned_data['email']
             his_password = userform.cleaned_data['his_password']
             password = userform.cleaned_data['password']
             password_confirmation = userform.cleaned_data['password_confirmation']
             if password != password_confirmation:
                 messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
                 return render(request, 'change_password.html')
-            user = User.objects.filter(username__exact=username).first()
+            user = User.objects.filter(username__exact=email).first()
             if not user:
                 messages.add_message(request, messages.ERROR, "email not exists!")
                 return render(request, 'change_password.html')
@@ -293,11 +291,10 @@ def view_category(request, id):
             balance = category.get_balance(from_date=from_date_obj, to_date=to_date_obj)
     
     if category.budget is not None:
-        used_percentage = expense / category.budget * 100
+        used_percentage = (category.budget - balance) / category.budget * 100
         used_percentage = round(used_percentage, 2)
     else:
         used_percentage = None
-    
     if balance < 0:
         warning_message = "Warning: You have exceeded your budget for this category."
     elif used_percentage is not None and used_percentage >= 90:
