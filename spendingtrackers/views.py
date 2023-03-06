@@ -1,5 +1,7 @@
 # Create your views here.
 import json
+import uuid
+
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import User, Transaction, Category
 from django.contrib.auth.decorators import login_required
@@ -13,14 +15,14 @@ from django.views import View
 from django.views.generic.edit import FormView
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
-from django.views.generic.edit import  UpdateView
+from django.views.generic.edit import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, get_user_budget, change_transaction_name, delete_transactions
+from .helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, \
+    get_user_budget, change_transaction_name, delete_transactions, sendMail
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import datetime
 
 from datetime import datetime
-
 
 
 class LoginProhibitedMixin:
@@ -87,7 +89,7 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
     form_class = SignUpForm
     template_name = "sign_up.html"
-    redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
+    redirect_when_logged_in_url = 'sign_success'
 
     def form_valid(self, form):
         self.object = form.save()
@@ -95,11 +97,18 @@ class SignUpView(LoginProhibitedMixin, FormView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+        return reverse(self.redirect_when_logged_in_url)
 
 
 def home_page(request):
+    user = request.user
+    if user.is_authenticated:
+        return render(request, 'feed.html')
     return render(request, 'home_page.html')
+
+
+def sign_success(request):
+    return render(request, 'sign_success.html')
 
 
 def feed(request):
@@ -110,32 +119,30 @@ def log_out(request):
     logout(request)
     return redirect('home_page')
 
-class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""
     model = UserForm
     template_name = "profile.html"
     form_class = UserForm
-
-
 
     def get_object(self):
         """Return the object (user) to be updated."""
         user = self.request.user
         return user
 
-
     def get_success_url(self):
         """Return redirect URL after successful update."""
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
 
 def new_transaction(request):
     if request.method == 'POST':
         form = TransactionForm(request.POST, request.FILES)
         if form.is_valid():
-            category_name=form.cleaned_data['category']
-            category_object = get_object_or_404(Category, user = request.user, name=category_name)
-            
+            category_name = form.cleaned_data['category']
+            category_object = get_object_or_404(Category, user=request.user, name=category_name)
+
             Transaction.objects.create(
                 user=request.user,
                 title=form.cleaned_data.get('title'),
@@ -146,7 +153,7 @@ def new_transaction(request):
                 category=form.cleaned_data.get('category'),
                 receipt=form.cleaned_data.get('receipt'),
                 transaction_type=form.cleaned_data.get('transaction_type'),
-                category_fk= category_object
+                category_fk=category_object
             )
             return redirect('feed')
         else:
@@ -175,6 +182,7 @@ def records(request):
             transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
     return render(request, 'records.html', {'transactions': transactions})
 
+
 def update_record(request, id):
     try:
         record = Transaction.objects.get(pk=id)
@@ -183,16 +191,17 @@ def update_record(request, id):
         return redirect('feed')
 
     if request.method == 'POST':
-        form = TransactionForm(instance = record, data = request.POST)
+        form = TransactionForm(instance=record, data=request.POST)
         if (form.is_valid()):
             messages.add_message(request, messages.SUCCESS, "Record updated!")
             form.save()
             return redirect('feed')
         else:
-            return render(request, 'update_record.html', {'form': form, 'transaction' : record})
+            return render(request, 'update_record.html', {'form': form, 'transaction': record})
     else:
-        form = TransactionForm(instance = record)
-        return render(request, 'update_record.html', {'form': form, 'transaction' : record})
+        form = TransactionForm(instance=record)
+        return render(request, 'update_record.html', {'form': form, 'transaction': record})
+
 
 def delete_record(request, id):
     if (Transaction.objects.filter(pk=id)):
@@ -231,6 +240,67 @@ def change_password(request):
         return render(request, 'change_password.html')
 
 
+def retrieve_password(request):
+    if request.method == 'POST':
+        user_name = request.POST['email']
+        user = User.objects.filter(username__exact=user_name).first()
+        if not user:
+            messages.add_message(request, messages.ERROR, "email not exists!")
+            return render(request, 'retrieve_password.html')
+        # 成功 发送邮件
+        # 生成sid
+        sid = str(uuid.uuid1())
+        with open('retrieve_password.json') as w:
+            retrieve_password_data = w.read()
+            if not retrieve_password_data:
+                retrieve_password_data = {}
+            else:
+                retrieve_password_data = json.loads(retrieve_password_data)
+        with open('retrieve_password.json', 'w') as w:
+            retrieve_password_data[sid] = user_name
+            w.write(json.dumps(retrieve_password_data))
+        path = 'http://0.0.0.0:8000/update_password/?sid=' + sid
+        sendMail(user_name, path)
+        messages.add_message(request, messages.SUCCESS, "SUCCESS!")
+        return render(request, 'retrieve_password.html')
+    else:
+        return render(request, 'retrieve_password.html')
+
+
+def update_password(request):
+    if request.method == 'POST':
+        sid = request.POST['sid']
+        password = request.POST['password']
+        password_confirmation = request.POST['password_confirmation']
+        if password != password_confirmation:
+            messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
+            return render(request, 'update_password.html', {"sid": sid})
+        with open('retrieve_password.json') as w:
+            retrieve_password_data = w.read()
+            if not retrieve_password_data:
+                retrieve_password_data = {}
+            else:
+                retrieve_password_data = json.loads(retrieve_password_data)
+
+            email = retrieve_password_data.get(sid)
+            if not email:
+                messages.add_message(request, messages.ERROR, "link not exists!")
+                return render(request, 'update_password.html', {"sid": sid})
+
+            user = User.objects.filter(username__exact=email).first()
+            user.password = make_password(password)
+            user.save()
+            retrieve_password_data.pop(sid)
+        with open('retrieve_password.json', 'w') as w:
+            w.write(json.dumps(retrieve_password_data))
+        messages.add_message(request, messages.SUCCESS, "SUCCESS!")
+        return render(request, 'update_password.html', {"sid": sid})
+    else:
+        sid = request.GET.get('sid')
+        if not sid:
+            return render(request, 'update_password.html')
+        return render(request, 'update_password.html', {"sid": sid})
+
 
 def edit_category_details(request, id):
     try:
@@ -240,17 +310,18 @@ def edit_category_details(request, id):
         return redirect('category')
 
     if request.method == 'POST':
-        form = CategoryDetailsForm(instance = category, data = request.POST)
+        form = CategoryDetailsForm(instance=category, data=request.POST)
         if (form.is_valid()):
             change_transaction_name(request.user, category)
             messages.add_message(request, messages.SUCCESS, "Category updated!")
             form.save()
             return redirect('category')
         else:
-            return render(request, 'edit_category_details.html', {'form': form, 'category' : category})
+            return render(request, 'edit_category_details.html', {'form': form, 'category': category})
     else:
-        form = CategoryDetailsForm(instance = category)
-        return render(request, 'edit_category_details.html', {'form': form, 'category' : category})
+        form = CategoryDetailsForm(instance=category)
+        return render(request, 'edit_category_details.html', {'form': form, 'category': category})
+
 
 def delete_category(request, id):
     if (Category.objects.filter(pk=id)):
@@ -264,10 +335,10 @@ def delete_category(request, id):
         return redirect('feed')
 
 
-
 def category(request):
-   categories = get_categories(request.user.id)
-   return render(request, 'category.html', {'categories':categories})
+    categories = get_categories(request.user.id)
+    return render(request, 'category.html', {'categories': categories})
+
 
 def view_category(request, id):
     try:
@@ -280,7 +351,7 @@ def view_category(request, id):
     expense = category.get_expenses()
     income = category.get_income()
     balance = category.get_balance()
-   
+
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
         to_date = request.POST.get('to_date')
@@ -291,13 +362,13 @@ def view_category(request, id):
             expense = category.get_expenses(from_date=from_date_obj, to_date=to_date_obj)
             income = category.get_income(from_date=from_date_obj, to_date=to_date_obj)
             balance = category.get_balance(from_date=from_date_obj, to_date=to_date_obj)
-    
+
     if category.budget is not None:
         used_percentage = expense / category.budget * 100
         used_percentage = round(used_percentage, 2)
     else:
         used_percentage = None
-    
+
     if balance < 0:
         warning_message = "Warning: You have exceeded your budget for this category."
     elif used_percentage is not None and used_percentage >= 90:
@@ -305,8 +376,10 @@ def view_category(request, id):
     else:
         warning_message = None
 
-    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income, 'balance': balance, 'warning_message': warning_message}
+    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income,
+               'balance': balance, 'warning_message': warning_message}
     return render(request, 'view_category.html', context)
+
 
 def add_category_details(request):
     if request.method == 'POST':
@@ -324,6 +397,7 @@ def add_category_details(request):
 
     return render(request, 'add_category_details.html', {'form': form})
 
+
 def overall(request):
     transactions = get_user_transactions(request.user)
     expense = get_user_expense(request.user)
@@ -337,17 +411,17 @@ def overall(request):
             from_date_obj = datetime.strptime(from_date, '%Y-%m-%d').date()
             to_date_obj = datetime.strptime(to_date, '%Y-%m-%d').date()
             transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
-            expense = get_user_expense(request.user,from_date=from_date_obj, to_date=to_date_obj)
-            income = get_user_income(request.user,from_date=from_date_obj, to_date=to_date_obj)
-            balance = get_user_balance(request.user,from_date=from_date_obj, to_date=to_date_obj)
-            budget = get_user_budget(request.user,from_date=from_date_obj, to_date=to_date_obj)
-    
+            expense = get_user_expense(request.user, from_date=from_date_obj, to_date=to_date_obj)
+            income = get_user_income(request.user, from_date=from_date_obj, to_date=to_date_obj)
+            balance = get_user_balance(request.user, from_date=from_date_obj, to_date=to_date_obj)
+            budget = get_user_budget(request.user, from_date=from_date_obj, to_date=to_date_obj)
+
     if budget:
         used_percentage = expense / budget * 100
         used_percentage = round(used_percentage, 2)
     else:
         used_percentage = None
-    
+
     if balance < 0:
         warning_message = "Warning: You have exceeded your budget for this category."
     elif used_percentage is not None and used_percentage >= 90:
@@ -355,5 +429,6 @@ def overall(request):
     else:
         warning_message = None
 
-    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income, 'balance': balance, 'budget':budget,'warning_message': warning_message,}
+    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income,
+               'balance': balance, 'budget': budget, 'warning_message': warning_message, }
     return render(request, 'overall.html', context)
