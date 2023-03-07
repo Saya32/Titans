@@ -238,6 +238,23 @@ def chart_expense_graph(request):
         'data': data,
     })
 
+def expense_structure(request):
+    
+    transactions = Transaction.objects.filter(user=request.user)
+    labels=[]
+    data=[]
+    expense = 0
+    for transaction in transactions:
+        labels.append(transaction.category)
+        if transaction.transaction_type == 'Expense':
+            expense += transaction.amount
+        else:
+            expense != transaction.amount 
+        data.append(expense)
+
+    
+    return render(request, 'dashboard.html', {'labels':labels, 'data':data})
+
 def update_record(request, id):
     try:
         record = Transaction.objects.get(pk=id)
@@ -374,9 +391,11 @@ def view_category(request, id):
 def dashboard(request):
     balance_data = chart_balance_graph(request)
     expense_data = chart_expense_graph(request)
+    expense_structure = expense_structure(request)
     context = {
         'balance_data': balance_data,
         'expense_data': expense_data,
+        'expense_structure': expense_structure,
         # other context variables
     }
     return render(request, 'dashboard.html')

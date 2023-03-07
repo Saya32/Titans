@@ -23,6 +23,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboard/balance_chart', views.chart_balance_graph, name='chart_balance_graph'),
     path('dashboard/expense_chart', views.chart_expense_graph, name='chart_expense_graph'),
+    path('dashboard/expense_structure', views.expense_structure, name='expense_structure'),
     path('add_category_details/', views.add_category_details, name='add_category_details'),
     path('delete_category/<int:id>', views.delete_category, name='delete_category'),
     path('overall/',views.overall, name ='overall'),
