@@ -28,8 +28,10 @@ class Category(models.Model):
     budget = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     start_date = models.DateField(auto_now_add=False, blank=False, null=True)
     end_date = models.DateField(auto_now_add=False, blank=False, null=True)
-    
 
+    class Meta:
+        unique_together = 'user','name'
+    
     def get_expenses(self, from_date=None, to_date=None):
         transactions = self.transaction_set.all()
         if from_date and to_date:
