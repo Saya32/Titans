@@ -92,3 +92,8 @@ class UpdateTransactionViewTestCase(TestCase):
         
         self.transactions = Transaction.objects.filter(user = self.user)
         self.assertEqual(self.transactions[0].amount, 1000)
+    
+    # def test_update_records_redirects_when_not_logged_in(self):  
+    #     redirect_url = reverse_with_next('log_in', self.url)
+    #     response = self.client.get(self.url)
+    #     self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)

@@ -88,3 +88,8 @@ class UpdateCategoryViewTestCase(TestCase):
         
         self.categories = Category.objects.filter(user = self.user)
         self.assertEqual(self.categories[0].budget, 1000)
+    
+ # def test_edit_category_redirects_when_not_logged_in(self): 
+    #      redirect_url = reverse_with_next('log_in', self.url)
+    #      response = self.client.get(self.url)
+    #      self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)

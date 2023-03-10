@@ -4,6 +4,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from spendingtrackers.models import Category, Transaction
 from spendingtrackers.views import overall
+from spendingtrackers.tests.helpers import reverse_with_next
 
 class OverallTestCase(TestCase):
     """Test case of overall view"""
@@ -52,3 +53,8 @@ class OverallTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         warning_message = response.context['warning_message']
         self.assertIsNone(warning_message)
+    
+    # def test_overall_when_not_logged_in(self): 
+    #      redirect_url = reverse_with_next('log_in', self.url)
+    #      response = self.client.get(self.url)
+    #      self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
