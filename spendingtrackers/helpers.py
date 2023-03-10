@@ -59,10 +59,6 @@ def delete_transactions(user, category):
             transaction.delete()
 
 
-def get_all_transactions():
-    transactions = Transaction.objects.filter()
-    return transactions
-
 
 class LogInTester:
     def _is_logged_in(self):
