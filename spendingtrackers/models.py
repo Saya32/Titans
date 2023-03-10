@@ -26,8 +26,8 @@ class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     budget = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    start_date = models.DateField(blank=False, null=True)
-    end_date = models.DateField(blank=False, null=True)
+    start_date = models.DateField(auto_now_add=False, blank=False, null=True)
+    end_date = models.DateField(auto_now_add=False, blank=False, null=True)
 
     def get_expenses(self, from_date=None, to_date=None):
         transactions = self.transaction_set.all()

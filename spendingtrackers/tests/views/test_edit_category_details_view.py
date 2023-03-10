@@ -9,14 +9,13 @@ class UpdateCategoryViewTestCase(TestCase):
     fixtures = [
         'spendingtrackers/tests/fixtures/default_user.json',
     ]
-
     def setUp(self):
         self.user = User.objects.get(username='johndoe@example.org')
         self.data = {
             'name':'Gifts',
             'budget':1000,
-            'start_date':'2023-12-12',
-            'end_date':'2024-12-12',
+            'start_date':'2022-12-12',
+            'end_date': '2023-12-12'
         }
         create_categories(self.user,1,3)
         self.categories = Category.objects.filter(user = self.user)
@@ -51,7 +50,7 @@ class UpdateCategoryViewTestCase(TestCase):
         self.assertTemplateUsed(response, 'edit_category_details.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, CategoryDetailsForm))
-        self.assertContains(response, "2023-12-12")
+        self.assertContains(response, "2022-12-12")
 
         before_count = Category.objects.count()
         update_response = self.client.post(category_url, self.data, follow=True)
