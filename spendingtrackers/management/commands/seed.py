@@ -1,10 +1,13 @@
 from django.core.management.base import BaseCommand, CommandError
 from faker import Faker
-from spendingtrackers.models import User
+from spendingtrackers.models import User, Transaction, Category
+from random import randint, random
 
 class Command(BaseCommand):
     PASSWORD = "Password123"
     USER_COUNT = 50
+    TRANSACTION_COUNT = 50
+    CATEGORY_COUNT = 12
    
 
     def __init__(self):
@@ -13,6 +16,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.create_users()
+        self.create_transactions()
+        self.create_tcategories()
 
     def create_users(self):
         self.create_user("John", "Doe")
@@ -41,3 +46,23 @@ class Command(BaseCommand):
     def email(self, first_name, last_name):
         email = f'{first_name.lower()}.{last_name.lower()}@example.org'
         return email
+    
+    def create_transactions(self):
+        for i in range(self.TRANSACTION_COUNT):
+            print(f"Seeding requests {i}/{self.TRANSACTION_COUNT}", end='\r')
+            self.create_transactions()
+        print("Request seeding complete.      ")
+
+    def create_transactions(self):
+        transactions = Transaction(
+            user=self.get_random_user(),
+            transaction_type='Expense',
+            title="TitleOne",
+            amount=40,
+            description='Description One',
+            date_paid = '2023-12-12',
+            time_paid = '20:20',
+            category='Salary',
+            receipt=None,
+        )
+        transactions.save()
