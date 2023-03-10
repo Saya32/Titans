@@ -139,8 +139,14 @@ class CategoryDetailsForm(forms.ModelForm):
         end_date = clean_data.get('end_date')
         if start_date and end_date and start_date >= end_date:
             raise ValidationError('Start date must be before end date.')
-        
         return clean_data
+    
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        if Category.objects.filter(name=name).exists():
+            raise ValidationError('Category with this name already exists.')
+        return name
+
         
 
 
