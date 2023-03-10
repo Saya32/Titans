@@ -306,20 +306,25 @@ def view_category(request, id):
     return render(request, 'view_category.html', context)
 
 def add_category_details(request):
-    if request.method == 'POST':
-        form = CategoryDetailsForm(request.POST)
-        if form.is_valid():
-            category = form.save(commit=False)
-            category.user = request.user
-            category.save()
-            messages.success(request, "Category added.")
-            return redirect('category')
+    try:
+        if request.method == 'POST':
+            form = CategoryDetailsForm(request.POST)
+            if form.is_valid():
+                category = form.save(commit=False)
+                category.user = request.user
+                category.save()
+                messages.success(request, "Category added.")
+                return redirect('category')
+            else:
+                messages.error(request, "Invalid form data.")
         else:
-            messages.error(request, "Invalid form data.")
-    else:
-        form = CategoryDetailsForm()
+            form = CategoryDetailsForm()
 
-    return render(request, 'add_category_details.html', {'form': form})
+        return render(request, 'add_category_details.html', {'form': form})
+    
+    except:
+        messages.add_message(request, messages.ERROR, "Error: Category exists")
+        return redirect('category')
 
 def overall(request):
     transactions = get_user_transactions(request.user)
