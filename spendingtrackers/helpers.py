@@ -63,4 +63,3 @@ def get_categories(user):
     categories = Category.objects.filter(user=user)
     return categories
 
-

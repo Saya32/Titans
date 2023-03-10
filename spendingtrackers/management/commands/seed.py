@@ -17,7 +17,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.create_users()
         self.create_transactions()
-        self.create_tcategories()
+        self.create_categories()
+        self.user = User.objects.all()
 
     def create_users(self):
         self.create_user("John", "Doe")
@@ -35,34 +36,53 @@ class Command(BaseCommand):
 
     def create_user(self, first_name, last_name ):
         username = self.email(first_name, last_name)
-        user = User.objects.create_user(
+        User.objects.create_user(
             username=username,
             first_name=first_name,
             last_name=last_name,
             password=Command.PASSWORD,
         )
-        return user
-    
-    def email(self, first_name, last_name):
-        email = f'{first_name.lower()}.{last_name.lower()}@example.org'
-        return email
     
     def create_transactions(self):
         for i in range(self.TRANSACTION_COUNT):
             print(f"Seeding requests {i}/{self.TRANSACTION_COUNT}", end='\r')
             self.create_transactions()
-        print("Request seeding complete.      ")
+        print("Transactions seeding complete.      ")
 
     def create_transactions(self):
         transactions = Transaction(
-            user=self.get_random_user(),
-            transaction_type='Expense',
+            users = User.objects.get(email="john.doe@example.org"),
+            transaction_type="Expense",
             title="TitleOne",
-            amount=40,
-            description='Description One',
-            date_paid = '2023-12-12',
-            time_paid = '20:20',
-            category='Salary',
+            amount=randint(1,5000),
+            description="Description One",
+            date_paid = "2023-12-12",
+            time_paid = "20:20",
+            category="Salary",
             receipt=None,
         )
         transactions.save()
+    
+    def create_categories(self):
+        for i in range(self.CATEGORY_COUNT):
+            print(f"Seeding requests {i}/{self.CATEGORY_COUNT}", end='\r')
+            self.create_categories()
+        print("Categories seeding complete.      ")
+
+    def create_categories(self):
+        category = Category(
+            users = User.objects.get(email="john.doe@example.org"),
+            name="Salary",
+            budget=randint(1,5000),
+            start_date = "2023-12-12",
+            end_date = "2024-12-12",
+        )
+        category.save()
+
+    # def get_random_user(self):
+    #     index = randint(0,self.user.count()-1)
+    #     return self.user[index]
+    
+    def email(self, first_name, last_name):
+        email = f'{first_name.lower()}.{last_name.lower()}@example.org'
+        return email
