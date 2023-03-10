@@ -50,7 +50,7 @@ class UpdateCategoryViewTestCase(TestCase):
         self.assertTemplateUsed(response, 'edit_category_details.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, CategoryDetailsForm))
-        self.assertContains(response, "2022-12-12")
+        self.assertContains(response, "2023-12-12")
 
         before_count = Category.objects.count()
         update_response = self.client.post(category_url, self.data, follow=True)

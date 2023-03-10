@@ -125,26 +125,24 @@ class CategoryDetailsForm(forms.ModelForm):
         }
         widgets = {
             'start_date': forms.widgets.DateInput(
-                format=('%d/%m/%Y'), attrs={'type': 'date'}
+                format=('%Y-%m-%d'), attrs={'type': 'date'}
                 ),
             'end_date': forms.widgets.DateInput(
-                format=('%d/%m/%Y'), attrs={'type': 'date'}
+                format=('%Y-%m-%d'), attrs={'type': 'date'}
                 ),
         }
 
     def clean(self):
-        cleaned_data = super().clean()
+        clean_data = super().clean()
 
-        start_date = self.cleaned_data.get('start_date')
-        end_date = self.cleaned_data.get('end_date')
-        if not start_date and end_date:
-            raise forms.ValidationError('Please enter the date as DD-MM-YYYY.')
-            return self.cleaned_data
-
+        start_date = clean_data.get('start_date')
+        end_date = clean_data.get('end_date')
         if start_date and end_date and start_date >= end_date:
             raise ValidationError('Start date must be before end date.')
         
-        return cleaned_data
+        return clean_data
+        
+
 
 
 
