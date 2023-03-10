@@ -100,10 +100,12 @@ def home_page(request):
     return render(request, 'home_page.html')
 
 
+@login_required
 def feed(request):
     return render(request, 'feed.html')
 
 
+@login_required
 def log_out(request):
     logout(request)
     return redirect('home_page')
@@ -127,6 +129,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         """Return redirect URL after successful update."""
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
+@login_required
 def new_transaction(request):
     if request.method == 'POST':
         form = TransactionForm(request.POST, request.FILES)
@@ -153,7 +156,7 @@ def new_transaction(request):
         form = TransactionForm()
         return render(request, 'new_transaction.html', {'form': form})
 
-
+@login_required
 def records(request):
     transactions = get_user_transactions(request.user)
     if request.method == 'POST':
@@ -173,6 +176,7 @@ def records(request):
             transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
     return render(request, 'records.html', {'transactions': transactions})
 
+@login_required
 def update_record(request, id):
     try:
         record = Transaction.objects.get(pk=id)
@@ -192,6 +196,7 @@ def update_record(request, id):
         form = TransactionForm(instance = record)
         return render(request, 'update_record.html', {'form': form, 'transaction' : record})
 
+@login_required
 def delete_record(request, id):
     if (Transaction.objects.filter(pk=id)):
         Transaction.objects.filter(pk=id).delete()
@@ -229,7 +234,7 @@ def change_password(request):
         return render(request, 'change_password.html')
 
 
-
+@login_required
 def edit_category_details(request, id):
     try:
         category = Category.objects.get(pk=id, user=request.user)
@@ -250,6 +255,7 @@ def edit_category_details(request, id):
         form = CategoryDetailsForm(instance = category)
         return render(request, 'edit_category_details.html', {'form': form, 'category' : category})
 
+@login_required
 def delete_category(request, id):
     if (Category.objects.filter(pk=id)):
         category = Category.objects.filter(pk=id)
@@ -263,10 +269,12 @@ def delete_category(request, id):
 
 
 
+@login_required
 def category(request):
    categories = get_categories(request.user.id)
    return render(request, 'category.html', {'categories':categories})
 
+@login_required
 def view_category(request, id):
     try:
         category = Category.objects.get(pk=id)
@@ -305,6 +313,7 @@ def view_category(request, id):
     context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income, 'balance': balance, 'warning_message': warning_message}
     return render(request, 'view_category.html', context)
 
+@login_required
 def add_category_details(request):
     if request.method == 'POST':
         form = CategoryDetailsForm(request.POST)
@@ -321,6 +330,7 @@ def add_category_details(request):
 
     return render(request, 'add_category_details.html', {'form': form})
 
+@login_required
 def overall(request):
     transactions = get_user_transactions(request.user)
     expense = get_user_expense(request.user)
