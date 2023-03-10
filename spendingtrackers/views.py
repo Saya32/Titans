@@ -15,7 +15,7 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import  UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, get_user_budget, change_transaction_name, delete_transactions, set_achievements, get_achievements
+from .helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, get_user_budget, change_transaction_name, delete_transactions, set_achievements, get_achievements, update_achievements
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import datetime
 
@@ -92,6 +92,7 @@ class SignUpView(LoginProhibitedMixin, FormView):
     def form_valid(self, form):
         self.object = form.save()
         set_achievements(self.object)
+        update_achievements(self.object)
         login(self.request, self.object)
         return super().form_valid(form)
 
@@ -149,6 +150,7 @@ def new_transaction(request):
                 transaction_type=form.cleaned_data.get('transaction_type'),
                 category_fk= category_object
             )
+            update_achievements(request.user)
             return redirect('feed')
         else:
             return render(request, 'new_transaction.html', {'form': form})
@@ -317,6 +319,7 @@ def add_category_details(request):
             category.user = request.user
             category.save()
             messages.success(request, "Category added.")
+            update_achievements(request.user)
             return redirect('category')
         else:
             messages.error(request, "Invalid form data.")

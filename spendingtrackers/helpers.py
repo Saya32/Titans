@@ -64,6 +64,12 @@ def get_categories(user):
     return categories
 
 def set_achievements(user):
+    new_user_achievement = Achievement.objects.create(
+        user = user,
+        title = "Welcome to the club",
+        description = "We take budgeting serious here - welcome!S",
+        unlocked = True
+    )
     five_category_achievement = Achievement.objects.create(
         user = user,
         title = "Getting organised!",
@@ -79,21 +85,22 @@ def set_achievements(user):
     )
 
 def update_achievements(user):
-    counter1 = 0
-    categories = get_categories(user=user)
-    for category in categories:
-        counter1 = counter1 + 1
-    if (counter1 >= 5):
-        five_transaction_achievement.unlocked = True
+    
+    category_count = Category.objects.filter(user=user).count()
+    transaction_count = Transaction.objects.filter(user=user).count()
+    achievements = Achievement.objects.filter(user=user)
 
-    counter2 = 0
-    transactions = get_all_transactions()
-    for transaction in transactions:
-        counter2 = counter2 + 1
-    if (counter2 >= 5):
+    if category_count >= 5:
+        five_category_achievement = achievements[1]
         five_category_achievement.unlocked = True
+        five_category_achievement.save()
+
+    if transaction_count >= 5:
+        five_transaction_achievement = achievements[2]
+        five_transaction_achievement.unlocked = True
+        five_transaction_achievement.save()
 
 
 def get_achievements(user):
-    achievements = Achievement.objects.filter(user=user)
+    achievements = Achievement.objects.filter(user=user).filter(unlocked=True)
     return achievements
