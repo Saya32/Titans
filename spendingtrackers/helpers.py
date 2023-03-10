@@ -1,4 +1,4 @@
-from .models import User, Transaction, Category
+from .models import User, Transaction, Category, Achievement
 from django.conf import settings
 from django.shortcuts import redirect
 from django.utils import timezone
@@ -63,4 +63,37 @@ def get_categories(user):
     categories = Category.objects.filter(user=user)
     return categories
 
+def set_achievements(user):
+    five_category_achievement = Achievement.objects.create(
+        user = user,
+        title = "Getting organised!",
+        description = "Creating five new categories.",
+        unlocked = False
+    )
 
+    five_transaction_achievement = Achievement.objects.create(
+        user = user,
+        title = "Money manager",
+        description = "Recording five transactions.",
+        unlocked = False
+    )
+
+def update_achievements(user):
+    counter1 = 0
+    categories = get_categories(user=user)
+    for category in categories:
+        counter1 = counter1 + 1
+    if (counter1 >= 5):
+        five_transaction_achievement.unlocked = True
+
+    counter2 = 0
+    transactions = get_all_transactions()
+    for transaction in transactions:
+        counter2 = counter2 + 1
+    if (counter2 >= 5):
+        five_category_achievement.unlocked = True
+
+
+def get_achievements(user):
+    achievements = Achievement.objects.filter(user=user)
+    return achievements

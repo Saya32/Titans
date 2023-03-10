@@ -64,10 +64,17 @@ class Transaction(models.Model):
     category_fk = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null =True)
     category = models.CharField(max_length=50, blank=False)
     receipt = models.ImageField(upload_to='images/', height_field = None, width_field = None, max_length= None, blank=True, null=True) #need to create receipts url pathway
-    
+
     def __str__(self):
         return self.title
 
     def receipt_url(self):
         if self.receipt and hasattr(self.receipt, 'url'):
             return self.receipt.url
+
+
+class Achievement(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(blank = False, max_length=30)
+    description = models.CharField(blank = False, max_length=200)
+    unlocked = models.BooleanField(blank = False)

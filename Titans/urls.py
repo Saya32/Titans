@@ -23,5 +23,6 @@ urlpatterns = [
     path('add_category_details/', views.add_category_details, name='add_category_details'),
     path('delete_category/<int:id>', views.delete_category, name='delete_category'),
     path('overall/',views.overall, name ='overall'),
+    path('view_achievements/', views.view_achievements, name='view_achievements'),
 ]
 urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
