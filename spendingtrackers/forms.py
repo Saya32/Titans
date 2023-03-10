@@ -113,10 +113,6 @@ class TransactionForm(forms.ModelForm):
              self.add_error('time_paid','Please enter the time as HH:MM.')
              return
 
-        # if(date <= timezone.now().date()):
-        #     self.add_error('date','Date must be in the future.')
-        #     if (date == timezone.now().date() and time <= timezone.now().time()):
-        #         self.add_error('time','Time must be in the future.')
     
 
 class CategoryDetailsForm(forms.ModelForm):
@@ -132,7 +128,6 @@ class CategoryDetailsForm(forms.ModelForm):
 
     def clean(self):
         clean_data = super().clean()
-
         start_date = clean_data.get('start_date')
         end_date = clean_data.get('end_date')
         if start_date and end_date and start_date >= end_date:
@@ -173,9 +168,3 @@ class ChangePasswordForm(forms.Form):
         if password != password_confirmation:
             self.add_error('password_confirmation', 'Confirmation does not match password.')
 
-# class ChangePasswordForm(forms.Form):
-#     username = forms.CharField(label='username', max_length=50)
-#     his_password = forms.CharField(label='his_password', widget=forms.PasswordInput())
-#     password = forms.CharField(label='password', widget=forms.PasswordInput())
-#     password_confirmation = forms.CharField(label='password_confirmation', widget=forms.PasswordInput())
- 
