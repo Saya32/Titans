@@ -274,10 +274,13 @@ def view_category(request, id):
         messages.add_message(request, messages.ERROR, "Category could not be found!")
         return redirect('feed')
 
+    # user_transactions = get_user_transactions(request.user)
+    # category_transactions = get_category_transactions(category)
     transactions = get_user_transactions(request.user)
     expense = category.get_expenses()
     income = category.get_income()
     balance = category.get_balance()
+    # transactions = user_transactions | category_transactions 
    
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
