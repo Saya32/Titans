@@ -1,13 +1,15 @@
 from django.core.management.base import BaseCommand, CommandError
 from faker import Faker
 from spendingtrackers.models import User, Transaction, Category
-from random import randint, random
+from random import randint, random, choice
+from datetime import datetime, timedelta
 
 class Command(BaseCommand):
     PASSWORD = "Password123"
     USER_COUNT = 50
     TRANSACTION_COUNT = 50
-    CATEGORY_COUNT = 12
+    CATEGORY_COUNT = 50
+    CATEGORY_NAME = ['Salary', 'Gifts', 'Travel', 'Insurance', 'Entertainment', 'Bills', 'Rent']
    
 
     def __init__(self):
@@ -16,9 +18,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.create_users()
-        self.create_transactions()
         self.create_categories()
-        self.user = User.objects.all()
+        self.create_transactions()
 
     def create_users(self):
         self.create_user("John", "Doe")
@@ -43,27 +44,7 @@ class Command(BaseCommand):
             password=Command.PASSWORD,
         )
         self.user = user
-
-    def create_transactions(self):
-        for i in range(self.TRANSACTION_COUNT):
-            print(f"Seeding transactions {i+1}/{self.TRANSACTION_COUNT}", end='\r')
-            self.create_transaction()
-        print("Transactions seeding complete.")
-
-    def create_transaction(self):
-        transaction = Transaction(
-            user=self.user,
-            transaction_type="Expense",
-            title="TitleOne",
-            amount=randint(1,5000),
-            description="Description One",
-            date_paid="2023-12-12",
-            time_paid="20:20",
-            category="Salary",
-            receipt=None,
-        )
-        transaction.save()
-
+    
     def create_categories(self):
         for i in range(self.CATEGORY_COUNT):
             print(f"Seeding categories {i+1}/{self.CATEGORY_COUNT}", end='\r')
@@ -71,14 +52,45 @@ class Command(BaseCommand):
         print("Categories seeding complete.")
 
     def create_category(self):
+        name=choice(Command.CATEGORY_NAME)
+        start_date = datetime.now().date() - timedelta(days=365)
+        end_date = datetime.now().date() + timedelta(days=365)
+        user=User.objects.order_by('?').first()
+        existing_category = Category.objects.filter(user=user, name=name).first()
+        if existing_category:
+            return
         category = Category(
-            user=self.user,
-            name="Salary",
+            user=user,
+            name=name,
             budget=randint(1,5000),
-            start_date="2023-12-12",
-            end_date="2024-12-12",
+            start_date=start_date,
+            end_date=end_date,
         )
         category.save()
+
+
+    def create_transactions(self):
+        for user in User.objects.all():
+            for category in Category.objects.filter(user=user):
+                for i in range(self.TRANSACTION_COUNT):
+                    print(f"Seeding transactions {i+1}/{self.TRANSACTION_COUNT}", end='\r')
+                    self.create_transaction(category)
+        print("Transactions seeding complete.")
+
+    def create_transaction(self, category):
+        transaction = Transaction(
+            user=category.user,
+            transaction_type=choice(['Expense', 'Income']),
+            title=self.faker.text(max_nb_chars=30),
+            amount=randint(1,5000),
+            description=self.faker.text(max_nb_chars=200),
+            date_paid=self.faker.date_this_year(),
+            time_paid=self.faker.time(),
+            category=category.name,
+            receipt=None,
+        )
+        transaction.save()
+
 
     def email(self, first_name, last_name):
         email = f'{first_name.lower()}.{last_name.lower()}@example.org'
