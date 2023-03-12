@@ -92,3 +92,5 @@ class UpdateTransactionViewTestCase(TestCase):
         
         self.transactions = Transaction.objects.filter(user = self.user)
         self.assertEqual(self.transactions[0].amount, 1000)
+    
+  
