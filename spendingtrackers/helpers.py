@@ -2,6 +2,7 @@ from .models import User, Transaction, Category
 from django.conf import settings
 from django.shortcuts import redirect
 from django.utils import timezone
+from django.db.models import Q
 
 
 
@@ -63,4 +64,9 @@ def get_categories(user):
     categories = Category.objects.filter(user=user)
     return categories
 
-
+# def get_category_transactions(category, user=None):
+#     if user:
+#         transactions = Transaction.objects.filter(category=category).filter(Q(seeded_by=user) | Q(seeded_by__isnull=True))
+#     else:
+#         transactions = Transaction.objects.filter(category=category)
+#     return transactions

@@ -29,8 +29,6 @@ class CategoryDetailsFormTestCase(TestCase):
         form = CategoryDetailsForm()
         self.assertIn('name', form.fields)
 
-        
-        
         self.assertIn('budget', form.fields)
         budget = form.fields['budget']
         self.assertTrue(isinstance(budget, forms.IntegerField))

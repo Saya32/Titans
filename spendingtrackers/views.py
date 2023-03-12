@@ -232,7 +232,7 @@ def change_password(request):
 
 def edit_category_details(request, id):
     try:
-        category = Category.objects.get(pk=id, user=request.user)
+        category = Category.objects.get(pk=id)
     except:
         messages.add_message(request, messages.ERROR, "Category could not be found!")
         return redirect('category')
@@ -274,10 +274,13 @@ def view_category(request, id):
         messages.add_message(request, messages.ERROR, "Category could not be found!")
         return redirect('feed')
 
+    # user_transactions = get_user_transactions(request.user)
+    # category_transactions = get_category_transactions(category)
     transactions = get_user_transactions(request.user)
     expense = category.get_expenses()
     income = category.get_income()
     balance = category.get_balance()
+    # transactions = user_transactions | category_transactions 
    
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
@@ -306,20 +309,25 @@ def view_category(request, id):
     return render(request, 'view_category.html', context)
 
 def add_category_details(request):
-    if request.method == 'POST':
-        form = CategoryDetailsForm(request.POST)
-        if form.is_valid():
-            category = form.save(commit=False)
-            category.user = request.user
-            category.save()
-            messages.success(request, "Category added.")
-            return redirect('category')
+    try:
+        if request.method == 'POST':
+            form = CategoryDetailsForm(request.POST)
+            if form.is_valid():
+                category = form.save(commit=False)
+                category.user = request.user
+                category.save()
+                messages.success(request, "Category added.")
+                return redirect('category')
+            else:
+                messages.error(request, "Invalid form data.")
         else:
-            messages.error(request, "Invalid form data.")
-    else:
-        form = CategoryDetailsForm()
+            form = CategoryDetailsForm()
 
-    return render(request, 'add_category_details.html', {'form': form})
+        return render(request, 'add_category_details.html', {'form': form})
+    
+    except:
+        messages.add_message(request, messages.ERROR, "Error: Category exists")
+        return redirect('category')
 
 def overall(request):
     transactions = get_user_transactions(request.user)
