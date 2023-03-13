@@ -238,22 +238,24 @@ def chart_expense_graph(request):
         'data': data,
     })
 
-def expense_structure(request):
-    
-    transactions = Transaction.objects.filter(user=request.user)
-    labels=[]
-    data=[]
-    expense = 0
+def expense_pie_chart(request):
+    transactions = Transaction.objects.filter(user=request.user).order_by('category')
+    labels = []
+    data = []
+    expenses = 0
     for transaction in transactions:
         labels.append(transaction.category)
-        if transaction.transaction_type == 'Expense':
-            expense += transaction.amount
-        else:
-            expense != transaction.amount 
-        data.append(expense)
+        if transaction.transaction_type == "Expense":
+            expenses = transaction.amount
+        data.append(expenses)
+
+    return JsonResponse(data={
+        'labels': labels,
+        'data': data,
+    })
+
 
     
-    return render(request, 'dashboard.html', {'labels':labels, 'data':data})
 
 def update_record(request, id):
     try:
@@ -391,14 +393,15 @@ def view_category(request, id):
 def dashboard(request):
     balance_data = chart_balance_graph(request)
     expense_data = chart_expense_graph(request)
-    expense_structure = expense_structure(request)
+    expense_structure = expense_pie_chart(request)
     context = {
         'balance_data': balance_data,
         'expense_data': expense_data,
-        'expense_structure': expense_structure,
+        'expense_pie_chart': expense_structure,
         # other context variables
     }
     return render(request, 'dashboard.html')
+
 def add_category_details(request):
     if request.method == 'POST':
         form = CategoryDetailsForm(request.POST)
