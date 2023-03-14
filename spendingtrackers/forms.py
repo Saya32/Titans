@@ -112,10 +112,6 @@ class TransactionForm(forms.ModelForm):
              self.add_error('time_paid','Please enter the time as HH:MM.')
              return
 
-        # if(date <= timezone.now().date()):
-        #     self.add_error('date','Date must be in the future.')
-        #     if (date == timezone.now().date() and time <= timezone.now().time()):
-        #         self.add_error('time','Time must be in the future.')
     
 
 class CategoryDetailsForm(forms.ModelForm):

@@ -248,8 +248,6 @@ def retrieve_password(request):
         if not user:
             messages.add_message(request, messages.ERROR, "email not exists!")
             return render(request, 'retrieve_password.html')
-        # 成功 发送邮件
-        # 生成sid
         sid = str(uuid.uuid1())
         with open('retrieve_password.json') as w:
             retrieve_password_data = w.read()
