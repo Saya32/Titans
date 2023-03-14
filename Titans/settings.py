@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'spendingtrackers',
     'widget_tweaks',
     'matplotlib',
-    'chartjs'
+    'chartjs',
 ]
 
 MIDDLEWARE = [
