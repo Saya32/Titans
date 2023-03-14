@@ -1,128 +1,289 @@
-{% extends 'base_content.html' %}
-{% block content %}
+{% extends 'base_content.html' %} {% block content %}
 <div class="container">
-    <div class="row" style="width:90%">
-        <div class="col-sm-4 text-center my-3">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Balance Trends</h4>
-                </div>
-                <canvas id="chart_balance_graph" data-url="{% url 'chart_balance_graph' %}"></canvas>
-                    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-                    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-                    <script>
-                    $(function () {
-                        var $chart_balance_graph = $("#chart_balance_graph");
-                        $.ajax({
-                            url: $chart_balance_graph.data("url"),
-                            success: function (data) {
-                                var ctx = $chart_balance_graph[0].getContext("2d");
-                                new Chart(ctx, {
-                                    type: 'bar',
-                                    data: {
-                                    labels: data.labels,
-                                    datasets: [{
-                                        label: 'Balance',
-                                        backgroundColor: 'blue',
-                                        data: data.data
-                                    }]          
-                                    },
-                                    options: {
-                                    responsive: true,
-                                    legend: {
-                                        position: 'top',
-                                    },
-                                    title: {
-                                        display: true,
-                                        text: 'Balance Trend Bar Chart'
-                                    }
-                                    }
-                                });
-
-                                }
-                            });
-
-                            });
-
-                    </script>
-            </div>
+  <div class="row" style="width: 90%">
+    <div class="col-sm-4 text-center my-3">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Balance Trends</h4>
         </div>
-    
-
-
-     <div class="col-sm-4 text-center my-3">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Expense Trends</h4>
-            </div>
-            <canvas id="chart_expense_graph" data-url="{% url 'chart_expense_graph' %}"></canvas>
-                <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-                <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-                <script>
-                $(function () {
-                    var $chart_expense_graph = $("#chart_expense_graph");
-                    $.ajax({
-                        url: $chart_expense_graph.data("url"),
-                        success: function (data) {
-                            var ctx = $chart_expense_graph[0].getContext("2d");
-                            new Chart(ctx, {
-                                type: 'bar',
-                                data: {
-                                labels: data.labels,
-                                datasets: [{
-                                    label: 'Expenses',
-                                    backgroundColor: 'blue',
-                                    data: data.data
-                                }]          
-                                },
-                                options: {
-                                responsive: true,
-                                legend: {
-                                    position: 'top',
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Expense Trend Bar Chart'
-                                }
-                                }
-                            });
-
-                            }
-                        });
-
-                        });
-
-                </script>
-        </div>
-    
-
-     <div class="col-sm-4 text-center my-3">
-        <div class="card card-block" style="height : 300px">
-            <div class="card-body d-flex">              
-            <h5 class="card-title">Income Trend</h5>
-            <a href="" class="stretched-link"></a> 
-            </div>
-        </div>
-    
-
-     <div class="col-sm-4 text-center my-3">
-        <div class="card card-block" style="height : 300px">
-            <div class="card-body d-flex">              
-            <h5 class="card-title">Expense Structure</h5>
-            <a href="" class="stretched-link"></a> 
-            </div>
-        </div>
-    
-
-     <div class="col-sm-4 text-center my-3">
-        <div class="card card-block" style="height : 300px">
-            <div class="card-body d-flex">              
-            <h5 class="card-title">Expense Structure</h5>
-            <a href="" class="stretched-link"></a> 
-            </div>
-        </div>
+        <canvas
+          id="chart_balance_graph"
+          data-url="{% url 'chart_balance_graph' %}"
+        ></canvas>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+          $(function () {
+            var $chart_balance_graph = $("#chart_balance_graph");
+            $.ajax({
+              url: $chart_balance_graph.data("url"),
+              success: function (data) {
+                var ctx = $chart_balance_graph[0].getContext("2d");
+                new Chart(ctx, {
+                  type: "bar",
+                  data: {
+                    labels: data.labels,
+                    datasets: [
+                      {
+                        label: "Balance",
+                        backgroundColor: "blue",
+                        data: data.data,
+                      },
+                    ],
+                  },
+                  options: {
+                    responsive: true,
+                    legend: {
+                      position: "top",
+                    },
+                    title: {
+                      display: true,
+                      text: "Balance Trend Bar Chart",
+                    },
+                  },
+                });
+              },
+            });
+          });
+        </script>
+      </div>
     </div>
-        
-</div>    
 
+    <div class="col-sm-4 text-center my-3">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Expense Trends</h4>
+        </div>
+        <canvas
+          id="chart_expense_graph"
+          data-url="{% url 'chart_expense_graph' %}"
+        ></canvas>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+          $(function () {
+            var $chart_expense_graph = $("#chart_expense_graph");
+            $.ajax({
+              url: $chart_expense_graph.data("url"),
+              success: function (data) {
+                var ctx = $chart_expense_graph[0].getContext("2d");
+                new Chart(ctx, {
+                  type: "bar",
+                  data: {
+                    labels: data.labels,
+                    datasets: [
+                      {
+                        label: "Expenses",
+                        backgroundColor: "blue",
+                        data: data.data,
+                      },
+                    ],
+                  },
+                  options: {
+                    responsive: true,
+                    legend: {
+                      position: "top",
+                    },
+                    title: {
+                      display: true,
+                      text: "Expense Trend Bar Chart",
+                    },
+                  },
+                });
+              },
+            });
+          });
+        </script>
+      </div>
+    </div>
+
+    <div class="col-sm-4 text-center my-3">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Income Trends</h4>
+        </div>
+        <canvas
+          id="chart_income_graph"
+          data-url="{% url 'chart_income_graph' %}"
+        ></canvas>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+          $(function () {
+            var $chart_income_graph = $("#chart_income_graph");
+            $.ajax({
+              url: $chart_income_graph.data("url"),
+              success: function (data) {
+                var ctx = $chart_income_graph[0].getContext("2d");
+                new Chart(ctx, {
+                  type: "bar",
+                  data: {
+                    labels: data.labels,
+                    datasets: [
+                      {
+                        label: "Income",
+                        backgroundColor: "red",
+                        data: data.data,
+                      },
+                    ],
+                  },
+                  options: {
+                    responsive: true,
+                    legend: {
+                      position: "top",
+                    },
+                    title: {
+                      display: true,
+                      text: "Income Trend Bar Chart",
+                    },
+                  },
+                });
+              },
+            });
+          });
+        </script>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="width: 90%">
+    <div class="col-sm-4 text-center my-3">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Expense Structure</h4>
+        </div>
+        <canvas
+          id="expense_structure"
+          data-url="{% url 'expense_structure' %}"
+        ></canvas>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+          $(function () {
+            var $expense_structure = $("#expense_structure");
+            var colors = ["red", "blue", "yellow", "purple", "magenta"];
+            $.ajax({
+              url: $expense_structure.data("url"),
+              success: function (data) {
+                let labels = [];
+                let legend = [];
+                let values = [];
+                for (const [key, value] of Object.entries(data.data)) {
+                  labels.push(key);
+                  values.push(value);
+                }
+                var ctx = $expense_structure[0].getContext("2d");
+                new Chart(ctx, {
+                  type: "doughnut",
+                  data: {
+                    labels: labels,
+                    datasets: [
+                      {
+                        backgroundColor: colors,
+                        data: values,
+                        total: data.total,
+                      },
+                    ],
+                  },
+                  options: {
+                    legend: {
+                      labels: {
+                        generateLabels: function (chart) {
+                          var data = chart.data;
+                          console.log(data);
+                          if (data.labels.length && data.datasets.length) {
+                            return data.labels.map(function (label, i) {
+                              var meta = chart.getDatasetMeta(0);
+                              var style = meta.controller.getStyle(i);
+                              var percent = Math.round(
+                                (data.datasets[0].data[i] /
+                                  data.datasets[0].total) *
+                                  100,
+                                2
+                              );
+                              var text = label + "  " + percent + "%";
+                              return {
+                                text: text,
+                                fillStyle: style.backgroundColor,
+                                strokeStyle: style.borderColor,
+                                lineWidth: style.borderWidth,
+                                // hidden:
+                                //   isNaN(data.datasets[0].data[i]) ||
+                                //   meta.data[i].hidden,
+
+                                // Extra data used for toggling the correct item
+                                index: i,
+                              };
+                            });
+                          }
+                          return [];
+                        },
+                      },
+                      position: "right",
+                    },
+                  },
+                });
+              },
+            });
+          });
+        </script>
+      </div>
+    </div>
+    <div class="col-sm-4 text-center my-3">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Expense Structure2</h4>
+        </div>
+        <canvas
+          id="expense_structure2"
+          data-url="{% url 'expense_structure2' %}"
+        ></canvas>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+          $(function () {
+            var $expense_structure2 = $("#expense_structure2");
+            var colors = ["red", "blue", "yellow", "purple", "magenta"];
+
+            $.ajax({
+              url: $expense_structure2.data("url"),
+              success: function (data) {
+                let labels = [];
+                let values = [];
+                for (const [key, value] of Object.entries(data.data)) {
+                  labels.push(key);
+                  values.push(value);
+                }
+                var ctx = $expense_structure2[0].getContext("2d");
+                new Chart(ctx, {
+                  type: "horizontalBar",
+                  data: {
+                    labels: labels,
+                    datasets: [
+                      {
+                        label: "Expense",
+                        backgroundColor: colors,
+                        data: values,
+                      },
+                    ],
+                  },
+                  options: {
+                    legend: {
+                      position: "right",
+                    },
+                    title: {
+                      display: true,
+                      text: "Expense Structure Chart",
+                    },
+                  },
+                });
+              },
+            });
+          });
+        </script>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -227,16 +227,92 @@ def chart_expense_graph(request):
     expense = 0
     for transaction in transactions:
         labels.append(transaction.date_paid.strftime("%m/%d/%Y"))
+
         if transaction.transaction_type == "Expense":
             expense = transaction.amount
         else:
-            expense != transaction.amount
+            expense = 0
         data.append(expense)
     # Create chart data
     return JsonResponse(data={
         'labels': labels,
         'data': data,
     })
+
+def chart_income_graph(request):
+    # Retrieve user's transactions
+    transactions = Transaction.objects.filter(user=request.user).order_by('date_paid')
+    # Extract data for graph
+    labels = []
+    data = []
+    income = 0
+    for transaction in transactions:
+        labels.append(transaction.date_paid.strftime("%m/%d/%Y"))
+        if transaction.transaction_type == "Income":
+            income = transaction.amount
+        else:
+            income = 0
+        data.append(income)
+    # Create chart data
+    return JsonResponse(data={
+        'labels': labels,
+        'data': data,
+    })
+
+def expense_structure(request):
+    # Retrieve user's transactions
+    transactions = Transaction.objects.filter(user=request.user).order_by('date_paid')
+    # Extract data for graph
+    labels = []
+    percentlabel = []
+    data = {}
+    total = 0
+    expense = 0
+    for transaction in transactions:
+        if transaction.transaction_type == "Expense":
+            total += transaction.amount
+    for transaction in transactions:
+        labels.append(transaction.category)
+        if transaction.transaction_type == "Expense":
+            expense = transaction.amount
+        else:
+            expense = 0
+        if transaction.category in data:
+            data[transaction.category] = round(int(data[transaction.category]) + expense)
+        else:
+            data[transaction.category] = expense
+    # Create chart data
+    return JsonResponse(data={
+        'labels': labels,
+        'total' : total,
+        'percentlabel': percentlabel,
+        'data': data,
+    })
+
+def expense_structure2(request):
+    # Retrieve user's transactions
+    transactions = Transaction.objects.filter(user=request.user).order_by('date_paid')
+    # Extract data for graph
+    labels = []
+    data = {}
+    expense = 0
+    for transaction in transactions:
+        labels.append(transaction.category)
+        if transaction.transaction_type == "Expense":
+            expense = transaction.amount
+        else:
+            expense = 0
+        if transaction.category in data:
+            data[transaction.category] = int(data[transaction.category]) + expense
+        else:
+            data[transaction.category] = expense
+    # Create chart data
+    return JsonResponse(data={
+        'labels': labels,
+        'data': data,
+    })
+
+
 
 def update_record(request, id):
     try:
@@ -374,9 +450,16 @@ def view_category(request, id):
 def dashboard(request):
     balance_data = chart_balance_graph(request)
     expense_data = chart_expense_graph(request)
+    income_data = chart_income_graph(request)
+    expense_structure_data = expense_structure(request)
+    expense_structure_data2 = expense_structure2(request)
+    
     context = {
         'balance_data': balance_data,
         'expense_data': expense_data,
+        'income_data': income_data,
+        'expense_structure_data': expense_structure_data,
+        'expense_structure_data2': expense_structure_data2,
         # other context variables
     }
     return render(request, 'dashboard.html')
