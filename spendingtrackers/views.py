@@ -1,6 +1,7 @@
 # Create your views here.
 import json
 import uuid
+import re
 
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import User, Transaction, Category
@@ -261,7 +262,8 @@ def retrieve_password(request):
             w.write(json.dumps(retrieve_password_data))
         path = 'http://0.0.0.0:8000/update_password/?sid=' + sid
         sendMail(user_name, path)
-        messages.add_message(request, messages.SUCCESS, "SUCCESS!")
+        messages.add_message(request, messages.SUCCESS,
+                             "SUCCESS!If you don't receive the email，Please find it in the spam mailbox！")
         return render(request, 'retrieve_password.html')
     else:
         return render(request, 'retrieve_password.html')
@@ -271,6 +273,12 @@ def update_password(request):
     if request.method == 'POST':
         sid = request.POST['sid']
         password = request.POST['password']
+        reg = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$'
+        if not re.match(reg, password):
+            messages.add_message(request, messages.ERROR, 'Password must contain an uppercase character, a lowercase '
+                                                          'character and a number')
+            return render(request, 'update_password.html', {"sid": sid})
+
         password_confirmation = request.POST['password_confirmation']
         if password != password_confirmation:
             messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
@@ -293,7 +301,7 @@ def update_password(request):
             retrieve_password_data.pop(sid)
         with open('retrieve_password.json', 'w') as w:
             w.write(json.dumps(retrieve_password_data))
-        messages.add_message(request, messages.SUCCESS, "SUCCESS!")
+        messages.add_message(request, messages.SUCCESS, "SUCCESS!password:{}!".format(password))
         return render(request, 'update_password.html', {"sid": sid})
     else:
         sid = request.GET.get('sid')
