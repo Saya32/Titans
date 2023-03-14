@@ -463,6 +463,7 @@ def dashboard(request):
         # other context variables
     }
     return render(request, 'dashboard.html')
+
 def add_category_details(request):
     if request.method == 'POST':
         form = CategoryDetailsForm(request.POST)
