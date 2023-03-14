@@ -2,7 +2,6 @@
 import json
 import uuid
 import re
-
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import User, Transaction, Category
 from django.contrib.auth.decorators import login_required
@@ -18,11 +17,8 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, \
-    get_user_budget, change_transaction_name, delete_transactions, sendMail
+from .helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, get_user_budget, change_transaction_name, delete_transactions, sendMail
 from django.contrib.auth.hashers import make_password, check_password
-from datetime import datetime
-
 from datetime import datetime
 
 
@@ -112,10 +108,12 @@ def sign_success(request):
     return render(request, 'sign_success.html')
 
 
+@login_required
 def feed(request):
     return render(request, 'feed.html')
 
 
+@login_required
 def log_out(request):
     logout(request)
     return redirect('home_page')
@@ -136,7 +134,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         """Return redirect URL after successful update."""
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
-
+@login_required
 def new_transaction(request):
     if request.method == 'POST':
         form = TransactionForm(request.POST, request.FILES)
@@ -163,7 +161,7 @@ def new_transaction(request):
         form = TransactionForm()
         return render(request, 'new_transaction.html', {'form': form})
 
-
+@login_required
 def records(request):
     transactions = get_user_transactions(request.user)
     if request.method == 'POST':
@@ -183,7 +181,7 @@ def records(request):
             transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
     return render(request, 'records.html', {'transactions': transactions})
 
-
+@login_required
 def update_record(request, id):
     try:
         record = Transaction.objects.get(pk=id)
@@ -204,6 +202,7 @@ def update_record(request, id):
         return render(request, 'update_record.html', {'form': form, 'transaction': record})
 
 
+@login_required
 def delete_record(request, id):
     if (Transaction.objects.filter(pk=id)):
         Transaction.objects.filter(pk=id).delete()
@@ -218,14 +217,14 @@ def change_password(request):
     if request.method == 'POST':
         userform = ChangePasswordForm(request.POST)
         if userform.is_valid():
-            username = userform.cleaned_data['username']
+            email = userform.cleaned_data['email']
             his_password = userform.cleaned_data['his_password']
             password = userform.cleaned_data['password']
             password_confirmation = userform.cleaned_data['password_confirmation']
             if password != password_confirmation:
                 messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
                 return render(request, 'change_password.html')
-            user = User.objects.filter(username__exact=username).first()
+            user = User.objects.filter(username__exact=email).first()
             if not user:
                 messages.add_message(request, messages.ERROR, "email not exists!")
                 return render(request, 'change_password.html')
@@ -241,76 +240,10 @@ def change_password(request):
         return render(request, 'change_password.html')
 
 
-def retrieve_password(request):
-    if request.method == 'POST':
-        user_name = request.POST['email']
-        user = User.objects.filter(username__exact=user_name).first()
-        if not user:
-            messages.add_message(request, messages.ERROR, "email not exists!")
-            return render(request, 'retrieve_password.html')
-        sid = str(uuid.uuid1())
-        with open('retrieve_password.json') as w:
-            retrieve_password_data = w.read()
-            if not retrieve_password_data:
-                retrieve_password_data = {}
-            else:
-                retrieve_password_data = json.loads(retrieve_password_data)
-        with open('retrieve_password.json', 'w') as w:
-            retrieve_password_data[sid] = user_name
-            w.write(json.dumps(retrieve_password_data))
-        path = 'http://0.0.0.0:8000/update_password/?sid=' + sid
-        sendMail(user_name, path)
-        messages.add_message(request, messages.SUCCESS,
-                             "SUCCESS!If you don't receive the email，Please find it in the spam mailbox！")
-        return render(request, 'retrieve_password.html')
-    else:
-        return render(request, 'retrieve_password.html')
-
-
-def update_password(request):
-    if request.method == 'POST':
-        sid = request.POST['sid']
-        password = request.POST['password']
-        reg = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$'
-        if not re.match(reg, password):
-            messages.add_message(request, messages.ERROR, 'Password must contain an uppercase character, a lowercase '
-                                                          'character and a number')
-            return render(request, 'update_password.html', {"sid": sid})
-
-        password_confirmation = request.POST['password_confirmation']
-        if password != password_confirmation:
-            messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
-            return render(request, 'update_password.html', {"sid": sid})
-        with open('retrieve_password.json') as w:
-            retrieve_password_data = w.read()
-            if not retrieve_password_data:
-                retrieve_password_data = {}
-            else:
-                retrieve_password_data = json.loads(retrieve_password_data)
-
-            email = retrieve_password_data.get(sid)
-            if not email:
-                messages.add_message(request, messages.ERROR, "link not exists!")
-                return render(request, 'update_password.html', {"sid": sid})
-
-            user = User.objects.filter(username__exact=email).first()
-            user.password = make_password(password)
-            user.save()
-            retrieve_password_data.pop(sid)
-        with open('retrieve_password.json', 'w') as w:
-            w.write(json.dumps(retrieve_password_data))
-        messages.add_message(request, messages.SUCCESS, "SUCCESS!password:{}!".format(password))
-        return render(request, 'update_password.html', {"sid": sid})
-    else:
-        sid = request.GET.get('sid')
-        if not sid:
-            return render(request, 'update_password.html')
-        return render(request, 'update_password.html', {"sid": sid})
-
-
+@login_required
 def edit_category_details(request, id):
     try:
-        category = Category.objects.get(pk=id, user=request.user)
+        category = Category.objects.get(pk=id)
     except:
         messages.add_message(request, messages.ERROR, "Category could not be found!")
         return redirect('category')
@@ -329,6 +262,7 @@ def edit_category_details(request, id):
         return render(request, 'edit_category_details.html', {'form': form, 'category': category})
 
 
+@login_required
 def delete_category(request, id):
     if (Category.objects.filter(pk=id)):
         category = Category.objects.filter(pk=id)
@@ -341,11 +275,14 @@ def delete_category(request, id):
         return redirect('feed')
 
 
+
+@login_required
 def category(request):
     categories = get_categories(request.user.id)
     return render(request, 'category.html', {'categories': categories})
 
 
+@login_required
 def view_category(request, id):
     try:
         category = Category.objects.get(pk=id)
@@ -353,11 +290,13 @@ def view_category(request, id):
         messages.add_message(request, messages.ERROR, "Category could not be found!")
         return redirect('feed')
 
+    # user_transactions = get_user_transactions(request.user)
+    # category_transactions = get_category_transactions(category)
     transactions = get_user_transactions(request.user)
     expense = category.get_expenses()
     income = category.get_income()
     balance = category.get_balance()
-
+   
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
         to_date = request.POST.get('to_date')
@@ -370,11 +309,11 @@ def view_category(request, id):
             balance = category.get_balance(from_date=from_date_obj, to_date=to_date_obj)
 
     if category.budget is not None:
-        used_percentage = expense / category.budget * 100
+        used_percentage = (category.budget - balance) / category.budget * 100
         used_percentage = round(used_percentage, 2)
     else:
         used_percentage = None
-
+    
     if balance < 0:
         warning_message = "Warning: You have exceeded your budget for this category."
     elif used_percentage is not None and used_percentage >= 90:
@@ -386,24 +325,29 @@ def view_category(request, id):
                'balance': balance, 'warning_message': warning_message}
     return render(request, 'view_category.html', context)
 
-
+@login_required
 def add_category_details(request):
-    if request.method == 'POST':
-        form = CategoryDetailsForm(request.POST)
-        if form.is_valid():
-            category = form.save(commit=False)
-            category.user = request.user
-            category.save()
-            messages.success(request, "Category added.")
-            return redirect('category')
+    try:
+        if request.method == 'POST':
+            form = CategoryDetailsForm(request.POST)
+            if form.is_valid():
+                category = form.save(commit=False)
+                category.user = request.user
+                category.save()
+                messages.success(request, "Category added.")
+                return redirect('category')
+            else:
+                messages.error(request, "Invalid form data.")
         else:
-            messages.error(request, "Invalid form data.")
-    else:
-        form = CategoryDetailsForm()
+            form = CategoryDetailsForm()
 
-    return render(request, 'add_category_details.html', {'form': form})
+        return render(request, 'add_category_details.html', {'form': form})
+    
+    except:
+        messages.add_message(request, messages.ERROR, "Error: Category exists")
+        return redirect('category')
 
-
+@login_required
 def overall(request):
     transactions = get_user_transactions(request.user)
     expense = get_user_expense(request.user)
@@ -438,3 +382,4 @@ def overall(request):
     context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income,
                'balance': balance, 'budget': budget, 'warning_message': warning_message, }
     return render(request, 'overall.html', context)
+

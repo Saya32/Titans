@@ -2,6 +2,7 @@ from .models import User, Transaction, Category
 from django.conf import settings
 from django.shortcuts import redirect
 from django.utils import timezone
+from django.db.models import Q
 
 from email.mime.multipart import MIMEMultipart
 import smtplib
@@ -70,35 +71,3 @@ def get_categories(user):
     return categories
 
 
-def sendMail(recv_address, link):
-    # param mail_content 
-    # param recv_address 
-    sender_address = 'jiahaocui11@gmail.com'
-    sender_pass = 'plkwbxgbxxjlobin'
-    message = MIMEMultipart()
-    message['From'] = "TITANS"
-    message['To'] = recv_address
-    message['Subject'] = 'Retrieve password'
-    main_content = '''
-    Dear user {}
-
-    Help you find your password
-
-    Please click the link {}
-
-    Change Password
-                        '''.format(recv_address, link)
-
-    message.attach(MIMEText(main_content, 'plain'))
-
-    session = smtplib.SMTP('smtp.gmail.com', 587)
-
-    session.starttls()
-
-    session.login(sender_address, sender_pass)
-
-    text = message.as_string()
-
-    session.sendmail(sender_address, recv_address, text)
-
-    session.quit()

@@ -5,6 +5,7 @@ from django.core.validators import RegexValidator
 from django.contrib.auth import authenticate
 from django.db import models
 from django.contrib.auth.forms import UserChangeForm
+from django.core.exceptions import ValidationError
 
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
@@ -112,7 +113,6 @@ class TransactionForm(forms.ModelForm):
              self.add_error('time_paid','Please enter the time as HH:MM.')
              return
 
-    
 
 class CategoryDetailsForm(forms.ModelForm):
     class Meta:
@@ -121,13 +121,23 @@ class CategoryDetailsForm(forms.ModelForm):
         labels = {
             'name': ('Name:'),
             'budget': ('Budget:'),
-            'start_date': ('Start Date:'),
-            'end_date': ('End Date:'),
+        }
+        widgets = {
+            'start_date': forms.widgets.DateInput(
+                format=('%Y-%m-%d'), attrs={'type': 'date'}
+                ),
+            'end_date': forms.widgets.DateInput(
+                format=('%Y-%m-%d'), attrs={'type': 'date'}
+                ),
         }
 
     def clean(self):
-        super().clean()
-
+        clean_data = super().clean()
+        start_date = clean_data.get('start_date')
+        end_date = clean_data.get('end_date')
+        if start_date and end_date and start_date >= end_date:
+            raise ValidationError('Start date must be before end date.')
+        return clean_data
 
 class ChangePasswordForm(forms.Form):
     email = forms.CharField(label='email', max_length=50)
@@ -159,4 +169,3 @@ class ChangePasswordForm(forms.Form):
         password_confirmation = self.cleaned_data.get('password_confirmation')
         if password != password_confirmation:
             self.add_error('password_confirmation', 'Confirmation does not match password.')
- 

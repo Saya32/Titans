@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
+from django.db.models import Sum
 
 class User(AbstractUser):
     """User model used for authentication and lessons authoring."""
@@ -25,9 +26,12 @@ class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     budget = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    start_date = models.DateField(blank=False, null=True)
-    end_date = models.DateField(blank=False, null=True)
+    start_date = models.DateField(auto_now_add=False, blank=False, null=True)
+    end_date = models.DateField(auto_now_add=False, blank=False, null=True)
 
+    class Meta:
+        unique_together = 'user','name'
+    
     def get_expenses(self, from_date=None, to_date=None):
         transactions = self.transaction_set.all()
         if from_date and to_date:
@@ -41,12 +45,13 @@ class Category(models.Model):
         return sum(transaction.amount for transaction in transactions if transaction.transaction_type =='Income')
 
     def get_balance(self, from_date=None, to_date=None):
-        if(from_date == None or to_date ==  None):
-            balance = self.budget - self.get_expenses(None,None)
-        else:
-            balance = self.budget - self.get_expenses(from_date,to_date)
+        if not from_date:
+            from_date = self.start_date
+        if not to_date:
+            to_date = self.end_date
+        expenses = self.transaction_set.filter(transaction_type='Expense',date_paid__range=[from_date, to_date]).aggregate(Sum('amount'))['amount__sum'] or 0
+        balance = self.budget - expenses
         return balance
-
 
 
 class Transaction(models.Model):
@@ -63,7 +68,7 @@ class Transaction(models.Model):
     time_paid = models.TimeField(auto_now_add=False, blank=True, null=True)
     category_fk = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null =True)
     category = models.CharField(max_length=50, blank=False)
-    receipt = models.ImageField(upload_to='images/', height_field = None, width_field = None, max_length= None, blank=True, null=True) #need to create receipts url pathway
+    receipt = models.ImageField(upload_to='images/', height_field = None, width_field = None, max_length= None, blank=True, null=True)
     
     def __str__(self):
         return self.title

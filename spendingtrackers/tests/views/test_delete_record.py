@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from spendingtrackers.models import User, Transaction
+from spendingtrackers.tests.helpers import reverse_with_next
 
 class DeleteTransactionViewTestCase(TestCase):
     """Test case of delete transaction view"""
