@@ -70,6 +70,7 @@ def set_achievements(user):
         description = "We take budgeting serious here - welcome!S",
         unlocked = True
     )
+
     five_category_achievement = Achievement.objects.create(
         user = user,
         title = "Getting organised!",
@@ -77,15 +78,43 @@ def set_achievements(user):
         unlocked = False
     )
 
+    ten_category_achievement = Achievement.objects.create(
+        user = user,
+        title = "Category Creator",
+        description = "Creating ten new categories.",
+        unlocked = False
+    )
+
+    fifteen_category_achievement = Achievement.objects.create(
+        user = user,
+        title = "",
+        description = "Creating fifteen new categories.",
+        unlocked = False
+    )
+
     five_transaction_achievement = Achievement.objects.create(
         user = user,
-        title = "Money manager",
+        title = "Money Manager",
         description = "Recording five transactions.",
         unlocked = False
     )
 
+    ten_transaction_achievement = Achievement.objects.create(
+        user = user,
+        title = "Keeping track",
+        description = "Recording ten transactions.",
+        unlocked = False
+    )
+
+    fifteen_transaction_achievement = Achievement.objects.create(
+        user = user,
+        title = "",
+        description = "Recording fifteen transactions.",
+        unlocked = False
+    )
+
 def update_achievements(user):
-    
+
     category_count = Category.objects.filter(user=user).count()
     transaction_count = Transaction.objects.filter(user=user).count()
     achievements = Achievement.objects.filter(user=user)
