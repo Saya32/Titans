@@ -46,3 +46,4 @@ def create_categories(user, from_count, to_count):
         )
         
         category.save()
+
