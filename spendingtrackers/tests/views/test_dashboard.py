@@ -45,13 +45,13 @@ class DashboardTestCase(TestCase):
         
         response = self.client.post(self.url, {'from_date': '2023-02-14', 'to_date': '2023-02-16'})
         # Check that the labels and data are correct
-        self.assertEqual(data['labels'], ['01/01/2022', '01/02/2022'])
+        self.assertEqual(data['labels'], ['2022-02-14', '2022-02-16'])
         self.assertEqual(data['data'], [100, 50])
         self.assertTemplateUsed(response, 'dashboard.html')
         self.assertIn(transaction1, response.context['transactions'])
         self.assertNotIn(transaction2, response.context['transactions'])
 
-    #def test_chart_expense_graph(self):
+    def test_chart_expense_graph(self):
         # Create some sample transactions
         self.client.login(username=self.user.username, password='Password123')
         transaction1 = Transaction.objects.create(user=user, transaction_type='Income', amount=100, date_paid=datetime.date(2022, 1, 1))
