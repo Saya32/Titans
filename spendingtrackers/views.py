@@ -261,7 +261,7 @@ def chart_income_graph(request):
 
 def expense_structure(request):
     # Retrieve user's transactions
-    transactions = Transaction.objects.filter(user=request.user).order_by('date_paid')
+    transactions = Transaction.objects.filter(user=request.user).order_by('category')
     # Extract data for graph
     labels = []
     percentlabel = []
@@ -291,7 +291,7 @@ def expense_structure(request):
 
 def expense_structure2(request):
     # Retrieve user's transactions
-    transactions = Transaction.objects.filter(user=request.user).order_by('date_paid')
+    transactions = Transaction.objects.filter(user=request.user).order_by('category')
     # Extract data for graph
     labels = []
     data = {}
