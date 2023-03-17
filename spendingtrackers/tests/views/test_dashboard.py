@@ -34,8 +34,8 @@ class DashboardTestCase(TestCase):
         create_transactions(self.user, 0, 2)
         transaction1 = Transaction.objects.first()
         transaction2 = Transaction.objects.last()
-        transaction1.date_paid = '01/01/2022'
-        transaction2.date_paid = '01/02/202'
+        transaction1.date_paid = '2022-02-14'
+        transaction2.date_paid = '2022-02-16'
         transaction1.transaction_type = 'Income'
         transaction2.transaction_type = 'Expense'
         transaction1.amount = '100'
