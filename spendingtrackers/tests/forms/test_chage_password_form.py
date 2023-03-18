@@ -36,12 +36,6 @@ class ChangePasswordFromTestCase(TestCase):
         password_confirmation_widget = form.fields['password_confirmation'].widget
         self.assertTrue(isinstance(password_confirmation_widget, forms.PasswordInput))
 
-    
-    # def test_form_is_not_bound(self):
-    #     url = reverse('change_password')
-    #     response = self.client.post(url)
-    #     form = response.context['form']
-    #     self.assertFalse(form.is_bound)
 
 
     # Email test:
