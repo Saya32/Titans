@@ -17,7 +17,8 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, get_user_budget, change_transaction_name, delete_transactions
+from .helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, \
+    get_user_budget, change_transaction_name, delete_transactions
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import datetime
 
@@ -81,6 +82,35 @@ class LogInView(LoginProhibitedMixin, View):
         return render(self.request, 'log_in.html', {'form': form, 'next': self.next})
 
 
+def forgot_password(request):
+    if request.method == 'POST':
+        user_name = request.POST['email']
+        pin = request.POST['pin']
+        password = request.POST['password']
+        password_confirmation = request.POST['password_confirmation']
+        regex = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$'
+        if not re.match(regex, password):
+            messages.add_message(request, messages.ERROR, 'Password must contain an uppercase character, a lowercase '
+                                                          'character and a number')
+            return render(request, 'forgot_password.html')
+        user = User.objects.filter(username__exact=user_name).first()
+        if not user:
+            messages.add_message(request, messages.ERROR, "email not exists!")
+            return render(request, 'forgot_password.html')
+        if user.pin != pin:
+            messages.add_message(request, messages.ERROR, "pin error!")
+            return render(request, 'forgot_password.html')
+        if password != password_confirmation:
+            messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
+            return render(request, 'forgot_password.html')
+        user.password = make_password(password)
+        user.save()
+        messages.add_message(request, messages.SUCCESS, "SUCCESS!")
+        return render(request, 'forgot_password.html')
+    else:
+        return render(request, 'forgot_password.html')
+
+
 class SignUpView(LoginProhibitedMixin, FormView):
     """View that signs up user."""
 
@@ -106,6 +136,10 @@ def home_page(request):
 
 def sign_success(request):
     return render(request, 'sign_success.html')
+
+
+def banner(request):
+    return render(request, 'banner.html')
 
 
 @login_required
@@ -134,6 +168,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         """Return redirect URL after successful update."""
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
+
 @login_required
 def new_transaction(request):
     if request.method == 'POST':
@@ -161,6 +196,7 @@ def new_transaction(request):
         form = TransactionForm()
         return render(request, 'new_transaction.html', {'form': form})
 
+
 @login_required
 def records(request):
     transactions = get_user_transactions(request.user)
@@ -180,6 +216,7 @@ def records(request):
             to_date_obj = datetime.strptime(to_date, '%Y-%m-%d').date()
             transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
     return render(request, 'records.html', {'transactions': transactions})
+
 
 @login_required
 def update_record(request, id):
@@ -275,7 +312,6 @@ def delete_category(request, id):
         return redirect('feed')
 
 
-
 @login_required
 def category(request):
     categories = get_categories(request.user.id)
@@ -296,7 +332,7 @@ def view_category(request, id):
     expense = category.get_expenses()
     income = category.get_income()
     balance = category.get_balance()
-   
+
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
         to_date = request.POST.get('to_date')
@@ -313,7 +349,7 @@ def view_category(request, id):
         used_percentage = round(used_percentage, 2)
     else:
         used_percentage = None
-    
+
     if balance < 0:
         warning_message = "Warning: You have exceeded your budget for this category."
     elif used_percentage is not None and used_percentage >= 90:
@@ -324,6 +360,7 @@ def view_category(request, id):
     context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income,
                'balance': balance, 'warning_message': warning_message}
     return render(request, 'view_category.html', context)
+
 
 @login_required
 def add_category_details(request):
@@ -342,10 +379,11 @@ def add_category_details(request):
             form = CategoryDetailsForm()
 
         return render(request, 'add_category_details.html', {'form': form})
-    
+
     except:
         messages.add_message(request, messages.ERROR, "Error: Category exists")
         return redirect('category')
+
 
 @login_required
 def overall(request):
@@ -382,4 +420,3 @@ def overall(request):
     context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income,
                'balance': balance, 'budget': budget, 'warning_message': warning_message, }
     return render(request, 'overall.html', context)
-

@@ -15,7 +15,8 @@ class SignUpFormTestCase(TestCase):
             'username': 'janedoe@example.org',
             'currency': '£',
             'new_password': 'Password123',
-            'password_confirmation': 'Password123'
+            'password_confirmation': 'Password123',
+            'pin': 'Password123'
         }
 
     def test_valid_sign_up_form(self):
@@ -28,6 +29,7 @@ class SignUpFormTestCase(TestCase):
         self.assertIn('last_name', form.fields)
         self.assertIn('username', form.fields)
         self.assertIn('new_password', form.fields)
+        self.assertIn('pin', form.fields)
         new_password_widget = form.fields['new_password'].widget
         self.assertTrue(isinstance(new_password_widget, forms.PasswordInput))
         self.assertIn('password_confirmation', form.fields)

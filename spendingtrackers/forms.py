@@ -45,6 +45,7 @@ class SignUpForm(forms.ModelForm):
             )]
     )
     password_confirmation = forms.CharField(label='Password confirmation', widget=forms.PasswordInput())
+    pin = forms.CharField(label='pin(Used to retrieve the password)')
 
     def clean(self):
         """Clean the data and generate messages for any errors."""
@@ -65,6 +66,7 @@ class SignUpForm(forms.ModelForm):
             last_name=self.cleaned_data.get('last_name'),
             password=self.cleaned_data.get('new_password'),
             currency=self.cleaned_data.get('currency'),
+            pin=self.cleaned_data.get('pin')
         )
         return user
 
