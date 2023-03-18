@@ -167,6 +167,7 @@ def new_transaction(request):
 @login_required
 def records(request):
     transactions = get_user_transactions(request.user)
+    currency = request.user.currency
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
         to_date = request.POST.get('to_date')
@@ -174,7 +175,7 @@ def records(request):
             from_date_obj = datetime.strptime(from_date, '%Y-%m-%d').date()
             to_date_obj = datetime.strptime(to_date, '%Y-%m-%d').date()
             transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
-    return render(request, 'records.html', {'transactions': transactions})
+    return render(request, 'records.html', {'transactions': transactions,'currency': currency})
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
         to_date = request.POST.get('to_date')
@@ -182,7 +183,7 @@ def records(request):
             from_date_obj = datetime.strptime(from_date, '%Y-%m-%d').date()
             to_date_obj = datetime.strptime(to_date, '%Y-%m-%d').date()
             transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
-    return render(request, 'records.html', {'transactions': transactions})
+    return render(request, 'records.html', {'transactions': transaction, 'currency': currency})
 
 @login_required
 def update_record(request, id):
@@ -299,6 +300,7 @@ def view_category(request, id):
     expense = category.get_expenses()
     income = category.get_income()
     balance = category.get_balance()
+    currency = request.user.currency
 
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
@@ -325,7 +327,7 @@ def view_category(request, id):
         warning_message = None
 
     context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income,
-               'balance': balance, 'warning_message': warning_message}
+               'balance': balance, 'warning_message': warning_message, 'currency':currency}
     return render(request, 'view_category.html', context)
 
 @login_required
@@ -357,6 +359,7 @@ def overall(request):
     income = get_user_income(request.user)
     balance = get_user_balance(request.user)
     budget = get_user_budget(request.user)
+    currency = request.user.currency
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
         to_date = request.POST.get('to_date')
@@ -382,7 +385,7 @@ def overall(request):
     else:
         warning_message = None
 
-    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income, 'balance': balance, 'budget':budget,'warning_message': warning_message,}
+    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income, 'balance': balance, 'budget':budget,'warning_message': warning_message,'currency':currency}
     return render(request, 'overall.html', context)
 
 def view_achievements(request):
