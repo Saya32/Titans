@@ -159,7 +159,15 @@ class ChangePasswordForm(forms.Form):
                     'character, a special character and a number'
             )]
     )
-    password_confirmation = forms.CharField(label='password_confirmation', widget=forms.PasswordInput())
+    password_confirmation = forms.CharField(
+        label='password',
+        widget=forms.PasswordInput(),
+        validators=[RegexValidator(
+            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*?[!@#\[:()"`;+\-|_?,.</\\>=$%}{^&*~]).*$',
+            message='Password must contain an uppercase character, a lowercase '
+                    'character, a special character and a number'
+            )]
+    )
 
     def clean(self):
         """Clean the data and generate messages for any errors."""
