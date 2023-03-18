@@ -212,6 +212,9 @@ def update_record(request, id):
             
             messages.add_message(request, messages.SUCCESS, "Record updated!")
             form.save()
+            record = Transaction.objects.get(pk=id)
+            record.category_fk = category_object
+            record.save()
             return redirect('feed')
         else:
             return render(request, 'update_record.html', {'form': form, 'transaction': record})
