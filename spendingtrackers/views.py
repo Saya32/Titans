@@ -198,9 +198,18 @@ def update_record(request, id):
         messages.add_message(request, messages.ERROR, "Record could not be found!")
         return redirect('feed')
 
+    
     if request.method == 'POST':
         form = TransactionForm(instance=record, data=request.POST)
         if (form.is_valid()):
+            
+            try:
+                category_name = form.cleaned_data['category']
+                category_object = get_object_or_404(Category, user=request.user, name=category_name)
+            except:
+                messages.add_message(request, messages.ERROR, "Category could not be found!")
+                return redirect('feed')
+            
             messages.add_message(request, messages.SUCCESS, "Record updated!")
             form.save()
             return redirect('feed')
