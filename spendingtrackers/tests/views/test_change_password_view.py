@@ -14,25 +14,20 @@ class ChangePasswordViewTestCase(TestCase, LogInTester):
 
     def setUp(self):
         self.url = reverse('change_password')
-        self.form_input = {
-            'email': 'johndoe@example.org', 
-            'his_password': 'P@ssword123.',
-            'password': 'WrongP@ssword12345', 
-            'password_confirmation': 'WrongP@ssword12345'
-        }
+        
         self.user = User.objects.get(username='johndoe@example.org')
 
     def test_change_password_url(self):
         self.assertEqual(self.url, '/change_password/')
 
     def test_change_password(self):
-        response = self.client.post(self.url, self.form_input)
+        response = self.client.post(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'change_password.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, ChangePasswordForm))
-        print(form.is_valid())
         self.assertFalse(form.is_bound)
+        
         # messages_list = list(response.context['messages'])
         # self.assertEqual(len(messages_list), 0)
     

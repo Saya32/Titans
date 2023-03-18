@@ -4,6 +4,7 @@ from spendingtrackers.models import User
 from spendingtrackers.forms import ChangePasswordForm
 from django.core.exceptions import ValidationError
 from django import forms
+from django.urls import reverse
 
 class ChangePasswordFromTestCase(TestCase):
 
@@ -34,6 +35,13 @@ class ChangePasswordFromTestCase(TestCase):
         self.assertIn('password_confirmation', form.fields)
         password_confirmation_widget = form.fields['password_confirmation'].widget
         self.assertTrue(isinstance(password_confirmation_widget, forms.PasswordInput))
+
+    
+    # def test_form_is_not_bound(self):
+    #     url = reverse('change_password')
+    #     response = self.client.post(url)
+    #     form = response.context['form']
+    #     self.assertFalse(form.is_bound)
 
 
     # Email test:
