@@ -76,3 +76,10 @@ class Transaction(models.Model):
     def receipt_url(self):
         if self.receipt and hasattr(self.receipt, 'url'):
             return self.receipt.url
+
+
+class Achievement(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(blank = False, max_length=30)
+    description = models.CharField(blank = False, max_length=200)
+    unlocked = models.BooleanField(blank = False)

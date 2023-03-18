@@ -4,7 +4,18 @@
     </div>
 </div>
 
-<div class="row row-cols-1 row-cols-md-3 mb-3 text-center" >
+<div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+    <div class="col-lg-3 d-flex align-items-stretch">
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <h4 class="card-header py-3">Add Category</h4>
+            <div class="card-body">
+                <p class="lead"> click here to add a new category</p>
+            </div>
+            <div class="card-header">
+                <a href="{%url 'add_category_details'%}" type="button" class="w-100 btn btn-lg btn-outline-primary">Add Categories</a>
+            </div>
+        </div>
+    </div>
     <div class="col-lg-3 d-flex align-items-stretch">
         <div class="card mb-4 rounded-3 shadow-sm">
             <h4 class="card-header py-3">Categories</h4>
@@ -29,12 +40,12 @@
     </div>
     <div class="col-lg-3 d-flex align-items-stretch">
         <div class="card mb-4 rounded-3 shadow-sm">
-            <h4 class="card-header py-3">Add Category</h4>
+            <h4 class="card-header py-3">Achievements</h4>
             <div class="card-body">
-                <p class="lead"> Click here to add a new category!</p>
+                <p class="lead"> click here to view all of your achievements</p>
             </div>
             <div class="card-header">
-                <a href="{%url 'add_category_details'%}" type="button" class="w-100 btn btn-lg btn-outline-primary">Add Categories</a>
+                <a href="{%url 'view_achievements'%}" type="button" class="w-100 btn btn-lg btn-outline-primary">See Achievements</a>
             </div>
         </div>
     </div>
@@ -49,8 +60,9 @@
             </div>
         </div>
     </div>
-</div>
 
+</div>
+    
 <center><div class="col-md-3">
         <h6>  <a href="mailto:aayushd03@gmail.com?subject=Contacting PST team" type="button" class="w-100 btn btn-lg" target="_blank" style="background-color: #d3d3d3;">Contact us!</a>
 </div> 

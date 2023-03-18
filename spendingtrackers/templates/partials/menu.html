@@ -24,7 +24,32 @@
           }
         </style> 
       </li>
-      <li class="nav-item dropdown">
+      
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'view_achievements'%}"style="color: #000000">Achievements</a>
+        <style>
+          .card:hover {
+            box-shadow: 0 0 10px rgba(0, 213, 14, 0.5);
+          }
+        </style> 
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'new_transaction'%}"style="color: #000000">Add Transaction</a>
+        <style>
+          .card:hover {
+            box-shadow: 0 0 10px rgba(0, 213, 14, 0.5);
+          }
+        </style> 
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'feed'%}"style="color: #000000">Feed</a>
+        <style>
+          .card:hover {
+            box-shadow: 0 0 10px rgba(0, 213, 14, 0.5);
+          }
+        </style> 
+      </li>
+            <li class="nav-item dropdown">
         <a class="nav-link" href="#" id="user-account-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="bi-person-circle"></span>
         </a>
