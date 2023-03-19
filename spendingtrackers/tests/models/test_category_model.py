@@ -26,7 +26,7 @@ class CategoryTest(TestCase):
     def test_valid_user(self):
         self._assert_user_is_valid()
 
-    def test_valid_user(self):
+    def test_valid_category(self):
         self._assert_category_is_valid()
 
 
