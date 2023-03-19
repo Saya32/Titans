@@ -1,6 +1,4 @@
 # Create your views here.
-import json
-import uuid
 import re
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import User, Transaction, Category, Achievement
