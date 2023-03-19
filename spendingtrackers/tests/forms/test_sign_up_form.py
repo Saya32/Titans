@@ -15,6 +15,9 @@ class SignUpFormTestCase(TestCase):
             'last_name': 'Doe',
             'username': 'janedoe@example.com',
             'currency': '£',
+            'new_password': 'Password123',
+            'password_confirmation': 'Password123',
+            'pin': 'Password123',
             'new_password': 'Password123*',
             'password_confirmation': 'Password123*'
         }
@@ -22,6 +25,7 @@ class SignUpFormTestCase(TestCase):
             'first_name': 'Jane',
             'last_name': 'Doe',
             'currency': '£',
+            'pin': 'Password123',
             'new_password': 'Password123*',
             'password_confirmation': 'Password123*'
         }
@@ -48,6 +52,9 @@ class SignUpFormTestCase(TestCase):
         self.assertTrue(isinstance(email_field, forms.EmailField))
 
         self.assertIn('new_password', form.fields)
+        self.assertIn('pin', form.fields)
+        new_password_widget = form.fields['new_password'].widget
+        self.assertTrue(isinstance(new_password_widget, forms.PasswordInput))
         password_widget = form.fields['new_password'].widget
         self.assertTrue(isinstance(password_widget, forms.PasswordInput))
 

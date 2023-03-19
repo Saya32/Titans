@@ -1,13 +1,11 @@
 # Create your views here.
-import json
-import uuid
 import re
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import User, Transaction, Category, Achievement
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.http import HttpResponse
-from .forms import SignUpForm, LogInForm, CategoryDetailsForm, ChangePasswordForm, UserForm, TransactionForm
+from .forms import SignUpForm, LogInForm, CategoryDetailsForm, UserForm, TransactionForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
@@ -81,6 +79,35 @@ class LogInView(LoginProhibitedMixin, View):
         return render(self.request, 'log_in.html', {'form': form, 'next': self.next})
 
 
+def forgot_password(request):
+    if request.method == 'POST':
+        user_name = request.POST['email']
+        pin = request.POST['pin']
+        password = request.POST['password']
+        password_confirmation = request.POST['password_confirmation']
+        regex = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$'
+        if not re.match(regex, password):
+            messages.add_message(request, messages.ERROR, 'Password must contain an uppercase character, a lowercase '
+                                                          'character and a number')
+            return render(request, 'forgot_password.html')
+        user = User.objects.filter(username__exact=user_name).first()
+        if not user:
+            messages.add_message(request, messages.ERROR, "email does not exist!")
+            return render(request, 'forgot_password.html')
+        if user.pin != pin:
+            messages.add_message(request, messages.ERROR, "pin error!")
+            return render(request, 'forgot_password.html')
+        if password != password_confirmation:
+            messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
+            return render(request, 'forgot_password.html')
+        user.password = make_password(password)
+        user.save()
+        messages.add_message(request, messages.SUCCESS, "SUCCESS!")
+        return render(request, 'forgot_password.html')
+    else:
+        return render(request, 'forgot_password.html')
+
+
 class SignUpView(LoginProhibitedMixin, FormView):
     """View that signs up user."""
 
@@ -110,6 +137,10 @@ def sign_success(request):
     return render(request, 'sign_success.html')
 
 
+def banner(request):
+    return render(request, 'banner.html')
+
+
 @login_required
 def feed(request):
     return render(request, 'feed.html')
@@ -135,6 +166,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         """Return redirect URL after successful update."""
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
 
 @login_required
 def new_transaction(request):
@@ -169,6 +201,7 @@ def new_transaction(request):
         return redirect('category')
 
 
+
 @login_required
 def records(request):
     transactions = get_user_transactions(request.user)
@@ -189,6 +222,7 @@ def records(request):
             to_date_obj = datetime.strptime(to_date, '%Y-%m-%d').date()
             transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
     return render(request, 'records.html', {'transactions': transaction, 'currency': currency})
+
 
 @login_required
 def update_record(request, id):
@@ -234,32 +268,6 @@ def delete_record(request, id):
         return redirect('feed')
 
 
-def change_password(request):
-    if request.method == 'POST':
-        userform = ChangePasswordForm(request.POST)
-        if userform.is_valid():
-            email = userform.cleaned_data['email']
-            his_password = userform.cleaned_data['his_password']
-            password = userform.cleaned_data['password']
-            password_confirmation = userform.cleaned_data['password_confirmation']
-            if password != password_confirmation:
-                messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
-                return render(request, 'change_password.html')
-            user = User.objects.filter(username__exact=email).first()
-            if not user:
-                messages.add_message(request, messages.ERROR, "email not exists!")
-                return render(request, 'change_password.html')
-            if not check_password(his_password, user.password):
-                messages.add_message(request, messages.ERROR, "history password error!")
-                return render(request, 'change_password.html')
-            user.password = make_password(password)
-            user.save()
-            return render(request, 'log_in.html')
-        else:
-            return render(request, 'change_password.html')
-    else:
-        return render(request, 'change_password.html')
-
 
 @login_required
 def edit_category_details(request, id):
@@ -294,7 +302,6 @@ def delete_category(request, id):
     else:
         messages.add_message(request, messages.ERROR, "Sorry, an error occurred deleting your Category")
         return redirect('feed')
-
 
 
 @login_required
@@ -335,7 +342,6 @@ def view_category(request, id):
         used_percentage = round(used_percentage, 2)
     else:
         used_percentage = None
-
     if balance < 0:
         warning_message = "Warning: You have exceeded your budget for this category."
     elif used_percentage is not None and used_percentage >= 90:
@@ -346,6 +352,7 @@ def view_category(request, id):
     context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income,
                'balance': balance, 'warning_message': warning_message, 'currency':currency}
     return render(request, 'view_category.html', context)
+
 
 @login_required
 def add_category_details(request):
@@ -364,10 +371,11 @@ def add_category_details(request):
             form = CategoryDetailsForm()
 
         return render(request, 'add_category_details.html', {'form': form})
-    
+
     except:
         messages.add_message(request, messages.ERROR, "Error: Category exists")
         return redirect('category')
+
 
 @login_required
 def overall(request):
