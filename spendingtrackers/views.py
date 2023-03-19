@@ -272,12 +272,12 @@ def delete_record(request, id):
 
 def change_password(request):
     if request.method == 'POST':
-        userform = ChangePasswordForm(request.POST)
-        if userform.is_valid():
-            email = userform.cleaned_data['email']
-            his_password = userform.cleaned_data['his_password']
-            password = userform.cleaned_data['password']
-            password_confirmation = userform.cleaned_data['password_confirmation']
+        # userform = ChangePasswordForm(request.POST)
+        # if userform.is_valid():
+            email = request.POST['email']
+            his_password = request.POST['his_password']
+            password = request.POST['password']
+            password_confirmation = request.POST['password_confirmation']
             if password != password_confirmation:
                 messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
                 return render(request, 'change_password.html')
@@ -291,8 +291,8 @@ def change_password(request):
             user.password = make_password(password)
             user.save()
             return render(request, 'log_in.html')
-        else:
-            return render(request, 'change_password.html')
+        # else:
+        #     return render(request, 'change_password.html')
     else:
         return render(request, 'change_password.html')
 
