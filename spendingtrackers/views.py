@@ -268,28 +268,6 @@ def delete_record(request, id):
         return redirect('feed')
 
 
-def change_password(request):
-    if request.method == 'POST':
-            user_name = request.POST['email']
-            his_password = request.POST['his_password']
-            password = request.POST['password']
-            password_confirmation = request.POST['password_confirmation']
-            if password != password_confirmation:
-                messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
-                return render(request, 'change_password.html')
-            user = User.objects.filter(username__exact=user_name).first()
-            if not user:
-                messages.add_message(request, messages.ERROR, "email not exists!")
-                return render(request, 'change_password.html')
-            if not check_password(his_password, user.password):
-                messages.add_message(request, messages.ERROR, "history password error!")
-                return render(request, 'change_password.html')
-            user.password = make_password(password)
-            user.save()
-            return render(request, 'log_in.html')
-    else:
-        return render(request, 'change_password.html')
-
 
 @login_required
 def edit_category_details(request, id):

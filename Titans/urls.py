@@ -20,7 +20,6 @@ urlpatterns = [
     path('forgot_password/', views.forgot_password, name='forgot_password'),
     path('banner/', views.banner, name='banner'),
     path('delete_record/<int:id>', views.delete_record, name='delete_record'),
-    path('change_password/', views.change_password, name='change_password'),
     path('category/',views.category, name='category'),
     path('view_category/<int:id>', views.view_category, name='view_category'),
     path('add_category_details/', views.add_category_details, name='add_category_details'),
