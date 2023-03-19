@@ -1,4 +1,4 @@
-from .models import User, Transaction, Category
+from .models import User, Transaction, Category, Achievement
 from django.conf import settings
 from django.shortcuts import redirect
 from django.utils import timezone
@@ -70,4 +70,93 @@ def get_categories(user):
     categories = Category.objects.filter(user=user)
     return categories
 
+def set_achievements(user):
+    new_user_achievement = Achievement.objects.create(
+        user = user,
+        title = "Welcome to the club",
+        description = "We take budgeting serious here - welcome!",
+        unlocked = True
+    )
 
+    five_category_achievement = Achievement.objects.create(
+        user = user,
+        title = "Getting organised!",
+        description = "Creating five new categories.",
+        unlocked = False
+    )
+
+    ten_category_achievement = Achievement.objects.create(
+        user = user,
+        title = "Category Creator",
+        description = "Creating ten new categories.",
+        unlocked = False
+    )
+
+    fifteen_category_achievement = Achievement.objects.create(
+        user = user,
+        title = "Well rounded",
+        description = "Creating fifteen new categories.",
+        unlocked = False
+    )
+
+    five_transaction_achievement = Achievement.objects.create(
+        user = user,
+        title = "Money Manager",
+        description = "Recording five transactions.",
+        unlocked = False
+    )
+
+    ten_transaction_achievement = Achievement.objects.create(
+        user = user,
+        title = "Staying on track",
+        description = "Recording ten transactions.",
+        unlocked = False
+    )
+
+    fifteen_transaction_achievement = Achievement.objects.create(
+        user = user,
+        title = "Record Keeper",
+        description = "Recording fifteen transactions.",
+        unlocked = False
+    )
+
+def update_achievements(user):
+
+    category_count = Category.objects.filter(user=user).count()
+    transaction_count = Transaction.objects.filter(user=user).count()
+    achievements = Achievement.objects.filter(user=user)
+
+    if category_count >= 5:
+        five_category_achievement = achievements[1]
+        five_category_achievement.unlocked = True
+        five_category_achievement.save()
+
+    if category_count >= 10:
+        ten_category_achievement = achievements[2]
+        ten_category_achievement.unlocked = True
+        ten_category_achievement.save()
+
+    if category_count >= 15:
+        fifteen_category_achievement = achievements[3]
+        fifteen_category_achievement.unlocked = True
+        fifteen_category_achievement.save()
+
+    if transaction_count >= 5:
+        five_transaction_achievement = achievements[4]
+        five_transaction_achievement.unlocked = True
+        five_transaction_achievement.save()
+
+    if transaction_count >= 10:
+        ten_transaction_achievement = achievements[5]
+        ten_transaction_achievement.unlocked = True
+        ten_transaction_achievement.save()
+
+    if transaction_count >= 15:
+        fifteen_transaction_achievement = achievements[6]
+        fifteen_transaction_achievement.unlocked = True
+        fifteen_transaction_achievement.save()
+
+
+def get_achievements(user):
+    achievements = Achievement.objects.filter(user=user).filter(unlocked=True)
+    return achievements
