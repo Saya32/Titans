@@ -218,30 +218,32 @@ def delete_record(request, id):
 
 def change_password(request):
     if request.method == 'POST':
-        form = ChangePasswordForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            his_password = form.cleaned_data['his_password']
-            password = form.cleaned_data['password']
-            password_confirmation = form.cleaned_data['password_confirmation']
-            if password != password_confirmation:
-                messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
-                return render(request, 'change_password.html', {'form': form})
-            user = User.objects.filter(username__exact=email).first()
-            if not user:
-                messages.add_message(request, messages.ERROR, "email not exists!")
-                return render(request, 'change_password.html', {'form': form})
-            if not check_password(his_password, user.password):
-                messages.add_message(request, messages.ERROR, "history password error!")
-                return render(request, 'change_password.html', {'form': form})
-            user.password = make_password(password)
-            user.save()
-            return render(request, 'log_in.html')
+        if request.POST:
+            #print(request.POST)
+            form = ChangePasswordForm(request.POST)
         else:
-            print(form.errors)  # <-- Add this line
+            form = ChangePasswordForm()
+        if form.is_valid():
+                email = form.cleaned_data['email']
+                his_password = form.cleaned_data['his_password']
+                password = form.cleaned_data['password']
+                password_confirmation = form.cleaned_data['password_confirmation']
+                if password != password_confirmation:
+                    messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
+                    return render(request, 'change_password.html')
+                user = User.objects.filter(username__exact=email).first()
+                if not user:
+                    messages.add_message(request, messages.ERROR, "email not exists!")
+                    return render(request, 'change_password.html')
+                if not check_password(his_password, user.password):
+                    messages.add_message(request, messages.ERROR, "history password error!")
+                    return render(request, 'change_password.html')
+                user.password = make_password(password)
+                user.save()
+                return render(request, 'log_in.html')
+        else:
             return render(request, 'change_password.html', {'form': form})
     else:
-        form = ChangePasswordForm()
         return render(request, 'change_password.html', {'form': form})
 
 
