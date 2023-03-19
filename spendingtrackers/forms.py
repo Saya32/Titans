@@ -140,34 +140,3 @@ class CategoryDetailsForm(forms.ModelForm):
         if start_date and end_date and start_date >= end_date:
             raise ValidationError('Start date must be before end date.')
         return clean_data
-
-class ChangePasswordForm(forms.Form):
-    email = forms.CharField(label='email', max_length=50)
-    his_password = forms.CharField(
-        label='his_password',
-        widget=forms.PasswordInput(),
-        validators=[RegexValidator(
-            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*?[!@#\[:()"`;+\-|_?,.</\\>=$%}{^&*~]).*$',
-            message='Password must contain an uppercase character, a lowercase '
-                    'character, a special character and a number'
-            )]
-    )
-    password = forms.CharField(
-        label='password',
-        widget=forms.PasswordInput(),
-        validators=[RegexValidator(
-            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*?[!@#\[:()"`;+\-|_?,.</\\>=$%}{^&*~]).*$',
-            message='Password must contain an uppercase character, a lowercase '
-                    'character, a special character and a number'
-            )]
-    )
-    password_confirmation = forms.CharField(label='password_confirmation', widget=forms.PasswordInput())
-
-    def clean(self):
-        """Clean the data and generate messages for any errors."""
-
-        super().clean()
-        password = self.cleaned_data.get('password')
-        password_confirmation = self.cleaned_data.get('password_confirmation')
-        if password != password_confirmation:
-            self.add_error('password_confirmation', 'Confirmation does not match password.')

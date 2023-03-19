@@ -5,7 +5,7 @@ from .models import User, Transaction, Category, Achievement
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.http import HttpResponse
-from .forms import SignUpForm, LogInForm, CategoryDetailsForm, ChangePasswordForm, UserForm, TransactionForm
+from .forms import SignUpForm, LogInForm, CategoryDetailsForm, UserForm, TransactionForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
@@ -270,16 +270,14 @@ def delete_record(request, id):
 
 def change_password(request):
     if request.method == 'POST':
-        userform = ChangePasswordForm(request.POST)
-        if userform.is_valid():
-            email = userform.cleaned_data['email']
-            his_password = userform.cleaned_data['his_password']
-            password = userform.cleaned_data['password']
-            password_confirmation = userform.cleaned_data['password_confirmation']
+            user_name = request.POST['email']
+            his_password = request.POST['his_password']
+            password = request.POST['password']
+            password_confirmation = request.POST['password_confirmation']
             if password != password_confirmation:
                 messages.add_message(request, messages.ERROR, "The two passwords are inconsistent!")
                 return render(request, 'change_password.html')
-            user = User.objects.filter(username__exact=email).first()
+            user = User.objects.filter(username__exact=user_name).first()
             if not user:
                 messages.add_message(request, messages.ERROR, "email not exists!")
                 return render(request, 'change_password.html')
@@ -289,8 +287,6 @@ def change_password(request):
             user.password = make_password(password)
             user.save()
             return render(request, 'log_in.html')
-        else:
-            return render(request, 'change_password.html')
     else:
         return render(request, 'change_password.html')
 
