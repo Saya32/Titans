@@ -4,7 +4,6 @@ from spendingtrackers.models import User
 from spendingtrackers.forms import ChangePasswordForm
 from django.core.exceptions import ValidationError
 from django import forms
-from django.urls import reverse
 
 class ChangePasswordFromTestCase(TestCase):
 
@@ -35,7 +34,6 @@ class ChangePasswordFromTestCase(TestCase):
         self.assertIn('password_confirmation', form.fields)
         password_confirmation_widget = form.fields['password_confirmation'].widget
         self.assertTrue(isinstance(password_confirmation_widget, forms.PasswordInput))
-
 
 
     # Email test:
@@ -70,7 +68,7 @@ class ChangePasswordFromTestCase(TestCase):
         self.form_input['his_password'] = 'Password*'
         form = ChangePasswordForm(data=self.form_input)
         self.assertFalse(form.is_valid())
-
+        
     def test_his_password_must_contain_character(self):
         self.form_input['his_password'] = 'Password123'
         form = ChangePasswordForm(data=self.form_input)
@@ -95,7 +93,7 @@ class ChangePasswordFromTestCase(TestCase):
         self.form_input['password_confirmation'] = 'Password#'
         form = ChangePasswordForm(data=self.form_input)
         self.assertFalse(form.is_valid())
-
+        
     def test_password_must_contain_character(self):
         self.form_input['password'] = 'Password123'
         self.form_input['password_confirmation'] = 'Password123'
