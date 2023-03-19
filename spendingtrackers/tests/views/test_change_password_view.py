@@ -53,4 +53,3 @@ class ChangePasswordViewTestCase(TestCase, LogInTester):
         response = self.client.post(self.url, form_input)
         messages_list = list(response.context['messages'])
         self.assertNotEqual(len(messages_list), 1)
-   

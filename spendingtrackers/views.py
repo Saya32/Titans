@@ -3,7 +3,7 @@ import json
 import uuid
 import re
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import User, Transaction, Category
+from .models import User, Transaction, Category, Achievement
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.http import HttpResponse
@@ -17,8 +17,7 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, \
-    get_user_budget, change_transaction_name, delete_transactions
+from .helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, get_user_budget, change_transaction_name, delete_transactions, set_achievements, get_achievements, update_achievements
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import datetime
 
@@ -120,6 +119,8 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
     def form_valid(self, form):
         self.object = form.save()
+        set_achievements(self.object)
+        update_achievements(self.object)
         login(self.request, self.object)
         return super().form_valid(form)
 
@@ -189,6 +190,7 @@ def new_transaction(request):
                 transaction_type=form.cleaned_data.get('transaction_type'),
                 category_fk=category_object
             )
+            update_achievements(request.user)
             return redirect('feed')
         else:
             return render(request, 'new_transaction.html', {'form': form})
@@ -332,7 +334,7 @@ def view_category(request, id):
     expense = category.get_expenses()
     income = category.get_income()
     balance = category.get_balance()
-
+   
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
         to_date = request.POST.get('to_date')
@@ -349,7 +351,6 @@ def view_category(request, id):
         used_percentage = round(used_percentage, 2)
     else:
         used_percentage = None
-
     if balance < 0:
         warning_message = "Warning: You have exceeded your budget for this category."
     elif used_percentage is not None and used_percentage >= 90:
@@ -417,6 +418,9 @@ def overall(request):
     else:
         warning_message = None
 
-    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income,
-               'balance': balance, 'budget': budget, 'warning_message': warning_message, }
+    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income, 'balance': balance, 'budget':budget,'warning_message': warning_message,}
     return render(request, 'overall.html', context)
+
+def view_achievements(request):
+   achievements = get_achievements(request.user.id)
+   return render(request, 'view_achievements.html', {'achievements':achievements})
