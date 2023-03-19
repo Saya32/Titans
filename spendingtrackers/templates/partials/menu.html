@@ -49,6 +49,14 @@
           }
         </style> 
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'dashboard'%}"style="color: #000000">Dashboard</a>
+        <style>
+          .card:hover {
+            box-shadow: 0 0 10px rgba(0, 213, 14, 0.5);
+          }
+        </style> 
+      </li>
             <li class="nav-item dropdown">
         <a class="nav-link" href="#" id="user-account-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="bi-person-circle"></span>
@@ -58,6 +66,7 @@
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item" href="{% url 'log_out'%}">Log out</a></li>
           <li><a class="dropdown-item" href="{% url 'profile'%}">Profile</a></li>
+          <li><a class="dropdown-item" href="{% url 'banner'%}">Introduction</a></li>
         </ul>
       </li>
     </ul>

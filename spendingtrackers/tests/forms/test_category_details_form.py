@@ -4,6 +4,7 @@ from ...forms import CategoryDetailsForm
 from ...models import Transaction, User
 from django.utils import timezone
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.exceptions import ValidationError
 
 class CategoryDetailsFormTestCase(TestCase):
     """Unit tests of the sign up form."""
@@ -69,3 +70,12 @@ class CategoryDetailsFormTestCase(TestCase):
         self.form_input['time_paid'] = ""
         form = CategoryDetailsForm(data=self.form_input)
         self.assertTrue(form.is_valid())
+    
+    def test_clean_method_with_start_date_greater_than_end_date(self):
+        self.form_input['start_date'] = '2023-03-20'  
+        self.form_input['end_date'] = '2022-12-12'  
+        form = CategoryDetailsForm(data=self.form_input)
+        self.assertFalse(form.is_valid())  
+        with self.assertRaises(ValidationError) as ve:
+            form.clean()
+        self.assertEqual(str(ve.exception.messages[0]), 'Start date must be before end date.')
