@@ -4,6 +4,10 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from spendingtrackers.models import Category, Transaction
 from spendingtrackers.views import overall
+<<<<<<< HEAD
+=======
+from spendingtrackers.tests.helpers import reverse_with_next
+>>>>>>> main
 
 class OverallTestCase(TestCase):
     """Test case of overall view"""

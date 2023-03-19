@@ -9,14 +9,22 @@ class UpdateCategoryViewTestCase(TestCase):
     fixtures = [
         'spendingtrackers/tests/fixtures/default_user.json',
     ]
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
     def setUp(self):
         self.user = User.objects.get(username='johndoe@example.org')
         self.data = {
             'name':'Gifts',
             'budget':1000,
+<<<<<<< HEAD
             'start_date':'2023-12-12',
             'end_date':'2024-12-12',
+=======
+            'start_date':'2022-12-12',
+            'end_date': '2023-12-12'
+>>>>>>> main
         }
         create_categories(self.user,1,3)
         self.categories = Category.objects.filter(user = self.user)

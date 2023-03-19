@@ -1,11 +1,13 @@
 <div class="row row-cols-1 mb-3">
-    <div class="card mb-4 rounded-3">
+    <div class="card mb-4 rounded-3"style="background-color: #B2D3C2;">
+        <center><p> This is your personalised spending tracker! If you have are facing any troubles, feel free to read the instructions page under the profile section. Otherwise, contact us below.</p></center>
     </div>
 </div>
 
 <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
     <div class="col-lg-3 d-flex align-items-stretch">
         <div class="card mb-4 rounded-3 shadow-sm">
+<<<<<<< HEAD
             <h4 class="card-header py-3">Dashboard</h4>
             <div class="card-body">
                 <p class="lead"> click here to view dashboard</p>
@@ -40,11 +42,25 @@
     <div class="col-lg-3 d-flex align-items-stretch">
         <div class="card mb-4 rounded-3 shadow-sm">
             <h4 class="card-header py-3">Add Transaction</h4>
+=======
+            <h4 class="card-header py-3">Add Category</h4>
+>>>>>>> main
             <div class="card-body">
-                <p class="lead">Click here to add a transaction</p>
+                <p class="lead"> click here to add a new category</p>
             </div>
             <div class="card-header">
-                <a href="{%url 'new_transaction'%}" type="button" class="w-100 btn btn-lg btn-outline-primary">Make a new transaction</a>
+                <a href="{%url 'add_category_details'%}" type="button" class="w-100 btn btn-lg btn-outline-primary">Add Categories</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 d-flex align-items-stretch">
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <h4 class="card-header py-3">Categories</h4>
+            <div class="card-body">
+                <p class="lead"> Click below to view all the categories!</p>
+            </div>
+            <div class="card-header">
+                <a href="{%url 'category'%}" type="button" class="w-100 btn btn-lg btn-outline-primary">See Categories</a>
             </div>
         </div>
     </div>
@@ -52,11 +68,43 @@
         <div class="card mb-4 rounded-3 shadow-sm">
             <h4 class="card-header py-3">Records</h4>
             <div class="card-body">
-                <p class="lead"> click here to view the past record of your transactions</p>
+                <p class="lead"> Click here to view the past records of your transactions!</p>
             </div>
             <div class="card-header">
                 <a href="{%url 'records'%}" type="button" class="w-100 btn btn-lg btn-outline-primary">See Records</a>
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 </div>
+=======
+    <div class="col-lg-3 d-flex align-items-stretch">
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <h4 class="card-header py-3">Achievements</h4>
+            <div class="card-body">
+                <p class="lead"> click here to view all of your achievements</p>
+            </div>
+            <div class="card-header">
+                <a href="{%url 'view_achievements'%}" type="button" class="w-100 btn btn-lg btn-outline-primary">See Achievements</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 d-flex align-items-stretch">
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <h4 class="card-header py-3">Add Transaction</h4>
+            <div class="card-body">
+                <p class="lead">Click here to add a transaction!</p>
+            </div>
+            <div class="card-header">
+                <a href="{%url 'new_transaction'%}" type="button" class="w-100 btn btn-lg btn-outline-primary">Make a new transaction</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+    
+<center><div class="col-md-3">
+        <h6>  <a href="mailto:aayushd03@gmail.com?subject=Contacting PST team" type="button" class="w-100 btn btn-lg" target="_blank" style="background-color: #d3d3d3;">Contact us!</a>
+</div> 
+</center>
+>>>>>>> main

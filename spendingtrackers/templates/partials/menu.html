@@ -1,6 +1,7 @@
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
       <li class="nav-item">
+<<<<<<< HEAD
         <a class="nav-link" href="{% url 'category'%}">Categories</a>
       </li>
       <li class="nav-item">
@@ -10,11 +11,62 @@
         <a class="nav-link" href="{% url 'records'%}">Records</a>
       </li>
       <li class="nav-item dropdown">
+=======
+        <a class="nav-link" href="{% url 'category'%}" style = "color: #000000">Categories</a>
+        <style>
+          .card:hover {
+            box-shadow: 0 0 10px rgba(0, 213, 14, 0.5);
+          }
+        </style>     
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'records'%}"style="color: #000000">Records</a>
+        <style>
+          .card:hover {
+            box-shadow: 0 0 10px rgba(0, 213, 14, 0.5);
+          }
+        </style> 
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'add_category_details'%}"style="color: #000000">Add Category</a>
+        <style>
+          .card:hover {
+            box-shadow: 0 0 10px rgba(0, 213, 14, 0.5);
+          }
+        </style> 
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'view_achievements'%}"style="color: #000000">Achievements</a>
+        <style>
+          .card:hover {
+            box-shadow: 0 0 10px rgba(0, 213, 14, 0.5);
+          }
+        </style> 
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'new_transaction'%}"style="color: #000000">Add Transaction</a>
+        <style>
+          .card:hover {
+            box-shadow: 0 0 10px rgba(0, 213, 14, 0.5);
+          }
+        </style> 
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'feed'%}"style="color: #000000">Feed</a>
+        <style>
+          .card:hover {
+            box-shadow: 0 0 10px rgba(0, 213, 14, 0.5);
+          }
+        </style> 
+      </li>
+            <li class="nav-item dropdown">
+>>>>>>> main
         <a class="nav-link" href="#" id="user-account-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="bi-person-circle"></span>
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-account-dropdown">
-          <li>Logged in as: <br><b>{{user.first_name}}</b></li>
+          <center><li>Logged in as: <br><b>{{user.first_name}} {{user.last_name}}</b></li></center>
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item" href="{% url 'log_out'%}">Log out</a></li>
           <li><a class="dropdown-item" href="{% url 'profile'%}">Profile</a></li>

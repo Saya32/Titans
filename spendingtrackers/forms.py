@@ -5,6 +5,7 @@ from django.core.validators import RegexValidator
 from django.contrib.auth import authenticate
 from django.db import models
 from django.contrib.auth.forms import UserChangeForm
+from django.core.exceptions import ValidationError
 
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
@@ -38,9 +39,9 @@ class SignUpForm(forms.ModelForm):
         label='Password',
         widget=forms.PasswordInput(),
         validators=[RegexValidator(
-            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
+            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*?[!@#\[:()"`;+\-|_?,.</\\>=$%}{^&*~]).*$',
             message='Password must contain an uppercase character, a lowercase '
-                    'character and a number'
+                    'character, a special character and a number'
             )]
     )
     password_confirmation = forms.CharField(label='Password confirmation', widget=forms.PasswordInput())
@@ -112,11 +113,6 @@ class TransactionForm(forms.ModelForm):
              self.add_error('time_paid','Please enter the time as HH:MM.')
              return
 
-        # if(date <= timezone.now().date()):
-        #     self.add_error('date','Date must be in the future.')
-        #     if (date == timezone.now().date() and time <= timezone.now().time()):
-        #         self.add_error('time','Time must be in the future.')
-    
 
 class CategoryDetailsForm(forms.ModelForm):
     class Meta:
@@ -125,12 +121,23 @@ class CategoryDetailsForm(forms.ModelForm):
         labels = {
             'name': ('Name:'),
             'budget': ('Budget:'),
-            'start_date': ('Start Date:'),
-            'end_date': ('End Date:'),
+        }
+        widgets = {
+            'start_date': forms.widgets.DateInput(
+                format=('%Y-%m-%d'), attrs={'type': 'date'}
+                ),
+            'end_date': forms.widgets.DateInput(
+                format=('%Y-%m-%d'), attrs={'type': 'date'}
+                ),
         }
 
     def clean(self):
-        super().clean()
+        clean_data = super().clean()
+        start_date = clean_data.get('start_date')
+        end_date = clean_data.get('end_date')
+        if start_date and end_date and start_date >= end_date:
+            raise ValidationError('Start date must be before end date.')
+        return clean_data
 
 
 class ChangePasswordForm(forms.Form):
@@ -139,28 +146,47 @@ class ChangePasswordForm(forms.Form):
         label='his_password',
         widget=forms.PasswordInput(),
         validators=[RegexValidator(
+<<<<<<< HEAD
             regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
             message='Password must contain an uppercase character, a lowercase '
                     'character and a number'
+=======
+            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*?[!@#\[:()"`;+\-|_?,.</\\>=$%}{^&*~]).*$',
+            message='Password must contain an uppercase character, a lowercase '
+                    'character, a special character and a number'
+>>>>>>> main
             )]
     )
     password = forms.CharField(
         label='password',
         widget=forms.PasswordInput(),
         validators=[RegexValidator(
+<<<<<<< HEAD
             regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
             message='Password must contain an uppercase character, a lowercase '
                     'character and a number'
+=======
+            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*?[!@#\[:()"`;+\-|_?,.</\\>=$%}{^&*~]).*$',
+            message='Password must contain an uppercase character, a lowercase '
+                    'character, a special character and a number'
+>>>>>>> main
             )]
     )
     password_confirmation = forms.CharField(label='password_confirmation', widget=forms.PasswordInput())
 
     def clean(self):
         """Clean the data and generate messages for any errors."""
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> main
         super().clean()
         password = self.cleaned_data.get('password')
         password_confirmation = self.cleaned_data.get('password_confirmation')
         if password != password_confirmation:
             self.add_error('password_confirmation', 'Confirmation does not match password.')
+<<<<<<< HEAD
  
+=======
+>>>>>>> main

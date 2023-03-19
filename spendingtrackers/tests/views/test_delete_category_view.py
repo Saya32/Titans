@@ -1,6 +1,10 @@
 from django.test import TestCase
 from django.urls import reverse
 from spendingtrackers.models import User, Category
+<<<<<<< HEAD
+=======
+from spendingtrackers.tests.helpers import reverse_with_next
+>>>>>>> main
 
 
 class DeleteCategoryViewTestCase(TestCase):

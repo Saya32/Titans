@@ -16,10 +16,12 @@ urlpatterns = [
     path('edit_category_details/<int:id>', views.edit_category_details, name='edit_category_details'),
     path('records/', views.records, name='records'),
     path('update_record/<int:id>', views.update_record, name='update_record'),
+    path('sign_success/', views.sign_success, name='sign_success'),
     path('delete_record/<int:id>', views.delete_record, name='delete_record'),
     path('change_password/', views.change_password, name='change_password'),
     path('category/',views.category, name='category'),
     path('view_category/<int:id>', views.view_category, name='view_category'),
+<<<<<<< HEAD
     path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboard/balance_chart', views.chart_balance_graph, name='chart_balance_graph'),
     path('dashboard/expense_chart', views.chart_expense_graph, name='chart_expense_graph'),
@@ -29,5 +31,11 @@ urlpatterns = [
     path('add_category_details/', views.add_category_details, name='add_category_details'),
     path('delete_category/<int:id>', views.delete_category, name='delete_category'),
     path('overall/',views.overall, name ='overall'),
+=======
+    path('add_category_details/', views.add_category_details, name='add_category_details'),
+    path('delete_category/<int:id>', views.delete_category, name='delete_category'),
+    path('overall/',views.overall, name ='overall'),
+    path('view_achievements/', views.view_achievements, name='view_achievements'),
+>>>>>>> main
 ]
 urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

@@ -36,10 +36,17 @@ class AddCategoryDetailsViewTestCase(TestCase):
         self.assertTrue(isinstance(form, CategoryDetailsForm))
         self.assertFalse(form.is_bound)
 
+<<<<<<< HEAD
     # def test_get_new_transaction_redirects_when_not_logged_in(self):  #NEED TO COME BACK ONCE WE ADD DECORATOR
     #     redirect_url = reverse_with_next('log_in', self.url)
     #     response = self.client.get(self.url)
     #     self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+=======
+    def test_get_add_new_category_redirects_when_not_logged_in(self): 
+         redirect_url = reverse_with_next('log_in', self.url)
+         response = self.client.get(self.url)
+         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+>>>>>>> main
 
     def test_successful_add_category(self):
         self.client.login(username=self.user.username, password="Password123")

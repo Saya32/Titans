@@ -40,7 +40,14 @@ class CategoryViewTestCase(TestCase):
             self.assertContains(response, f'Category__{count}')
 
 
+<<<<<<< HEAD
     # def test_get_pending_category_redirects_when_not_logged_in(self): //WHEN LOGIN REQUIRED IS ADDED WE CAN CHANGE THIS
     #     redirect_url = reverse_with_next('log_in', self.url)
     #     response = self.client.get(self.url)
     #     self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+=======
+    def test_category_redirects_when_not_logged_in(self): 
+         redirect_url = reverse_with_next('log_in', self.url)
+         response = self.client.get(self.url)
+         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+>>>>>>> main
