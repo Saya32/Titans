@@ -94,7 +94,7 @@ def forgot_password(request):
             return render(request, 'forgot_password.html')
         user = User.objects.filter(username__exact=user_name).first()
         if not user:
-            messages.add_message(request, messages.ERROR, "email not exists!")
+            messages.add_message(request, messages.ERROR, "email does not exist!")
             return render(request, 'forgot_password.html')
         if user.pin != pin:
             messages.add_message(request, messages.ERROR, "pin error!")
