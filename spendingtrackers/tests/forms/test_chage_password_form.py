@@ -68,7 +68,7 @@ class ChangePasswordFromTestCase(TestCase):
         self.form_input['his_password'] = 'Password*'
         form = ChangePasswordForm(data=self.form_input)
         self.assertFalse(form.is_valid())
-        
+
     def test_his_password_must_contain_character(self):
         self.form_input['his_password'] = 'Password123'
         form = ChangePasswordForm(data=self.form_input)
@@ -93,7 +93,7 @@ class ChangePasswordFromTestCase(TestCase):
         self.form_input['password_confirmation'] = 'Password#'
         form = ChangePasswordForm(data=self.form_input)
         self.assertFalse(form.is_valid())
-        
+
     def test_password_must_contain_character(self):
         self.form_input['password'] = 'Password123'
         self.form_input['password_confirmation'] = 'Password123'

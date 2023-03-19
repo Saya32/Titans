@@ -94,7 +94,7 @@ def forgot_password(request):
             return render(request, 'forgot_password.html')
         user = User.objects.filter(username__exact=user_name).first()
         if not user:
-            messages.add_message(request, messages.ERROR, "email not exists!")
+            messages.add_message(request, messages.ERROR, "email does not exist!")
             return render(request, 'forgot_password.html')
         if user.pin != pin:
             messages.add_message(request, messages.ERROR, "pin error!")
@@ -172,36 +172,42 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
 @login_required
 def new_transaction(request):
-    if request.method == 'POST':
-        form = TransactionForm(request.POST, request.FILES)
-        if form.is_valid():
-            category_name = form.cleaned_data['category']
-            category_object = get_object_or_404(Category, user=request.user, name=category_name)
+    try:
+        if request.method == 'POST':
+            form = TransactionForm(request.POST, request.FILES)
+            if form.is_valid():
+                category_name = form.cleaned_data['category']
+                category_object = get_object_or_404(Category, user=request.user, name=category_name)
 
-            Transaction.objects.create(
-                user=request.user,
-                title=form.cleaned_data.get('title'),
-                description=form.cleaned_data.get('description'),
-                amount=form.cleaned_data.get('amount'),
-                date_paid=form.cleaned_data.get('date_paid'),
-                time_paid=form.cleaned_data.get('time_paid'),
-                category=form.cleaned_data.get('category'),
-                receipt=form.cleaned_data.get('receipt'),
-                transaction_type=form.cleaned_data.get('transaction_type'),
-                category_fk=category_object
-            )
-            update_achievements(request.user)
-            return redirect('feed')
+                Transaction.objects.create(
+                    user=request.user,
+                    title=form.cleaned_data.get('title'),
+                    description=form.cleaned_data.get('description'),
+                    amount=form.cleaned_data.get('amount'),
+                    date_paid=form.cleaned_data.get('date_paid'),
+                    time_paid=form.cleaned_data.get('time_paid'),
+                    category=form.cleaned_data.get('category'),
+                    receipt=form.cleaned_data.get('receipt'),
+                    transaction_type=form.cleaned_data.get('transaction_type'),
+                    category_fk=category_object
+                )
+                update_achievements(request.user)
+                return redirect('feed')
+            else:
+                return render(request, 'new_transaction.html', {'form': form})
         else:
+            form = TransactionForm()
             return render(request, 'new_transaction.html', {'form': form})
-    else:
-        form = TransactionForm()
-        return render(request, 'new_transaction.html', {'form': form})
+    except:
+        messages.add_message(request, messages.ERROR, "Error: Category does not exist")
+        return redirect('category')
+
 
 
 @login_required
 def records(request):
     transactions = get_user_transactions(request.user)
+    currency = request.user.currency
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
         to_date = request.POST.get('to_date')
@@ -209,7 +215,7 @@ def records(request):
             from_date_obj = datetime.strptime(from_date, '%Y-%m-%d').date()
             to_date_obj = datetime.strptime(to_date, '%Y-%m-%d').date()
             transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
-    return render(request, 'records.html', {'transactions': transactions})
+    return render(request, 'records.html', {'transactions': transactions,'currency': currency})
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
         to_date = request.POST.get('to_date')
@@ -217,7 +223,7 @@ def records(request):
             from_date_obj = datetime.strptime(from_date, '%Y-%m-%d').date()
             to_date_obj = datetime.strptime(to_date, '%Y-%m-%d').date()
             transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
-    return render(request, 'records.html', {'transactions': transactions})
+    return render(request, 'records.html', {'transactions': transaction, 'currency': currency})
 
 
 @login_required
@@ -228,11 +234,23 @@ def update_record(request, id):
         messages.add_message(request, messages.ERROR, "Record could not be found!")
         return redirect('feed')
 
+    
     if request.method == 'POST':
         form = TransactionForm(instance=record, data=request.POST)
         if (form.is_valid()):
+            
+            try:
+                category_name = form.cleaned_data['category']
+                category_object = get_object_or_404(Category, user=request.user, name=category_name)
+            except:
+                messages.add_message(request, messages.ERROR, "Category could not be found!")
+                return redirect('feed')
+            
             messages.add_message(request, messages.SUCCESS, "Record updated!")
             form.save()
+            record = Transaction.objects.get(pk=id)
+            record.category_fk = category_object
+            record.save()
             return redirect('feed')
         else:
             return render(request, 'update_record.html', {'form': form, 'transaction': record})
@@ -334,7 +352,8 @@ def view_category(request, id):
     expense = category.get_expenses()
     income = category.get_income()
     balance = category.get_balance()
-   
+    currency = request.user.currency
+
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
         to_date = request.POST.get('to_date')
@@ -359,7 +378,7 @@ def view_category(request, id):
         warning_message = None
 
     context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income,
-               'balance': balance, 'warning_message': warning_message}
+               'balance': balance, 'warning_message': warning_message, 'currency':currency}
     return render(request, 'view_category.html', context)
 
 
@@ -393,6 +412,7 @@ def overall(request):
     income = get_user_income(request.user)
     balance = get_user_balance(request.user)
     budget = get_user_budget(request.user)
+    currency = request.user.currency
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
         to_date = request.POST.get('to_date')
@@ -418,7 +438,7 @@ def overall(request):
     else:
         warning_message = None
 
-    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income, 'balance': balance, 'budget':budget,'warning_message': warning_message,}
+    context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income, 'balance': balance, 'budget':budget,'warning_message': warning_message,'currency':currency}
     return render(request, 'overall.html', context)
 
 def view_achievements(request):
