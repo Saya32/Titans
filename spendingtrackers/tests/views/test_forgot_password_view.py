@@ -31,3 +31,13 @@ class ForgotPasswordViewTestCase(TestCase, LogInTester):
 
         response = self.client.get(self.url, form_input)
         self.assertEqual(response.status_code, 200)
+
+    def test_forgot_password_error(self):
+        form_input = {"pin": "johndoe@example.org", 'email': 'johndoe@example.org', 'password': 'aaa1',
+                      "password_confirmation": "aaa"}
+
+        response = self.client.post(self.url, form_input)
+        self.assertEqual(response.status_code, 200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)

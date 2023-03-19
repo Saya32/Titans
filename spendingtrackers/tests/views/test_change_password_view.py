@@ -53,4 +53,11 @@ class ChangePasswordViewTestCase(TestCase, LogInTester):
         response = self.client.post(self.url, form_input)
         messages_list = list(response.context['messages'])
         self.assertNotEqual(len(messages_list), 1)
+
+    def test_change_password_error(self):
+        form_input = {'username': 'johndoe2@exam22ple.org', 'his_password': 'WrongPass22word123.',
+                      'password': 'WrongPassword1234,5', "password_confirmation": "WrongPassword1234,5"}
+        response = self.client.post(self.url, form_input)
+        messages_list = list(response.context['messages'])
+        self.assertNotEqual(len(messages_list), 1)
    
