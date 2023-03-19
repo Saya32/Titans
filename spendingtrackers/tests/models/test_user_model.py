@@ -14,6 +14,7 @@ class UserModelTestCase(TestCase):
             last_name = 'Doe',
             username = 'johndoe@example.org',
             currency = "£",
+            pin = "123",
         )
 
     def test_valid_user(self):
@@ -37,6 +38,7 @@ class UserModelTestCase(TestCase):
             last_name = 'Doe',
             username = 'janedoe@example.org',
             currency = "£",
+            pin = "345",
         )
         return user
 
@@ -151,3 +153,22 @@ class UserModelTestCase(TestCase):
     def test_currency_cannot_be_any_others(self):
         self.user.currency = '!'
         self._assert_user_is_invalid()
+
+    
+    def test_pin_cannot_be_blank(self):
+        self.user.pin = ''
+        self._assert_user_is_invalid()
+
+    def test_pin_does_not_need_to_be_unique(self):
+        another_user = self._create_second_user()
+        self.user.pin = another_user.pin
+        self._assert_user_is_valid()
+
+    def test_pin_can_be_50_characters_long(self):
+        self.user.pin = 'x'*50
+        self._assert_user_is_valid()
+
+    def test_pin_cannot_be_over_50_characters_long(self):
+        self.user.pin = 'x'*51
+        self._assert_user_is_invalid()
+
