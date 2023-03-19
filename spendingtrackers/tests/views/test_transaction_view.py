@@ -64,3 +64,15 @@ class NewTransactionViewTestCase(TestCase):
         form = response.context['form']
         self.assertTrue(isinstance(form, TransactionForm))
         self.assertTrue(form.is_bound)
+    
+    def test_add_existing_transaction(self):
+        self.client.login(username=self.user.username, password="Password123")
+        Transaction.objects.create(name=self.data['name'], user=self.user)
+        response = self.client.post(self.url, self.data, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'category.html')
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        message = str(messages[0])
+        self.assertIn('Error:', message)
+        self.assertIn('Category exists', message)
