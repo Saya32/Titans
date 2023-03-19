@@ -12,19 +12,19 @@
     <div class="row">
       <div class="column" style="background-color:#5cbc691b;">
         <h2>Budget</h2>
-        <p>{{budget}}</p>
+        <p>{{currency}}{{budget}}</p>
       </div>
       <div class="column" style="background-color:#5cbc695b;">
         <h2>Expense</h2>
-        <p>{{expense}}</p>
+        <p>{{currency}}{{expense}}</p>
       </div>
       <div class="column" style="background-color:#5cbc69d8;">
         <h2>Income</h2>
-        <p>{{income}}</p>
+        <p>{{currency}}{{income}}</p>
       </div>
       <div class="column" style="background-color:#5cbc68;">
         <h2>Balance</h2>
-        <p>{{balance}}</p>
+        <p>{{currency}}{{balance}}</p>
       </div>
     </div>
   
@@ -53,7 +53,7 @@
                 <td>{{ transaction.id }}</td> 
                 <td>{{ transaction.date_paid}}</td>
                 <td>{{ transaction.time_paid  }}</td>
-                <td>{{ transaction.amount }}</td>
+                <td>{{currency}}{{ transaction.amount }}</td>
                 <td>{{ transaction.transaction_type }}</td>
                 <td>{{ transaction.category }}</td>
 
