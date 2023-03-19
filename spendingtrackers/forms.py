@@ -39,9 +39,9 @@ class SignUpForm(forms.ModelForm):
         label='Password',
         widget=forms.PasswordInput(),
         validators=[RegexValidator(
-            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*?[!@#\[:()"`;+\-|_?,.</\\>=$%}{^&*~]).*$',
+            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
             message='Password must contain an uppercase character, a lowercase '
-                    'character, a special character and a number'
+                    'character and a number'
             )]
     )
     password_confirmation = forms.CharField(label='Password confirmation', widget=forms.PasswordInput())
