@@ -80,21 +80,21 @@ class Transaction(models.Model):
 
 
 class Chart(models.Model):
-    name = models.CharField(max_length=200) 
-    start_date = models.DateField()
+    name = models.CharField(max_length=200)
+    start_date = models.DateField(auto_now_add=False, blank=False, null=True)
     responsible = models.ForeignKey(User, on_delete=models.CASCADE)
     week_number = models.CharField(max_length=2, blank=True)
-    finish_date = models.DateField()
+    finish_date = models.DateField(auto_now_add=False, blank=False, null=True)
 
 #string representation method
     def __str__(self):
         return str(self.name)
 #overiding the save method
-    def save(self, *args, **kwargs):
-        print(self.start_date.isocalendar()[1])
-        if self.week_number == "":
-            self.week_number = self.start_date.isocalendar()[1]
-        super().save(*args, **kwargs)
+    #def save(self, *args, **kwargs):
+        #print(self.start_date.isocalendar()[1])
+        #if self.week_number == "":
+            #self.week_number = self.start_date.isocalendar()[1]
+        #super().save(*args, **kwargs)
 
 class Achievement(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
