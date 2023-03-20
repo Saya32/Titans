@@ -32,6 +32,9 @@ class Category(models.Model):
     class Meta:
         unique_together = 'user','name'
 
+    def get_start_date(self):
+        return self.start_date
+
     def get_expenses(self, from_date=None, to_date=None):
         transactions = self.transaction_set.all()
         if from_date and to_date:
