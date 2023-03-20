@@ -140,3 +140,4 @@ class CategoryDetailsForm(forms.ModelForm):
         if start_date and end_date and start_date >= end_date:
             raise ValidationError('Start date must be before end date.')
         return clean_data
+

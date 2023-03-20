@@ -6,6 +6,9 @@ from django.contrib.messages import get_messages
 from spendingtrackers.models import Category, Transaction, User
 from spendingtrackers.views import view_category
 from spendingtrackers.tests.helpers import reverse_with_next, create_transactions, create_categories
+from ...helpers import get_user_balance,get_user_income,get_user_budget,get_user_expense
+from datetime import datetime
+
 
 class ViewCategoryTestCase(TestCase):
     """Test case of view category view"""
@@ -67,3 +70,21 @@ class ViewCategoryTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         warning_message = response.context['warning_message']
         self.assertIsNone(warning_message)
+
+    def test_get_user_balance(self):
+        balance = get_user_balance(self.user)
+        self.assertEqual(balance, Decimal('500.00'))
+    
+    def test_get_user_budget(self):
+        budget = get_user_budget(self.user)
+        self.assertEqual(budget, Decimal('500.00'))
+    
+    def test_get_user_expense(self):
+        expense = get_user_expense(self.user)
+        self.assertEqual(expense, 0)
+    
+    def test_get_user_income(self):
+        income = get_user_income(self.user)
+        self.assertEqual(income, 0)
+    
+    
