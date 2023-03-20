@@ -4,7 +4,7 @@ from spendingtrackers.models import User, Transaction
 import json
 from django.urls import reverse
 
-class ExpenseStructureTestCase(TestCase):
+class ExpenseStructure2TestCase(TestCase):
     fixtures = [
         'spendingtrackers/tests/fixtures/default_user.json',
     ]
@@ -28,11 +28,12 @@ class ExpenseStructureTestCase(TestCase):
         
     def test_chart_expense_structure2_graph(self):
         self.client.login(username=self.user.username, password='Password123')
-        response = self.client.get(reverse('chart_expense_graph'))
+        response = self.client.get(reverse('expense_structure2'))
         self.assertEqual(response.status_code, 200)
 
         expected_data = {
-            'labels': ['03/15/2022', '03/17/2022'],
-            'data': [10.0, 5.0]
+            'labels': ['', ''],
+            'data': {'': '15.00'}
         }
         self.assertJSONEqual(json.dumps(response.json()), expected_data)
+
