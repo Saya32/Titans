@@ -70,9 +70,6 @@ class UpdateTransactionViewTestCase(TestCase):
         self.transactions = Transaction.objects.filter(user = self.user)
         self.assertEqual(self.transactions[0].category, 'Salary')
 
-
-        
-
     def test_update_does_not_save_if_form_is_invalid(self):
         self.client.login(username=self.user.username, password='Password123')
         transaction_url = reverse('update_record', kwargs={'id': self.transactions[0].pk})
