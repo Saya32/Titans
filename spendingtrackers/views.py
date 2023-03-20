@@ -15,6 +15,7 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from .helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, get_user_budget, change_transaction_name, delete_transactions, set_achievements, get_achievements, update_achievements
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import datetime
@@ -318,8 +319,6 @@ def view_category(request, id):
         messages.add_message(request, messages.ERROR, "Category could not be found!")
         return redirect('feed')
 
-    # user_transactions = get_user_transactions(request.user)
-    # category_transactions = get_category_transactions(category)
     transactions = get_user_transactions(request.user)
     expense = category.get_expenses()
     income = category.get_income()
@@ -353,7 +352,7 @@ def view_category(request, id):
                'balance': balance, 'warning_message': warning_message, 'currency':currency}
     return render(request, 'view_category.html', context)
 
-
+@transaction.atomic        #https://docs.djangoproject.com/en/4.1/topics/db/transactions/
 @login_required
 def add_category_details(request):
     try:
@@ -369,12 +368,11 @@ def add_category_details(request):
                 messages.error(request, "Invalid form data.")
         else:
             form = CategoryDetailsForm()
-
         return render(request, 'add_category_details.html', {'form': form})
-
     except:
-        messages.add_message(request, messages.ERROR, "Error: Category exists")
-        return redirect('category')
+        with transaction.atomic(): #https://stackoverflow.com/questions/21458387/transactionmanagementerror-you-cant-execute-queries-until-the-end-of-the-atom
+            messages.add_message(request, messages.ERROR, "Error: Category exists")
+            return redirect('category')
 
 
 @login_required
