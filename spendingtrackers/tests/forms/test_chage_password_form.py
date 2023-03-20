@@ -34,3 +34,78 @@ class ChangePasswordFromTestCase(TestCase):
         self.assertIn('password_confirmation', form.fields)
         password_confirmation_widget = form.fields['password_confirmation'].widget
         self.assertTrue(isinstance(password_confirmation_widget, forms.PasswordInput))
+
+
+    # Email test:
+    def test_email_cannot_be_blank(self):
+        self.form_input['email'] = ''
+        form = ChangePasswordForm(data=self.form_input)
+        self.assertFalse(form.is_valid())
+
+    def test_email_can_be_50_characters_long(self):
+        self.form_input['email'] = 'x'*50
+        form = ChangePasswordForm(data=self.form_input)
+        self.assertTrue(form.is_valid())
+
+    def test_email_cannot_be_over_50_characters_long(self):
+        self.form_input['email'] = 'x'*51
+        form = ChangePasswordForm(data=self.form_input)
+        self.assertFalse(form.is_valid())
+
+
+    # History Password tests:
+    def test_his_password_must_contain_uppercase_character(self):
+        self.form_input['his_password'] = 'password123*'
+        form = ChangePasswordForm(data=self.form_input)
+        self.assertFalse(form.is_valid())
+
+    def test_his_password_must_contain_lowercase_character(self):
+        self.form_input['his_password'] = 'PASSWORD123*'
+        form = ChangePasswordForm(data=self.form_input)
+        self.assertFalse(form.is_valid())
+
+    def test_his_password_must_contain_number(self):
+        self.form_input['his_password'] = 'Password*'
+        form = ChangePasswordForm(data=self.form_input)
+        self.assertFalse(form.is_valid())
+
+    def test_his_password_must_contain_character(self):
+        self.form_input['his_password'] = 'Password123'
+        form = ChangePasswordForm(data=self.form_input)
+        self.assertFalse(form.is_valid())
+
+
+    # New Password test:
+    def test_password_must_contain_uppercase_character(self):
+        self.form_input['password'] = 'password123#'
+        self.form_input['password_confirmation'] = 'password123#'
+        form = ChangePasswordForm(data=self.form_input)
+        self.assertFalse(form.is_valid())
+
+    def test_password_must_contain_lowercase_character(self):
+        self.form_input['password'] = 'PASSWORD123#'
+        self.form_input['password_confirmation'] = 'PASSWORD123#'
+        form = ChangePasswordForm(data=self.form_input)
+        self.assertFalse(form.is_valid())
+
+    def test_password_must_contain_number(self):
+        self.form_input['password'] = 'Password#'
+        self.form_input['password_confirmation'] = 'Password#'
+        form = ChangePasswordForm(data=self.form_input)
+        self.assertFalse(form.is_valid())
+
+    def test_password_must_contain_character(self):
+        self.form_input['password'] = 'Password123'
+        self.form_input['password_confirmation'] = 'Password123'
+        form = ChangePasswordForm(data=self.form_input)
+        self.assertFalse(form.is_valid())
+
+    def test_password_and_his_password_cannot_be_identical(self):
+        self.form_input['password'] = 'Password123*'
+        form = ChangePasswordForm(data=self.form_input)
+        self.assertFalse(form.is_valid())
+
+    def test_password_and_password_confirmation_are_identical(self):
+        self.form_input['password_confirmation'] = 'ponbiubijbuinassword123'
+        form = ChangePasswordForm(data=self.form_input)
+        self.assertFalse(form.is_valid())
