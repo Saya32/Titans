@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
-from spendingtrackers.models import User, Category
+from spendingtrackers.models import User, Category, Transaction
 from spendingtrackers.tests.helpers import reverse_with_next
+from spendingtrackers.helpers import delete_transactions
 
 
 class DeleteCategoryViewTestCase(TestCase):
@@ -71,3 +72,27 @@ class DeleteCategoryViewTestCase(TestCase):
         self.assertTemplateUsed(response, 'feed.html')
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
+    
+    def test_transactions_delete_when_category_deletes(self):
+        self.client.login(username=self.user.username, password='Password123')
+        self.categoryData.save()
+        self.transactionData = Transaction(
+            user=self.user,
+            title='This is a title',
+            description='Description of Transaction goes here',
+            amount=1000,
+            date_paid='2023-12-12',
+            time_paid='10:51',
+            category='Gifts',
+            receipt ='',
+            transaction_type='Expense',
+            category_fk=self.categories[0]
+
+        )
+        pk = self.categories[0].pk
+        category_url = reverse('delete_category', kwargs={'id': pk})
+        delete_transactions(self.user, self.categories[0])
+        transaction_count = Transaction.objects.count()
+        self.assertEqual(transaction_count,0)
+        
+
