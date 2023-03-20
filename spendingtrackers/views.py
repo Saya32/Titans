@@ -168,7 +168,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         """Return redirect URL after successful update."""
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
-
+@transaction.atomic 
 @login_required
 def new_transaction(request):
     try:
@@ -193,13 +193,15 @@ def new_transaction(request):
                 update_achievements(request.user)
                 return redirect('feed')
             else:
+                messages.error(request, "Error: Form is not valid")
                 return render(request, 'new_transaction.html', {'form': form})
         else:
             form = TransactionForm()
             return render(request, 'new_transaction.html', {'form': form})
     except:
-        messages.add_message(request, messages.ERROR, "Error: Category does not exist")
-        return redirect('category')
+        with transaction.atomic():
+            messages.add_message(request, messages.ERROR, "Error: Category does not exist")
+            return redirect('category')
 
 
 
