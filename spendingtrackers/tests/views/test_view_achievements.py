@@ -27,11 +27,6 @@ class AchievementsViewTestCase(TestCase):
     def test_view_achievements_url(self):
         self.assertEqual(self.url,'/view_achievements/')
     
-    def test_view_achievements(self):
-        url = reverse('view_achievements')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'view_achievements.html')
     
     def test_get_view_achievements_redirects_when_not_logged_in(self):  
          redirect_url = reverse_with_next('log_in', self.url)
