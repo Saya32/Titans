@@ -1,5 +1,4 @@
 
-
 from django.test import TestCase
 from ...models import Category, User, Transaction
 from django.core.exceptions import ValidationError

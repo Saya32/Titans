@@ -7,6 +7,7 @@ from spendingtrackers.models import Category, Transaction, User
 from spendingtrackers.views import view_category
 from spendingtrackers.tests.helpers import reverse_with_next, create_transactions, create_categories
 from ...helpers import get_user_balance,get_user_income,get_user_budget,get_user_expense
+from datetime import datetime
 
 
 class ViewCategoryTestCase(TestCase):
@@ -85,3 +86,5 @@ class ViewCategoryTestCase(TestCase):
     def test_get_user_income(self):
         income = get_user_income(self.user)
         self.assertEqual(income, 0)
+    
+    
