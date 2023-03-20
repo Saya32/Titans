@@ -1,8 +1,7 @@
 """Test case of new transaction view"""
 from django.test import TestCase
 from django.urls import reverse
-from spendingtrackers.models import User, Transaction, Category
-from django.test.client import RequestFactory
+from spendingtrackers.models import User, Transaction
 from spendingtrackers.views import new_transaction
 from spendingtrackers.forms import TransactionForm
 from spendingtrackers.tests.helpers import reverse_with_next
@@ -46,7 +45,6 @@ class NewTransactionViewTestCase(TestCase):
         redirect_url = reverse_with_next('log_in', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-    
 
     def test_successful_new_transaction(self):
         self.client.login(username=self.user.username, password="Password123")
@@ -67,13 +65,4 @@ class NewTransactionViewTestCase(TestCase):
         self.assertTrue(isinstance(form, TransactionForm))
         self.assertTrue(form.is_bound)
     
-
-    # def test_new_transaction_category_not_exist(self):
-    #     self.client.login(username=self.user.username, password="Password123")
-    #     self.data['category'] = 'InvalidCategory'
-    #     response = self.client.post(self.url, self.data, follow=True)
-    #     self.assertRedirects(response, reverse('category'), status_code=302, target_status_code=200)
-    #     messages = list(response.context.get('messages'))
-    #     self.assertEqual(len(messages), 1)
-    #     self.assertEqual(str(messages[0]), 'Error: Category does not exist')
     

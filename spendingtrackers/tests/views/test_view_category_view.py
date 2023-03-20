@@ -67,5 +67,3 @@ class ViewCategoryTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         warning_message = response.context['warning_message']
         self.assertIsNone(warning_message)
-    
-    
