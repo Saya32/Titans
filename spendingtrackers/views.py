@@ -301,7 +301,7 @@ def chart_income_graph(request):
             income = transaction.amount
         else:
             income = 0
-        data.append(income)
+        data.append(float(income))
     # Create chart data
     return JsonResponse(data={
         'labels': labels,
