@@ -64,3 +64,5 @@ class NewTransactionViewTestCase(TestCase):
         form = response.context['form']
         self.assertTrue(isinstance(form, TransactionForm))
         self.assertTrue(form.is_bound)
+    
+    
