@@ -155,10 +155,12 @@ def home_page(request):
     return render(request, 'home_page.html')
 
 
+@login_required
 def sign_success(request):
     return render(request, 'sign_success.html')
 
 
+@login_required
 def banner(request):
     return render(request, 'banner.html')
 
@@ -491,6 +493,7 @@ def view_category(request, id):
     context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income,'balance': balance, 'warning_message': warning_message, 'currency':currency}
     return render(request, 'view_category.html', context)
 
+@login_required
 def dashboard(request):
     balance_data = chart_balance_graph(request)
     expense_data = chart_expense_graph(request)
@@ -568,6 +571,8 @@ def overall(request):
     context = {'category': category, 'transactions': transactions, 'expense': expense, 'income': income, 'balance': balance, 'budget':budget,'warning_message': warning_message,'currency':currency}
     return render(request, 'overall.html', context)
 
+
+@login_required
 def view_achievements(request):
    achievements = get_achievements(request.user.id)
    return render(request, 'view_achievements.html', {'achievements':achievements})
