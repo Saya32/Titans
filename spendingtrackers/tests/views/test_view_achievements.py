@@ -20,6 +20,9 @@ class AchievementsViewTestCase(TestCase):
         create_transactions(self.user,0,16)
         create_categories(self.user,0,16)
         self.transactions = Transaction.objects.filter()
+        set_achievements(self.user)
+        get_achievements(self.user)
+        update_achievements(self.user)
 
     def test_view_achievements_url(self):
         self.assertEqual(self.url,'/view_achievements/')
@@ -29,5 +32,24 @@ class AchievementsViewTestCase(TestCase):
          response = self.client.get(self.url)
          self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
     
-        
+
+    def test_default_achievement(self):
+        self.client.login(username=self.user.username, password="Password123") 
+        achievements = Achievement.objects.filter(user=self.user)
+        self.assertTrue(achievements[0].unlocked)
+
+    def test_category_achievements(self):
+        self.client.login(username=self.user.username, password="Password123") 
+        achievements = Achievement.objects.filter(user=self.user)
+        self.assertTrue(achievements[1].unlocked)
+        self.assertTrue(achievements[2].unlocked)
+        self.assertTrue(achievements[3].unlocked)
+    
+
+    def test_transaction_achievements(self):
+        self.client.login(username=self.user.username, password="Password123") 
+        achievements = Achievement.objects.filter(user=self.user)
+        self.assertTrue(achievements[4].unlocked)
+        self.assertTrue(achievements[5].unlocked)
+        self.assertTrue(achievements[6].unlocked)
  
