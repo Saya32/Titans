@@ -34,6 +34,26 @@
     </div>
   {% endif %}
 
+
+  <p>
+          
+    <h5 class="card-title"><b>Budget:</b>{{currency}}{{ category.budget}}</h5>
+    <h5 class="card-title"><b>Start Date:</b>{{ category.start_date}}</h5>
+    <h5 class="card-title"><b>End Date:</b>{{ category.end_date}}</h5>
+
+
+  </a>
+  <a href="{%url 'edit_category_details' category.id %}" class="btn btn-success">Edit</a> 
+  <a href="{%url 'delete_category' category.id %}" class="btn btn-success">Delete Category</a> 
+  </p>
+
+
+  <p><b>Budget</b> = Your category budget for {{ category.name}},
+  <b>Expense</b> = Total of all your expenses for {{ category.name}}, 
+  <b>Income</b> = Total of all your income for {{ category.name}}, 
+  <b>Balance</b> = All the expenses between category start date:{{ category.start_date}}  and category end date:{{ category.end_date}} taken away from budget </p>
+  
+
   </form>
           <table class="table table-hover text-nowrap">
             <thead>
@@ -63,18 +83,6 @@
                 
             </tbody>
             </table>
-          <p>
-          
-            <h5 class="card-title"><b>Budget:</b>{{currency}}{{ category.budget}}</h5>
-            <h5 class="card-title"><b>Start Date:</b>{{ category.start_date}}</h5>
-            <h5 class="card-title"><b>End Date:</b>{{ category.end_date}}</h5>
-        
-
-          </a>
-          <a href="{%url 'edit_category_details' category.id %}" class="btn btn-success">Edit</a> 
-          <a href="{%url 'delete_category' category.id %}" class="btn btn-success">Delete Category</a> 
-          </p>
-        
       
     
   </div>
