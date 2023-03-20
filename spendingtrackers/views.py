@@ -259,7 +259,7 @@ def chart_balance_graph(request):
             balance -= transaction.amount
         else:
             balance += transaction.amount
-        data.append(balance)
+        data.append(int(balance))
     
     # Create chart data
     return JsonResponse(data={
@@ -281,7 +281,7 @@ def chart_expense_graph(request):
             expense = transaction.amount
         else:
             expense = 0
-        data.append(expense)
+        data.append(float(expense))
     # Create chart data
     return JsonResponse(data={
         'labels': labels,
