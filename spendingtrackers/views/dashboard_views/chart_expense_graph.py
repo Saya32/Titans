@@ -2,27 +2,23 @@
 from spendingtrackers.models import Transaction
 from django.http import JsonResponse
 
-
-
-def chart_balance_graph(request):
+def chart_expense_graph(request):
     # Retrieve user's transactions
     transactions = Transaction.objects.filter(user=request.user).order_by('date_paid')
-    
     # Extract data for graph
     labels = []
     data = []
-    balance = 0
+    expense = 0
     for transaction in transactions:
         labels.append(transaction.date_paid.strftime("%m/%d/%Y"))
+
         if transaction.transaction_type == "Expense":
-            balance -= transaction.amount
+            expense = transaction.amount
         else:
-            balance += transaction.amount
-        data.append(int(balance))
-    
+            expense = 0
+        data.append(float(expense))
     # Create chart data
     return JsonResponse(data={
         'labels': labels,
         'data': data,
     })
-    

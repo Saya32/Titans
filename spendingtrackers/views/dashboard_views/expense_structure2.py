@@ -1,6 +1,4 @@
 # Create your views here.
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from spendingtrackers.models import Transaction
 from django.http import JsonResponse
 

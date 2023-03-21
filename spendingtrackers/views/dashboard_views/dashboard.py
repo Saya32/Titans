@@ -1,9 +1,11 @@
 # Create your views here.
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from django.shortcuts import render
+from spendingtrackers.views.dashboard_views.chart_balance_graph import chart_balance_graph
+from spendingtrackers.views.dashboard_views.chart_expense_graph import chart_expense_graph, chart_income_graph, expense_structure
+from spendingtrackers.views.dashboard_views.expense_structure import expense_structure2
+
 
 
 @login_required
