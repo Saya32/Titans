@@ -278,7 +278,7 @@ if (delta == (-1) && floor_bool == 0) {
 var i = "floor_index < all_floor";
 var ii = "floor_index += 1";
 change_page(i, ii)
-if(floor_index==8){
+if(floor_index==17){
 window.location.href="{% url 'feed'%}";
 }
 } else if (delta == (1) && floor_bool == 0) {
@@ -365,67 +365,158 @@ background: #0072E3;
         <div id="floor_1" class="floor">
             <div style="width:100%;height:100%">
                 <h2 style="text-align:center;color:#5cbc68;margin-top:20px;">This is the home page!<br>
-                    You can find all functionalities here and do any changes as you want!</h2>
-                <img src="{% static '1.png' %}" style="width:80%;height:80%;margin-left:10%">
+                    You can find all functionalities here and do any changes as you want!
+                </h2>
+                <img src="{% static '1.jpg' %}" style="width:80%;height:80%;margin-left:10%">
             </div>
         </div>
         <div id="floor_2" class="floor">
-            <h2 style="text-align:center;color:#5cbc68;">No acceptable categories found? Don’t worry!<br>
+            <h2 style="text-align:center;color:#5cbc68;">No acceptable categories found? Don't worry!<br>
                     This is the Category_Add entrance. You can add your Category details here!
                 </h2>
-                <img src="{% static '6.png' %}" style="width:80%;height:80%;margin-left:10%">
+                <img src="{% static '2.jpg' %}" style="width:80%;height:80%;margin-left:10%">
 
         </div>
         <div id="floor_3" class="floor">
             <div style="width:100%;height:100%">
-                <img src="{% static '7.png' %}" style="width:80%;height:80%;margin-left:10%;">
+                <img src="{% static '2_1.jpg' %}" style="width:80%;height:80%;margin-left:10%;">
             </div>
         </div>
         <div id="floor_4" class="floor">
             <div style="width:100%;height:100%">
-                <h2 style="text-align:center;color:#5cbc68;margin-top:20px;">Forget your transactions? Don’t worry! <br>
-                    We have listed all your records here!
-                </h2>
-                <img src="{% static '4.png' %}" style="width:80%;height:80%;margin-left:10%">
+                <img src="{% static '2_2.jpg' %}" style="width:80%;height:80%;margin-left:10%;">
             </div>
         </div>
         <div id="floor_5" class="floor">
             <div style="width:100%;height:100%">
-                <img src="{% static '5.png' %}" style="width:80%;height:80%;margin-left:10%;">
+                <div style="width:100%;height:100%">
+                <h2 style="text-align:center;color:#5cbc68;margin-top:20px;">Congratulations you have added your categories successfully!<br>
+                    Click here to view all your categories!
+                </h2>
+                <img src="{% static '3.jpg' %}" style="width:80%;height:80%;margin-left:10%">
+            </div>
             </div>
         </div>
         <div id="floor_6" class="floor">
             <div style="width:100%;height:100%">
-                <div style="width:100%;height:100%">
-                <h2 style="text-align:center;color:#5cbc68;margin-top:20px;">Click here to view all your categories!<br>
-                </h2>
-                <img src="{% static '2.png' %}" style="width:80%;height:80%;margin-left:10%">
-            </div>
+                <img src="{% static '3_1.jpg' %}" style="width:80%;height:80%;margin-left:10%;">
             </div>
         </div>
         <div id="floor_7" class="floor">
             <div style="width:100%;height:100%">
-                <img src="{% static '3.jpg' %}" style="width:80%;height:80%;margin-left:10%;">
+                <h2 style="text-align:center;color:#5cbc68;margin-top:20px;">Forget your transactions? Don't worry! <br>
+                    We have listed all your records here!
+                </h2>
+                <img src="{% static '4.jpg' %}" style="width:80%;height:80%;margin-left:10%">
             </div>
         </div>
         <div id="floor_8" class="floor">
             <div style="width:100%;height:100%">
-                <h2 style="text-align:center;color:#5cbc68;">Don’t know how to add new transactions?<br>
-                    Just click here to add any transactions as you want!
-                </h2>
-                <img src="{% static '8.png' %}" style="width:80%;height:80%;margin-left:10%">
+                <img src="{% static '4_1.jpg' %}" style="width:80%;height:80%;margin-left:10%;">
             </div>
         </div>
         <div id="floor_9" class="floor">
             <div style="width:100%;height:100%">
-                <img src="{% static '9.png' %}" style="width:80%;height:80%;margin-left:10%;">
+                <h2 style="text-align:center;color:#5cbc68;margin-top:20px;">Thanks for using Spending Tracker! <br>
+                    More interesting achievements waiting for you to explore!
+                </h2>
+                <img src="{% static '5.jpg' %}" style="width:80%;height:80%;margin-left:10%">
+            </div>
+        </div>
+        <div id="floor_10" class="floor">
+            <div style="width:100%;height:100%">
+                <img src="{% static '5_1.jpg' %}" style="width:80%;height:80%;margin-left:10%;">
+            </div>
+        </div>
+        <div id="floor_11" class="floor">
+            <div style="width:100%;height:100%">
+                <h2 style="text-align:center;color:#5cbc68;">Don't know how to add new transactions?<br>
+                    Just click here to add any transactions as you want!
+                </h2>
+                <img src="{% static '6.jpg' %}" style="width:80%;height:80%;margin-left:10%">
+            </div>
+        </div>
+        <div id="floor_12" class="floor">
+            <div style="width:100%;height:100%">
+                <img src="{% static '6_1.jpg' %}" style="width:80%;height:80%;margin-left:10%;">
+            </div>
+        </div>
+        <div id="floor_13" class="floor">
+            <div style="width:100%;height:100%">
+                <h2 style="text-align:center;color:#5cbc68;">Want to view your records more concisely?<br>
+                    Different kinds of pie charts and bar charts are showing for you!
+                </h2>
+                <img src="{% static '7.jpg' %}" style="width:80%;height:80%;margin-left:10%">
+            </div>
+        </div>
+        <div id="floor_14" class="floor">
+            <div style="width:100%;height:100%">
+                <img src="{% static '7_1.jpg' %}" style="width:80%;height:80%;margin-left:10%;">
+            </div>
+        </div>
+        <div id="floor_15" class="floor">
+            <div style="width:100%;height:100%">
+                <h2 style="text-align:center;color:#5cbc68;">Contact us if you need help!<br>
+                    There will be experts helping you to solve problems.
+                </h2>
+                <img src="{% static '8.jpg' %}" style="width:80%;height:80%;margin-left:10%">
+            </div>
+        </div>
+        <div id="floor_16" class="floor">
+            <div style="width:100%;height:100%">
+                <h2 style="text-align:center;color:#5cbc68;">Just now,<br>
+                    Click here backing to home page!
+                </h2>
+                <img src="{% static '9.jpg' %}" style="width:80%;height:80%;margin-left:10%">
+            </div>
+        </div>
+        <div id="floor_17" class="floor">
+            <div style="width:100%;height:100%">
+                <h2 style="text-align:center;color:#5cbc68;">Easy way to use different functions here!<br>
+                </h2>
+                <img src="{% static '10.jpg' %}" style="width:80%;height:80%;margin-left:10%">
+            </div>
+        </div>
+        <div id="floor_17" class="floor">
+            <div style="width:100%;height:100%">
+                <h2 style="text-align:center;color:#5cbc68;">Welcome to SpendingTracker!<br>
+                </h2>
+                <img src="{% static 'white.jpg' %}" style="width:80%;height:80%;margin-left:10%">
             </div>
         </div>
     </div>
+
     <div id="floor_li_wrap">
         <ul>
             <li>
                 <a class="floor_li_a this_floor_li_a"></a>
+            </li>
+            <li>
+                <a class="floor_li_a"></a>
+            </li>
+            <li>
+                <a class="floor_li_a"></a>
+            </li>
+            <li>
+                <a class="floor_li_a"></a>
+            </li>
+            <li>
+                <a class="floor_li_a"></a>
+            </li>
+            <li>
+                <a class="floor_li_a"></a>
+            </li>
+            <li>
+                <a class="floor_li_a"></a>
+            </li>
+            <li>
+                <a class="floor_li_a"></a>
+            </li>
+            <li>
+                <a class="floor_li_a"></a>
+            </li>
+            <li>
+                <a class="floor_li_a"></a>
             </li>
             <li>
                 <a class="floor_li_a"></a>
