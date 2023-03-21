@@ -1,11 +1,4 @@
-from .models import User, Transaction, Category, Achievement
-from django.conf import settings
-from django.shortcuts import redirect
-from django.utils import timezone
-from django.db.models import Q
-from email.mime.multipart import MIMEMultipart
-import smtplib
-from email.mime.text import MIMEText
+from .models import Transaction, Category, Achievement
 
 
 def get_user_transactions(user):

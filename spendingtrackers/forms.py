@@ -1,10 +1,7 @@
 from django import forms
 from .models import User, Transaction, Category
-from django.utils import timezone
 from django.core.validators import RegexValidator
 from django.contrib.auth import authenticate
-from django.db import models
-from django.contrib.auth.forms import UserChangeForm
 from django.core.exceptions import ValidationError
 
 class LogInForm(forms.Form):
