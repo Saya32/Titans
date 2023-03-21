@@ -1,11 +1,8 @@
 # Create your views here.
 
 from django.shortcuts import render, redirect, get_object_or_404
-from ..models import User, Transaction, Category, Achievement, Chart
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
-from django.http import HttpResponse
-from ..forms import SignUpForm, LogInForm, CategoryDetailsForm, UserForm, TransactionForm
+from spendingtrackers.forms import CategoryDetailsForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.db import transaction

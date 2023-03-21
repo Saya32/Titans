@@ -1,11 +1,11 @@
 # Create your views here.
 import re
-from django.shortcuts import render, redirect, get_object_or_404
-from ..models import User, Transaction, Category, Achievement, Chart
+from django.shortcuts import render, redirect
+from spendingtrackers.models import Category
 from django.contrib.auth.decorators import login_required
-from ..forms import CategoryDetailsForm
+from spendingtrackers.forms import CategoryDetailsForm
 from django.contrib import messages
-from ..helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, get_user_budget, change_transaction_name, delete_transactions, set_achievements, get_achievements, update_achievements
+from spendingtrackers.helpers import change_transaction_name
 from django.shortcuts import render
 
 

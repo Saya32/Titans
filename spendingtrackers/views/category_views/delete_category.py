@@ -1,9 +1,9 @@
 # Create your views here.
 from django.shortcuts import redirect
-from ..models import Category
+from spendingtrackers.models import Category
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from ..helpers import delete_transactions
+from spendingtrackers.helpers import delete_transactions
 
 
 

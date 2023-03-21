@@ -1,12 +1,15 @@
 # Create your views here.
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from ..helpers import get_user_transactions, get_categories, get_user_balance, get_user_income, get_user_expense, get_user_budget
-from spendingtrackers.models import Transaction
+from spendingtrackers.helpers import get_user_transactions, get_user_balance, get_user_income, get_user_expense, get_user_budget, get_categories
 import datetime 
 from django.shortcuts import render
 from datetime import datetime
 
+@login_required
+def category(request):
+    categories = get_categories(request.user.id)
+    return render(request, 'category.html', {'categories': categories})
 
 @login_required
 def overall(request):

@@ -1,9 +1,8 @@
 # Create your views here.
 from django.shortcuts import render, redirect
-from ..models import Category
+from spendingtrackers.models import Category
 from django.contrib.auth.decorators import login_required
-from ..helpers import get_user_transactions
-import matplotlib.pyplot as plt
+from spendingtrackers.helpers import get_user_transactions
 import datetime 
 from django.shortcuts import render
 from datetime import datetime
