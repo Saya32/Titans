@@ -49,6 +49,9 @@ Run all tests with:
 $ python3 manage.py test
 ```
 
+## Deployed Version
+- http://sayaka.pythonanywhere.com/
+
 ## References
 - https://djangopy.org/how-to/how-to-implement-categories-in-django/
 - https://github.com/AymenBerb/Narwhal
