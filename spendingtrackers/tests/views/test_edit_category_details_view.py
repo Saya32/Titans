@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from spendingtrackers.models import User, Category
 from spendingtrackers.forms import CategoryDetailsForm
-from spendingtrackers.tests.helpers import reverse_with_next, create_categories
+from spendingtrackers.tests.helpers import create_categories
 
 class UpdateCategoryViewTestCase(TestCase):
     """Test case of edit category view"""

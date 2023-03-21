@@ -5,7 +5,7 @@ from django.contrib.auth import login
 from django.views.generic.edit import FormView
 from django.urls import reverse
 from spendingtrackers.helpers import set_achievements, update_achievements
-from spendingtrackers.views.views import LoginProhibitedMixin
+from spendingtrackers.views import LoginProhibitedMixin
 
 
 

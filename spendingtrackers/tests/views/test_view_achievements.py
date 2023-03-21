@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from ...models import User, Achievement, Transaction, Category
-from ...views import view_achievements
+from ...models import User, Achievement, Transaction
 from ...helpers import set_achievements, get_achievements, update_achievements, set_achievements
 from spendingtrackers.tests.helpers import reverse_with_next, create_categories, create_transactions
 

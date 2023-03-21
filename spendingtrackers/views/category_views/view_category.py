@@ -6,7 +6,7 @@ from spendingtrackers.helpers import get_user_transactions
 import datetime 
 from django.shortcuts import render
 from datetime import datetime
-
+from django.contrib import messages
 
 @login_required
 def view_category(request, id):

@@ -5,7 +5,6 @@ from django.test import TestCase
 from django.urls import reverse
 from spendingtrackers.models import User
 from spendingtrackers.tests.helpers import LogInTester
-from django.contrib.auth.hashers import make_password, check_password
 
 
 class ForgotPasswordViewTestCase(TestCase, LogInTester):

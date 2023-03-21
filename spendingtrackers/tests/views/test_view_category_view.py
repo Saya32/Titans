@@ -1,13 +1,10 @@
-from datetime import date, timedelta
+
 from django.test import TestCase
 from decimal import Decimal
 from django.urls import reverse
 from django.contrib.messages import get_messages
 from spendingtrackers.models import Category, Transaction, User
-from spendingtrackers.views import view_category
-from spendingtrackers.tests.helpers import reverse_with_next, create_transactions, create_categories
 from ...helpers import get_user_balance,get_user_income,get_user_budget,get_user_expense
-from datetime import datetime
 
 
 class ViewCategoryTestCase(TestCase):

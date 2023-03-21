@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from faker import Faker
 from spendingtrackers.models import User, Transaction, Category
 from random import randint, random, choice

@@ -1,12 +1,9 @@
 """Test case of new transaction view"""
 from django.test import TestCase
 from django.urls import reverse
-from spendingtrackers.models import User, Transaction, Category
-from spendingtrackers.views.views import new_transaction
+from spendingtrackers.models import User, Transaction
 from spendingtrackers.forms import TransactionForm
 from spendingtrackers.tests.helpers import reverse_with_next
-from spendingtrackers.tests.helpers import create_transactions
-from datetime import datetime
 
 class NewTransactionViewTestCase(TestCase):
     """Test case of new transaction view"""
