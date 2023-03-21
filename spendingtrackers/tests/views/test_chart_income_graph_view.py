@@ -25,6 +25,12 @@ class ChartIncomeGraphTestCase(TestCase):
             amount=5, 
             date_paid="2022-03-17"
         )
+        self.expense1 = Transaction.objects.create(
+            user=self.user, 
+            transaction_type="Expense", 
+            amount=5, 
+            date_paid="2022-03-17"
+        )
         
     def test_chart_income_graph(self):
         self.client.login(username=self.user.username, password='Password123')
@@ -32,7 +38,7 @@ class ChartIncomeGraphTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         expected_data = {
-            'labels': ['03/15/2022', '03/17/2022'],
-            'data': [10.0, 5.0]
+            'labels': ['03/15/2022', '03/17/2022','03/17/2022'],
+            'data': [10.0, 5.0, 0.0]
         }
         self.assertJSONEqual(json.dumps(response.json()), expected_data)
