@@ -20,7 +20,6 @@ from .helpers import get_user_transactions, get_categories, get_user_balance, ge
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import HttpResponse
 import matplotlib.pyplot as plt
-from io import BytesIO
 import base64
 import pandas as pd
 from django.http import HttpResponse
@@ -30,7 +29,6 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from io import BytesIO
 from spendingtrackers.models import Transaction
-import datetime 
 from django.utils import timezone
 from datetime import timedelta
 from django.shortcuts import render

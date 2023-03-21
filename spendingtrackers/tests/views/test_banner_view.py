@@ -17,4 +17,9 @@ class BannerViewTestCase(TestCase, LogInTester):
 
     def test_banner_url(self):
         self.assertEqual(self.url, '/banner/')
+    
+    def test_banner_success(self):
+        self.client.login(username=self.user.username, password="Password123")
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, 'banner.html')
 
