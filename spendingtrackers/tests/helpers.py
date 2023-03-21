@@ -1,5 +1,5 @@
 from django.urls import reverse
-from spendingtrackers.models import User, Transaction, Category
+from spendingtrackers.models import Transaction, Category
 
 class LogInTester:
     def _is_logged_in(self):

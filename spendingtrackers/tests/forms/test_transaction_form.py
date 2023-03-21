@@ -1,9 +1,7 @@
 from django import forms
 from django.test import TestCase
-from ...forms import TransactionForm
-from ...models import Transaction, User
-from django.utils import timezone
-from django.core.files.uploadedfile import SimpleUploadedFile
+from spendingtrackers.forms import TransactionForm
+from spendingtrackers.models import User
 
 class TransactionFormTestCase(TestCase):
     """Unit tests of the sign up form."""

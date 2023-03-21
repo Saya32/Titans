@@ -1,9 +1,7 @@
 from django import forms
 from django.test import TestCase
-from ...forms import CategoryDetailsForm
-from ...models import Transaction, User
-from django.utils import timezone
-from django.core.files.uploadedfile import SimpleUploadedFile
+from spendingtrackers.forms import CategoryDetailsForm
+from spendingtrackers.models import User
 from django.core.exceptions import ValidationError
 
 class CategoryDetailsFormTestCase(TestCase):

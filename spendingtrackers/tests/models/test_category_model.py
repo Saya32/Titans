@@ -1,6 +1,6 @@
 
 from django.test import TestCase
-from ...models import Category, User, Transaction
+from ...models import Category, User
 from django.core.exceptions import ValidationError
 import datetime
 

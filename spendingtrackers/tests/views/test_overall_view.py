@@ -1,11 +1,8 @@
 from decimal import Decimal
 from spendingtrackers.models import Category, Transaction, User
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 from spendingtrackers.models import Category, Transaction
-from spendingtrackers.views import overall
-from spendingtrackers.tests.helpers import reverse_with_next
-from ...helpers import get_user_balance,get_user_income,get_user_budget,get_user_expense
 from datetime import datetime
 
 class OverallTestCase(TestCase):
