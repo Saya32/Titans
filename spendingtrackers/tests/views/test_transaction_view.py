@@ -2,7 +2,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from spendingtrackers.models import User, Transaction, Category
-from spendingtrackers.views import new_transaction
+from spendingtrackers.views.views import new_transaction
 from spendingtrackers.forms import TransactionForm
 from spendingtrackers.tests.helpers import reverse_with_next
 from spendingtrackers.tests.helpers import create_transactions
