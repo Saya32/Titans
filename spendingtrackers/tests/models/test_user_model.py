@@ -3,7 +3,6 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from spendingtrackers.models import User
-from decimal import Decimal
 
 
 class UserModelTestCase(TestCase):

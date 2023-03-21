@@ -1,7 +1,6 @@
 from django.test import TestCase
-from django.core.exceptions import ValidationError
-from ...models import Category, User, Transaction, Achievement
-from ...helpers import update_achievements, set_achievements, get_achievements
+from spendingtrackers.models import Category, User
+from spendingtrackers.helpers import update_achievements, set_achievements, get_achievements
 
 class AchievementTest(TestCase):
     fixtures = [

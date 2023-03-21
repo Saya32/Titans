@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.urls import reverse
 from spendingtrackers.forms import LogInForm
 from spendingtrackers.models import User
-from spendingtrackers.tests.helpers import LogInTester, reverse_with_next
+from spendingtrackers.tests.helpers import LogInTester
 
 class LogInViewTestCase(TestCase, LogInTester):
     """Tests of the log in view."""

@@ -1,7 +1,6 @@
 
 from django.test import TestCase
 from django.urls import reverse
-from spendingtrackers.forms import CategoryDetailsForm
 from spendingtrackers.models import User, Category
 from spendingtrackers.tests.helpers import reverse_with_next, create_categories
 

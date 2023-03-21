@@ -1,5 +1,4 @@
 """Tests of the sign up view."""
-from django.contrib.auth.hashers import check_password
 from django.test import TestCase
 from django.urls import reverse
 from spendingtrackers.forms import SignUpForm

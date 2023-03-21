@@ -1,7 +1,7 @@
 """Unit Tests for the Chart Model."""
 from django.test import TestCase
 from django.core.exceptions import ValidationError
-from ...models import Category, User, Transaction, Achievement, Chart
+from spendingtrackers.models import User, Chart
 
 class ChartTest(TestCase):
 

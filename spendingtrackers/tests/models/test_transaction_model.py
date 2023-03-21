@@ -1,7 +1,6 @@
 from django.test import TestCase
-from ...models import Transaction, User
+from spendingtrackers.models import Transaction, User
 from django.core.exceptions import ValidationError
-import datetime
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 class TransactionTest(TestCase):
