@@ -22,10 +22,6 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from datetime import datetime
 
-
-
-
-
 class LoginProhibitedMixin:
     """Mixin that redirects when a user is logged in."""
 
