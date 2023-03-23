@@ -19,7 +19,7 @@ Last but not least, the user should have access to reports and visualisations fo
 - CHULIANG LI 
 
 ## Installation instructions
-To install the software and use it in your local development environment, you must first set up and activate a local development environment.  From the root of the project:
+To install the software make sure you have python and use it in your local development environment, you must first set up and activate a local development environment.  From the root of the project:
 
 ```
 $ virtualenv venv
