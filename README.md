@@ -1,5 +1,5 @@
 # Titans: Personal Spending Tracker
-## Personal Spending Tracker
+## 2.1. A1: Personal Spending Tracker
 The goal of this project is to create an application that lets users keep track of their spending.
 The expense may fall under a variety of areas.
 These categories ought to be able to be added, changed, and removed by the user.
