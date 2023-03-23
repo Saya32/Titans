@@ -21,8 +21,11 @@
         <script>
           $(function () {
             var $chart_balance_graph = $("#chart_balance_graph");
+            $('form').submit(function(event) {
+              event.preventDefault();
             $.ajax({
               url: $chart_balance_graph.data("url"),
+              data: $('form').serialize(),
               success: function (data) {
                 var ctx = $chart_balance_graph[0].getContext("2d");
                 new Chart(ctx, {
@@ -51,9 +54,11 @@
               },
             });
           });
-        </script>
+        });
+      </script>
       </div>
     </div>
+      
 
     <div class="col-sm-4 text-center my-3">
       <div class="card">
@@ -69,8 +74,11 @@
         <script>
           $(function () {
             var $chart_expense_graph = $("#chart_expense_graph");
+            $('form').submit(function(event) {
+              event.preventDefault();
             $.ajax({
               url: $chart_expense_graph.data("url"),
+              data: $('form').serialize(),
               success: function (data) {
                 var ctx = $chart_expense_graph[0].getContext("2d");
                 new Chart(ctx, {
@@ -99,6 +107,7 @@
               },
             });
           });
+        });
         </script>
       </div>
     </div>
@@ -117,8 +126,11 @@
         <script>
           $(function () {
             var $chart_income_graph = $("#chart_income_graph");
+            $('form').submit(function(event) {
+              event.preventDefault();
             $.ajax({
               url: $chart_income_graph.data("url"),
+              data: $('form').serialize(),
               success: function (data) {
                 var ctx = $chart_income_graph[0].getContext("2d");
                 new Chart(ctx, {
@@ -147,6 +159,7 @@
               },
             });
           });
+        });
         </script>
       </div>
     </div>
@@ -169,8 +182,11 @@
           $(function () {
             var $expense_structure = $("#expense_structure");
             var colors = ["green", "MediumSeaGreen", "LightSeaGreen", "purple", "magenta"];
+            $('form').submit(function(event) {
+              event.preventDefault();
             $.ajax({
               url: $expense_structure.data("url"),
+              data: $('form').serialize(),
               success: function (data) {
                 let labels = [];
                 let legend = [];
@@ -228,6 +244,7 @@
               },
             });
           });
+        });
         </script>
       </div>
     </div>
@@ -246,9 +263,11 @@
           $(function () {
             var $expense_structure2 = $("#expense_structure2");
             var colors = ["green", "blue", "yellow", "purple", "magenta"];
-
+            $('form').submit(function(event) {
+              event.preventDefault();
             $.ajax({
               url: $expense_structure2.data("url"),
+              data: $('form').serialize(),
               success: function (data) {
                 let labels = [];
                 let values = [];
@@ -282,6 +301,7 @@
               },
             });
           });
+        });
         </script>
       </div>
     </div>
