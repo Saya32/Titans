@@ -53,11 +53,11 @@ $ python3 manage.py test
 - http://sayaka.pythonanywhere.com/
 
 User Account to login with:
-Name: Sarah
-Last: Higgins
-Email: sarah@test.com
-Password: Password123!!
-Pin: 2ersj("YY"£
+- Name: Sarah
+- Last: Higgins
+- Email: sarah@test.com
+- Password: Password123!!
+- Pin: 2ersj("YY"£
 
 ## References
 - https://djangopy.org/how-to/how-to-implement-categories-in-django/
