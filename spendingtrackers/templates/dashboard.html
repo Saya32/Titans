@@ -1,11 +1,15 @@
 {% extends 'base_content.html' %} {% block content %}
 <div class="container">
+  <div class="card mb-4 rounded-3"style="background-color: #B2D3C2;">
+    <center><p> Press Show dashboard to see all your Balance, Income and Expense Trends.</p></center>
+</div>
   <div class="row" style="width: 90%">
+
     <form method="POST">
       {% csrf_token %}
       From: <input type="date" name="from_date"/>
       To: <input type="date" name="to_date"/>
-      <input type="submit" value="Search"/>
+      <input type="submit" value="Show Dashboard"/>
     </form>
     <div class="col-sm-4 text-center my-3">
       <div class="card">
@@ -15,14 +19,19 @@
         <canvas
           id="chart_balance_graph"
           data-url="{% url 'chart_balance_graph' %}"
+          width="1600"
+          height="1600"
         ></canvas>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script>
           $(function () {
             var $chart_balance_graph = $("#chart_balance_graph");
+            $('form').submit(function(event) {
+              event.preventDefault();
             $.ajax({
               url: $chart_balance_graph.data("url"),
+              data: $('form').serialize(),
               success: function (data) {
                 var ctx = $chart_balance_graph[0].getContext("2d");
                 new Chart(ctx, {
@@ -46,14 +55,24 @@
                       display: true,
                       text: "Balance Trend Bar Chart",
                     },
+                    scales: {
+                      yAxes: [{
+                        ticks: {
+                          padding: 10 
+                        }
+                        
+                      }],
+                    },
                   },
                 });
               },
             });
           });
-        </script>
+        });
+      </script>
       </div>
     </div>
+      
 
     <div class="col-sm-4 text-center my-3">
       <div class="card">
@@ -63,14 +82,19 @@
         <canvas
           id="chart_expense_graph"
           data-url="{% url 'chart_expense_graph' %}"
+          width="1600"
+          height="1600"
         ></canvas>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script>
           $(function () {
             var $chart_expense_graph = $("#chart_expense_graph");
+            $('form').submit(function(event) {
+              event.preventDefault();
             $.ajax({
               url: $chart_expense_graph.data("url"),
+              data: $('form').serialize(),
               success: function (data) {
                 var ctx = $chart_expense_graph[0].getContext("2d");
                 new Chart(ctx, {
@@ -99,6 +123,7 @@
               },
             });
           });
+        });
         </script>
       </div>
     </div>
@@ -111,14 +136,19 @@
         <canvas
           id="chart_income_graph"
           data-url="{% url 'chart_income_graph' %}"
+          width="1600"
+          height="1600"
         ></canvas>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script>
           $(function () {
             var $chart_income_graph = $("#chart_income_graph");
+            $('form').submit(function(event) {
+              event.preventDefault();
             $.ajax({
               url: $chart_income_graph.data("url"),
+              data: $('form').serialize(),
               success: function (data) {
                 var ctx = $chart_income_graph[0].getContext("2d");
                 new Chart(ctx, {
@@ -142,11 +172,20 @@
                       display: true,
                       text: "Income Trend Bar Chart",
                     },
+                    scales: {
+                      yAxes: [{
+                        ticks: {
+                          padding: 10
+                        }
+                      }],
+                    },
+                   
                   },
                 });
               },
             });
           });
+        });
         </script>
       </div>
     </div>
@@ -161,6 +200,8 @@
         <canvas
           id="expense_structure"
           data-url="{% url 'expense_structure' %}"
+          width="1600"
+          height="1600"
         ></canvas>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
@@ -169,8 +210,11 @@
           $(function () {
             var $expense_structure = $("#expense_structure");
             var colors = ["green", "MediumSeaGreen", "LightSeaGreen", "purple", "magenta"];
+            $('form').submit(function(event) {
+              event.preventDefault();
             $.ajax({
               url: $expense_structure.data("url"),
+              data: $('form').serialize(),
               success: function (data) {
                 let labels = [];
                 let legend = [];
@@ -228,6 +272,7 @@
               },
             });
           });
+        });
         </script>
       </div>
     </div>
@@ -239,6 +284,8 @@
         <canvas
           id="expense_structure2"
           data-url="{% url 'expense_structure2' %}"
+          width="1600"
+          height="1600"
         ></canvas>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -246,9 +293,11 @@
           $(function () {
             var $expense_structure2 = $("#expense_structure2");
             var colors = ["green", "blue", "yellow", "purple", "magenta"];
-
+            $('form').submit(function(event) {
+              event.preventDefault();
             $.ajax({
               url: $expense_structure2.data("url"),
+              data: $('form').serialize(),
               success: function (data) {
                 let labels = [];
                 let values = [];
@@ -282,6 +331,7 @@
               },
             });
           });
+        });
         </script>
       </div>
     </div>

@@ -223,6 +223,13 @@ def records(request):
 def chart_balance_graph(request):
     # Retrieve user's transactions
     transactions = Transaction.objects.filter(user=request.user).order_by('date_paid')
+    if request.method == 'GET':
+        from_date = request.GET.get('from_date')
+        to_date = request.GET.get('to_date')
+        if from_date and to_date:
+            from_date_obj = datetime.strptime(from_date, '%Y-%m-%d').date()
+            to_date_obj = datetime.strptime(to_date, '%Y-%m-%d').date()
+            transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
     
     # Extract data for graph
     labels = []
@@ -245,6 +252,13 @@ def chart_balance_graph(request):
 def chart_expense_graph(request):
     # Retrieve user's transactions
     transactions = Transaction.objects.filter(user=request.user).order_by('date_paid')
+    if request.method == 'GET':
+        from_date = request.GET.get('from_date')
+        to_date = request.GET.get('to_date')
+        if from_date and to_date:
+            from_date_obj = datetime.strptime(from_date, '%Y-%m-%d').date()
+            to_date_obj = datetime.strptime(to_date, '%Y-%m-%d').date()
+            transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
     # Extract data for graph
     labels = []
     data = []
@@ -266,6 +280,13 @@ def chart_expense_graph(request):
 def chart_income_graph(request):
     # Retrieve user's transactions
     transactions = Transaction.objects.filter(user=request.user).order_by('date_paid')
+    if request.method == 'GET':
+        from_date = request.GET.get('from_date')
+        to_date = request.GET.get('to_date')
+        if from_date and to_date:
+            from_date_obj = datetime.strptime(from_date, '%Y-%m-%d').date()
+            to_date_obj = datetime.strptime(to_date, '%Y-%m-%d').date()
+            transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
     # Extract data for graph
     labels = []
     data = []
@@ -286,6 +307,13 @@ def chart_income_graph(request):
 def expense_structure(request):
     # Retrieve user's transactions
     transactions = Transaction.objects.filter(user=request.user).order_by('category')
+    if request.method == 'GET':
+        from_date = request.GET.get('from_date')
+        to_date = request.GET.get('to_date')
+        if from_date and to_date:
+            from_date_obj = datetime.strptime(from_date, '%Y-%m-%d').date()
+            to_date_obj = datetime.strptime(to_date, '%Y-%m-%d').date()
+            transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
     # Extract data for graph
     labels = []
     percentlabel = []
@@ -316,6 +344,13 @@ def expense_structure(request):
 def expense_structure2(request):
     # Retrieve user's transactions
     transactions = Transaction.objects.filter(user=request.user).order_by('category')
+    if request.method == 'GET':
+        from_date = request.GET.get('from_date')
+        to_date = request.GET.get('to_date')
+        if from_date and to_date:
+            from_date_obj = datetime.strptime(from_date, '%Y-%m-%d').date()
+            to_date_obj = datetime.strptime(to_date, '%Y-%m-%d').date()
+            transactions = transactions.filter(date_paid__range=[from_date_obj, to_date_obj])
     # Extract data for graph
     labels = []
     data = {}

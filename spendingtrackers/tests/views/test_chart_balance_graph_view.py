@@ -42,3 +42,14 @@ class ChartBalanceGraphTestCase(TestCase):
             'data': [-10, 10, 5]
         }
         self.assertJSONEqual(json.dumps(response.json()), expected_data)
+    
+    def test_filter_transactions_by_date_range_for_chart_blance_graph(self):
+        self.client.login(username=self.user.username, password='Password123')
+        response = self.client.get(reverse('chart_balance_graph'), {'from_date': '2022-02-14', 'to_date': '2022-03-16'})
+        expected_data = {
+            'labels': ['03/15/2022', '03/16/2022'],
+            'data': [-10, 10]
+        }
+        self.assertJSONEqual(json.dumps(response.json()), expected_data)
+    
+    

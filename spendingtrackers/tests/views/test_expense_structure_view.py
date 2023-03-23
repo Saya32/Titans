@@ -23,6 +23,12 @@ class ExpenseStructureTestCase(TestCase):
             user=self.user, 
             transaction_type="Expense", 
             amount=5, 
+            date_paid="2022-03-16"
+        )
+        self.expense2 = Transaction.objects.create(
+            user=self.user, 
+            transaction_type="Expense", 
+            amount=5, 
             date_paid="2022-03-17"
         )
         
@@ -32,7 +38,18 @@ class ExpenseStructureTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         expected_data = {
-            'labels': ['', ''],
+            'labels': ['', '', ''],
+            'total' : '20.00',
+            'percentlabel':[],
+            'data': {'': 20}
+        }
+        self.assertJSONEqual(json.dumps(response.json()), expected_data)
+    
+    def test_filter_transactions_by_date_range_for_chart_income_graph(self):
+        self.client.login(username=self.user.username, password='Password123')
+        response = self.client.get(reverse('expense_structure'), {'from_date': '2022-02-14', 'to_date': '2022-03-16'})
+        expected_data = {
+            'labels': ['',''],
             'total' : '15.00',
             'percentlabel':[],
             'data': {'': 15}
