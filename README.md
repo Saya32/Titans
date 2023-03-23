@@ -25,6 +25,11 @@ To install the software and use it in your local development environment, you mu
 $ virtualenv venv
 $ source venv/bin/activate
 ```
+Install django packages:
+
+```
+$ pip3 install django
+```
 
 Install all required packages:
 
