@@ -1,11 +1,15 @@
 {% extends 'base_content.html' %} {% block content %}
 <div class="container">
+  <div class="card mb-4 rounded-3"style="background-color: #B2D3C2;">
+    <center><p> Press Show dashboard to see all your Balance, Income and Expense Trends.</p></center>
+</div>
   <div class="row" style="width: 90%">
+
     <form method="POST">
       {% csrf_token %}
       From: <input type="date" name="from_date"/>
       To: <input type="date" name="to_date"/>
-      <input type="submit" value="Search"/>
+      <input type="submit" value="Show Dashboard"/>
     </form>
     <div class="col-sm-4 text-center my-3">
       <div class="card">
@@ -48,6 +52,14 @@
                     title: {
                       display: true,
                       text: "Balance Trend Bar Chart",
+                    },
+                    scales: {
+                      yAxes: [{
+                        ticks: {
+                          padding: 10 
+                        }
+                        
+                      }],
                     },
                   },
                 });
@@ -154,6 +166,14 @@
                       display: true,
                       text: "Income Trend Bar Chart",
                     },
+                    scales: {
+                      yAxes: [{
+                        ticks: {
+                          padding: 10
+                        }
+                      }],
+                    },
+                   
                   },
                 });
               },
