@@ -32,32 +32,43 @@ class ChangePasswordViewTestCase(TestCase, LogInTester):
 
         response = self.client.get(self.url, form_input)
         self.assertEqual(response.status_code, 200)
-        
-    def test_change_password_unsuccessful(self):
+
+    def test_change_password_invalid_email(self):
+        form_input = {'email': 'johndo22e@example.org', 'his_password': 'WrongPassword123.',
+                      'password': 'WrongPassword12345,', "password_confirmation": "WrongPassword12345,"}
+
+        response = self.client.post(self.url, form_input)
+        self.assertEqual(response.status_code, 200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+
+    def test_change_password_invalid_password(self):
+        form_input = {'email': 'johndoe@example.org', 'his_password': '2222.',
+                      'password': 'WrongPassw22ord12345,', "password_confirmation": "WrongPassword12345,"}
+
+        response = self.client.post(self.url, form_input)
+        self.assertEqual(response.status_code, 200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+
+    def test_change_password_invalid_password_confirmation(self):
         form_input = {'email': 'johndoe@example.org', 'his_password': 'WrongPassword123.',
-                      'password': 'WrongPassword12345,', "password_confirmation": "WrongPassw22ord1234,5"}
-        response = self.client.post(self.url, form_input)
-        messages_list = list(response.context['messages'])
-        self.assertNotEqual(len(messages_list), 1)
+                      'password': 'WrongPassword12345,', "password_confirmation": "Wrong22Password12345,"}
 
-    def test_change_password_unsuccessful_by_his(self):
-        form_input = {'username': 'johndoe@example.org', 'his_password': 'WrongPass22word123.',
-                      'password': 'WrongPassword12,345', "password_confirmation": "WrongPasswo,rd12345"}
         response = self.client.post(self.url, form_input)
+        self.assertEqual(response.status_code, 200)
         messages_list = list(response.context['messages'])
-        self.assertNotEqual(len(messages_list), 1)
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
 
-    def test_change_password_unsuccessful_by_user_name(self):
-        form_input = {'username': 'johndoe@exam22ple.org', 'his_password': 'WrongPass22word123.',
-                      'password': 'WrongPassword1234,5', "password_confirmation": "WrongPa,ssword12345"}
-        response = self.client.post(self.url, form_input)
-        messages_list = list(response.context['messages'])
-        self.assertNotEqual(len(messages_list), 1)
+    def test_forgot_password_successful(self):
+        form_input = {'email': 'johndoe@example.org', 'his_password': 'WrongPassword123.',
+                      'password': 'WrongPassword12345,', "password_confirmation": "WrongPassword12345,"}
 
-    def test_change_password_error(self):
-        form_input = {'username': 'johndoe2@exam22ple.org', 'his_password': 'WrongPass22word123.',
-                      'password': 'WrongPassword1234,5', "password_confirmation": "WrongPassword1234,5"}
         response = self.client.post(self.url, form_input)
+        self.assertEqual(response.status_code, 200)
         messages_list = list(response.context['messages'])
-        self.assertNotEqual(len(messages_list), 1)
-   
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.SUCCESS)
