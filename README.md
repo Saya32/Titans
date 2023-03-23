@@ -38,9 +38,10 @@ Migrate the database:
 $ python3 manage.py migrate
 ```
 
-Run all tests with:
+Run tests and check coverage:
 ```
-$ python3 manage.py test
+$ coverage run manage.py test
+$ coverage report
 ```
 
 ## Deployed Version
