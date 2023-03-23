@@ -494,6 +494,7 @@ def add_category_details(request):
                 category = form.save(commit=False)
                 category.user = request.user
                 category.save()
+                update_achievements(request.user)
                 messages.success(request, "Category added.")
                 return redirect('category')
             else:
