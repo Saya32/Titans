@@ -55,5 +55,6 @@ User Account to login with:
 
 ## References
 - We used out Knowledge from ```Clucker``` and what we learned from ```Music School Management``` to give us a structure on how to format some models, forms, views, templates and testcases for our project.
-- https://stackoverflow.com/questions/52126753/understanding-image-fields-media-root-media-url
+- We used the below stcakoverflow to help us integrate upload receipt in ```views.py``` for new_transaction function and to display the images of receipt in records
+```https://stackoverflow.com/questions/52126753/understanding-image-fields-media-root-media-url```
 - https://simpleisbetterthancomplex.com/tutorial/2020/01/19/how-to-use-chart-js-with-django.html
