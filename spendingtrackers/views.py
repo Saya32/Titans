@@ -485,7 +485,7 @@ def view_category(request, id):
             income = category.get_income(from_date=from_date_obj, to_date=to_date_obj)
             balance = category.get_balance(from_date=from_date_obj, to_date=to_date_obj)
 
-    if category.budget is not None:
+    if category.budget != 0 or None:
         used_percentage = (category.budget - balance) / category.budget * 100
         used_percentage = round(used_percentage, 2)
     else:
