@@ -54,6 +54,6 @@ User Account to login with:
 - Pin: 2ersj("YY"£
 
 ## References
-- We used out Knowledge from ```Clucker``` and what we learned from ```Music School Management``` to give us a structure on how to format some models, forms and views for our project.
+- We used out Knowledge from ```Clucker``` and what we learned from ```Music School Management``` to give us a structure on how to format some models, forms, views, templates and testcases for our project.
 - https://stackoverflow.com/questions/52126753/understanding-image-fields-media-root-media-url
 - https://simpleisbetterthancomplex.com/tutorial/2020/01/19/how-to-use-chart-js-with-django.html
