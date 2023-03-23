@@ -13,7 +13,8 @@
     <table class="table table-hover text-nowrap">
     <thead>
         <tr>
-        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
         <th>Date</th>
         <th>Time</th>
         <th>Amount</th>
@@ -25,7 +26,8 @@
     <tbody>
         {% for transaction in transactions %}
         <tr>
-        <td>{{ transaction.id }}</td> 
+        <td>{{ transaction.title}}</td> 
+        <td>{{ transaction.description}}</td> 
         <td>{{ transaction.date_paid}}</td>
         <td>{{ transaction.time_paid  }}</td>
         <td>{{currency}}{{ transaction.amount }}</td>
