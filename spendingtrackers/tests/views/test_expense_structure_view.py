@@ -45,7 +45,7 @@ class ExpenseStructureTestCase(TestCase):
         }
         self.assertJSONEqual(json.dumps(response.json()), expected_data)
     
-    def test_filter_transactions_by_date_range_for_chart_income_graph(self):
+    def test_filter_transactions_by_date_range_for_chart_expense_structure_graph(self):
         self.client.login(username=self.user.username, password='Password123')
         response = self.client.get(reverse('expense_structure'), {'from_date': '2022-02-14', 'to_date': '2022-03-16'})
         expected_data = {
